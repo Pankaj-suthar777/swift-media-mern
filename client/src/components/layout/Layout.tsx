@@ -21,15 +21,21 @@ const Layout = () => {
   return (
     <div className="flex h-screen w-screen bg-slate-100">
       <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar}>
-        {allNav.map((n, i) => (
-          <SidebarItem
-            key={i}
-            icon={n.icon}
-            text={n.title}
-            to={n.path}
-            active={pathname === n.path}
-          />
-        ))}
+        {allNav.map((n, i) => {
+          const isActive =
+            pathname === n.path ||
+            pathname === `${n.path}/` ||
+            `${pathname}/` === n.path;
+          return (
+            <SidebarItem
+              key={i}
+              icon={n.icon}
+              text={n.title}
+              to={n.path}
+              active={isActive}
+            />
+          );
+        })}
       </Sidebar>
 
       <div

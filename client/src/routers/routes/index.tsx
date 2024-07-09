@@ -8,7 +8,7 @@ export const getRoutes = () => {
   });
 
   return {
-    path: "/",
+    path: "/user",
     element: <Layout />,
     children: privateRoutes,
   };

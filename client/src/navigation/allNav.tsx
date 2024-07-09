@@ -1,4 +1,4 @@
-import { Home } from "lucide-react";
+import { Home, User } from "lucide-react";
 
 export const allNav = [
   {
@@ -6,6 +6,13 @@ export const allNav = [
     title: "Dashboard",
     icon: <Home size={20} />,
     role: "user",
-    path: "/dashboard",
+    path: "/user/dashboard",
+  },
+  {
+    id: 2,
+    title: "Profile",
+    icon: <User size={20} />,
+    role: "user",
+    path: "/user/profile",
   },
 ];

@@ -1,4 +1,5 @@
 //import { useAppSelector } from "@/redux/hooks";
+import { MountainIcon } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -36,17 +37,13 @@ export default function Sidebar({
         }`}
       >
         <nav className="h-full flex flex-col bg-white  ">
-          <span
-            // to={role === "admin" ? "/admin/dashboard" : "/dashboard"}
-            className="p-4 pb-2 flex justify-center items-center cursor-pointer mb-5 mt-2"
-          >
-            <img
-              src={
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUp08aReiNKV4tTlIBDbInK5KV8ffAtfBImw&s"
-              }
-              className={`overflow-hidden transition-all w-32`}
-            />
-          </span>
+          <Link to="#" className="mr-6 flex justify-center items-center py-6">
+            <MountainIcon className="h-8 w-8" />
+            <span className="sr-only">Acme Inc</span>
+            <span className="ml-4 text-black font-medium text-lg">
+              Swift Rivals
+            </span>
+          </Link>
           <ul className="flex-1 px-3">{children}</ul>
         </nav>
       </aside>
