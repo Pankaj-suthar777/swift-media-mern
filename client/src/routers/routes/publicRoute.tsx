@@ -1,7 +1,8 @@
 import LoginPage from "@/pages/auth/LoginPage";
-import LandingPage from "../../pages/LandingPage";
+import LandingPage from "@/pages/LandingPage";
 import Register from "@/pages/auth/Register";
 import AdminLoginPage from "@/pages/auth/AdminLoginPage";
+import NotFoundError from "@/pages/NotFoundError";
 
 const publicRoutes = [
   {
@@ -19,6 +20,10 @@ const publicRoutes = [
   {
     path: "/admin/login",
     element: <AdminLoginPage />,
+  },
+  {
+    path: "*",
+    element: <NotFoundError />,
   },
 ];
 

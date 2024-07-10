@@ -5,6 +5,7 @@ interface UserInfo {
   name: string;
   email: string;
   role: string;
+  id: number;
 }
 
 interface IUserState {

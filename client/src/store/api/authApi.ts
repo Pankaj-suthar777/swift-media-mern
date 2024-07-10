@@ -2,8 +2,27 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
+
+  baseQuery: fetchBaseQuery({
+    baseUrl: "/api",
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
+    adminLogin: builder.mutation({
+      query(body) {
+        return {
+          url: "/auth/admin/login",
+          method: "POST",
+          body,
+        };
+      },
+    }),
     login: builder.mutation({
       query(body) {
         return {
@@ -55,6 +74,13 @@ export const authApi = createApi({
         };
       },
     }),
+    adminGetUserInfo: builder.query({
+      query() {
+        return {
+          url: `/auth/admin/get-user`,
+        };
+      },
+    }),
   }),
 });
 
@@ -65,4 +91,6 @@ export const {
   useLoginMutation,
   useGetUserInfoQuery,
   useLogoutMutation,
+  useAdminLoginMutation,
+  useAdminGetUserInfoQuery,
 } = authApi;

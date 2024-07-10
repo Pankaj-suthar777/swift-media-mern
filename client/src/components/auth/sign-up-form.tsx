@@ -1,4 +1,4 @@
-import { HTMLAttributes, useState } from "react";
+import { HTMLAttributes, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -14,11 +14,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/custom/button";
 import { PasswordInput } from "@/components/custom/password-input";
 import { cn } from "@/lib/utils";
+import { useRegisterMutation } from "@/store/api/authApi";
+import { toast } from "../ui/use-toast";
+import { setUser } from "@/store/features/userSlice";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hooks";
 
 interface SignUpFormProps extends HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z
   .object({
+    name: z.string().min(1, { message: "Please enter your name" }),
     email: z
       .string()
       .min(1, { message: "Please enter your email" })
@@ -28,8 +34,8 @@ const formSchema = z
       .min(1, {
         message: "Please enter your password",
       })
-      .min(7, {
-        message: "Password must be at least 7 characters long",
+      .min(6, {
+        message: "Password must be at least 6 characters long",
       }),
     confirmPassword: z.string(),
   })
@@ -39,31 +45,60 @@ const formSchema = z
   });
 
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [register, { isLoading, error, isError }] = useRegisterMutation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    console.log(data);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    const response = await register(data);
+    if (response.data?.token) {
+      localStorage.setItem("accessToken", response.data?.token);
+      dispatch(setUser(response.data?.userInfo));
+      toast({
+        title: "Register success",
+        description: response.data?.message,
+      });
+      navigate("/user/dashboard");
+    }
   }
+
+  useEffect(() => {
+    if (isError) {
+      toast({
+        // @ts-expect-error fixing needed here for type
+        title: error?.data?.error,
+      });
+    }
+  }, [isError, error]);
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid gap-2">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"

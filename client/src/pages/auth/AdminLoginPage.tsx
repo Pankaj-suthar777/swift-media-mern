@@ -1,7 +1,23 @@
 import { UserAuthForm } from "@/components/auth/user-auth-form";
 import ViteLogo from "../../assets/react.svg";
+import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "@/store/hooks";
+import { useEffect } from "react";
 
 const AdminLoginPage = () => {
+  const { token, userInfo, role } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token && userInfo) {
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/user/dashboard");
+      }
+    }
+  }, [token, userInfo, role, navigate]);
+
   return (
     <div>
       <div>

@@ -1,6 +1,6 @@
-import { HTMLAttributes, useState } from "react";
+import { HTMLAttributes, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -16,6 +16,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/custom/button";
 import { PasswordInput } from "@/components/custom/password-input";
 import { cn } from "@/lib/utils";
+import { useLoginMutation } from "@/store/api/authApi";
+import { setUser } from "@/store/features/userSlice";
+import { toast } from "../ui/use-toast";
+import { useAppDispatch } from "@/store/hooks";
 
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -29,14 +33,12 @@ const formSchema = z.object({
     .min(1, {
       message: "Please enter your password",
     })
-    .min(7, {
-      message: "Password must be at least 7 characters long",
+    .min(6, {
+      message: "Password must be at least 6 characters long",
     }),
 });
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,14 +47,32 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    console.log(data);
+  const [login, { isLoading, error, isError }] = useLoginMutation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    const response = await login(data);
+
+    if (response.data?.token) {
+      localStorage.setItem("accessToken", response.data?.token);
+      dispatch(setUser(response.data?.userInfo));
+      toast({
+        title: "Login success",
+        description: response.data?.message,
+      });
+      navigate("/user/dashboard");
+    }
   }
+
+  useEffect(() => {
+    if (isError) {
+      toast({
+        // @ts-expect-error fixing needed here for type
+        title: error?.data?.error,
+      });
+    }
+  }, [isError, error]);
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>

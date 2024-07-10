@@ -14,6 +14,7 @@ export const user_register: RequestHandler = async (req, res) => {
       email: email,
     },
   });
+
   if (user) {
     responseReturn(res, 404, { error: "Email Already Exits" });
   } else {
@@ -32,7 +33,15 @@ export const user_register: RequestHandler = async (req, res) => {
       role: "user",
     });
 
-    responseReturn(res, 201, { message: "User Register Success", token });
+    responseReturn(res, 201, {
+      message: "User Register Success",
+      token,
+      userInfo: {
+        id: createUser.id,
+        email: createUser.email,
+        role: "user",
+      },
+    });
   }
 };
 

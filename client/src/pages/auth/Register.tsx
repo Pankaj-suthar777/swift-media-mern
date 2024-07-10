@@ -1,8 +1,22 @@
 import { SignUpForm } from "@/components/auth/sign-up-form";
 import { Card } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { useAppSelector } from "@/store/hooks";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const { token, userInfo, role } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token && userInfo) {
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/user/dashboard");
+      }
+    }
+  }, [token, userInfo, role, navigate]);
   return (
     <div>
       <>

@@ -1,7 +1,25 @@
 import { UserAuthForm } from "@/components/auth/user-auth-form";
 import ViteLogo from "../../assets/react.svg";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppSelector } from "@/store/hooks";
+import { useEffect } from "react";
 
 const LoginPage = () => {
+  const { token, userInfo, role } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  console.log(token, userInfo, role);
+
+  useEffect(() => {
+    if (token && userInfo) {
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/user/dashboard");
+      }
+    }
+  }, [token, userInfo, role, navigate]);
+
   return (
     <div>
       <>
@@ -54,21 +72,10 @@ const LoginPage = () => {
               </div>
               <UserAuthForm />
               <p className="px-8 text-center text-sm text-muted-foreground">
-                By clicking login, you agree to our{" "}
-                <a
-                  href="/terms"
-                  className="underline underline-offset-4 hover:text-primary"
-                >
-                  Terms of Service
-                </a>{" "}
-                and{" "}
-                <a
-                  href="/privacy"
-                  className="underline underline-offset-4 hover:text-primary"
-                >
-                  Privacy Policy
-                </a>
-                .
+                Don't have an account{" "}
+                <Link className="underline" to={"/register"}>
+                  sign up?
+                </Link>
               </p>
             </div>
           </div>

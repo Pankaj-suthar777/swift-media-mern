@@ -1,3 +1,4 @@
+import { userLogout } from "@/store/features/userSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
@@ -7,11 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-// import { useLogoutMutation } from "@/redux/api/authApi";
-// import { userLogout } from "@/redux/features/userSlice";
-// import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hooks";
 
 interface Props {
   showSidebar: boolean;
@@ -19,22 +17,13 @@ interface Props {
 }
 
 const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
-  //   const dispatch = useAppDispatch();
-  //   const navigate = useNavigate();
-  //   const { userInfo } = useAppSelector((state) => state.auth);
-  //   const [logout, { isSuccess }] = useLogoutMutation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const logoutUser = async () => {
-    // await logout({});
-    // localStorage.removeItem("accessToken");
-    // dispatch(userLogout());
+    localStorage.removeItem("accessToken");
+    dispatch(userLogout());
+    navigate("/login");
   };
-
-  //   useEffect(() => {
-  //     if (isSuccess) {
-  //       userLogout();
-  //       navigate("/login");
-  //     }
-  //   }, [isSuccess, navigate]);
 
   return (
     <div className="w-full h-full">

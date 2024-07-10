@@ -83,3 +83,20 @@ body {
   background: #171515; /* Thumb color */
   border-radius: 0px; /* Rounded corners */
 }
+
+.header-btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(252, 70, 100);
+  transform: translateX(-100%);
+  transition: all 0.3s;
+  z-index: -1;
+}
+
+.header-btn:hover::before {
+  transform: translateX(0);
+}

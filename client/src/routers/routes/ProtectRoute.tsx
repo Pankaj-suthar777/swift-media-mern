@@ -1,4 +1,5 @@
 //import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector } from "@/store/hooks";
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -8,13 +9,7 @@ interface Props {
 }
 
 const ProtectRoute = ({ route, children }: Props) => {
-  //   const { role, userInfo } = useAppSelector((state) => state.auth);
-  const role = "user";
-  const userInfo = {
-    name: "Pankaj",
-    email: "pankaj@gmail.com",
-    id: "324234234",
-  };
+  const { role, userInfo } = useAppSelector((state) => state.auth);
 
   if (role) {
     if (route.role) {
