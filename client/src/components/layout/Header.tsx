@@ -1,14 +1,17 @@
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { useAppSelector } from "@/store/hooks";
 import { Link } from "react-router-dom";
 
 export default function Header() {
+  const { userInfo } = useAppSelector((state) => state.auth);
+
+  console.log(userInfo);
   return (
     <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6 z-50">
       <Sheet>
         <div className="w-full flex justify-between">
           <Link to="#" className="mr-6 flex justify-center items-center">
             <MountainIcon className="h-6 w-6" />
-            <span className="sr-only">Acme Inc</span>
             <span className="ml-4 text-white font-light">Swift Rivals</span>
           </Link>
           <SheetTrigger asChild>
@@ -43,12 +46,21 @@ export default function Header() {
             >
               Contact
             </Link>
-            <Link
-              to="#"
-              className="flex w-full items-center py-2 text-lg font-semibold"
-            >
-              Login
-            </Link>
+            {userInfo ? (
+              <Link
+                to="/user/dashboard"
+                className="flex w-full items-center py-2 text-lg font-semibold"
+              >
+                Go to console
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="flex w-full items-center py-2 text-lg font-semibold"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </SheetContent>
       </Sheet>
@@ -68,18 +80,26 @@ export default function Header() {
         </Link>
 
         <Link
-          className="header-btn relative inline-flex px-4 py-2 text-sm h-9 w-max items-center justify-center font-medium text-white border-3 border-pink-500 cursor-pointer bg-transparent overflow-hidden z-10"
+          className="header-btn relative inline-flex px-4 py-2 text-sm h-9 w-max items-center justify-center font-medium text-white border-3 border-pink-500 cursor-pointer bg-transparent overflow-hidden z-10 "
           to="#"
         >
           Contact
         </Link>
-
-        <Link
-          className="header-btn relative inline-flex px-4 py-2 text-sm h-9 w-max items-center justify-center font-medium text-white border-3 border-pink-500 cursor-pointer bg-transparent overflow-hidden z-10"
-          to="#"
-        >
-          Login
-        </Link>
+        {userInfo ? (
+          <Link
+            className="header-btn relative inline-flex px-4 py-2 text-sm h-9 w-max items-center justify-center font-medium text-white border-3 border-pink-500 cursor-pointer bg-transparent overflow-hidden z-10"
+            to="/user/dashboard"
+          >
+            Go to console
+          </Link>
+        ) : (
+          <Link
+            className="header-btn relative inline-flex px-4 py-2 text-sm h-9 w-max items-center justify-center font-medium text-white border-3 border-pink-500 cursor-pointer bg-transparent overflow-hidden z-10"
+            to="/login"
+          >
+            Login
+          </Link>
+        )}
       </nav>
     </header>
   );

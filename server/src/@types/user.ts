@@ -30,6 +30,7 @@ declare global {
         followers: number;
         followings: number;
         role: string;
+        about: string;
       };
       token: string;
     }

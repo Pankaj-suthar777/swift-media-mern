@@ -6,6 +6,9 @@ interface UserInfo {
   email: string;
   role: string;
   id: number;
+  followings: number;
+  followers: number;
+  about: string;
 }
 
 interface IUserState {

@@ -1,8 +1,21 @@
 import { BackgroundBeams } from "@/components/layout/background-beams";
 import Header from "@/components/layout/Header";
 import { Spotlight } from "@/components/layout/spotlight";
+import { useAppSelector } from "@/store/hooks";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+  const { userInfo } = useAppSelector((state) => state.auth);
+
+  const redirect = () => {
+    if (userInfo) {
+      navigate("/user/dashboard");
+    } else {
+      navigate("login");
+    }
+  };
+
   return (
     <>
       <div className="h-[80vh]">
@@ -22,8 +35,16 @@ const LandingPage = () => {
               <br /> play with friends.
             </h1>
             <p className="mt-4 font-normal text-base text-neutral-300 max-w-lg text-center mx-auto">
-              Join the Fun: Play Online Games with Friends!{" "}
+              Join the Fun: Play Swift Rivals with Friends!{" "}
             </p>
+          </div>
+          <div className="button-borders mt-10 w-[250px] bg-transparent">
+            <button
+              className="primary-button w-[250px] bg-transparent"
+              onClick={redirect}
+            >
+              Let's Play
+            </button>
           </div>
         </div>
       </div>

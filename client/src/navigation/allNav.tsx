@@ -1,4 +1,4 @@
-import { Home, User } from "lucide-react";
+import { Home, User, UsersRound } from "lucide-react";
 
 export const allNav = [
   {
@@ -14,5 +14,12 @@ export const allNav = [
     icon: <User size={20} />,
     role: "user",
     path: "/user/profile",
+  },
+  {
+    id: 3,
+    title: "Friends",
+    icon: <UsersRound size={20} />,
+    role: "user",
+    path: "/user/chats",
   },
 ];

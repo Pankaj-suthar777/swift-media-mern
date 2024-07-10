@@ -31,6 +31,9 @@ export const user_register: RequestHandler = async (req, res) => {
       name: createUser.name,
       email: createUser.email,
       role: "user",
+      followers: createUser.followers,
+      followings: createUser.followings,
+      about: createUser.about,
     });
 
     responseReturn(res, 201, {
@@ -40,6 +43,9 @@ export const user_register: RequestHandler = async (req, res) => {
         id: createUser.id,
         email: createUser.email,
         role: "user",
+        followers: createUser.followers,
+        followings: createUser.followings,
+        about: createUser.about,
       },
     });
   }
@@ -65,6 +71,9 @@ export const user_login: RequestHandler = async (req, res) => {
         name: user.name,
         email: user.email,
         role: "user",
+        followers: user.followers,
+        followings: user.followings,
+        about: user.about,
       });
 
       responseReturn(res, 201, {
@@ -74,6 +83,9 @@ export const user_login: RequestHandler = async (req, res) => {
           id: user.id,
           email: user.email,
           role: "user",
+          followers: user.followers,
+          followings: user.followings,
+          about: user.about,
         },
       });
     } else {
@@ -96,7 +108,22 @@ export const get_user: RequestHandler = async (req, res) => {
     },
   });
 
-  responseReturn(res, 200, { userInfo: user });
+  if (!user) {
+    return responseReturn(res, 200, {
+      error: "User not found",
+    });
+  }
+
+  responseReturn(res, 200, {
+    userInfo: {
+      id: user.id,
+      email: user.email,
+      role: "admin",
+      followers: user.followers,
+      followings: user.followings,
+      about: user.about,
+    },
+  });
 };
 
 // End Method
@@ -118,6 +145,9 @@ export const admin_login: RequestHandler = async (req, res) => {
         name: user.name,
         email: user.email,
         role: "admin",
+        followers: user.followers,
+        followings: user.followings,
+        about: user.about,
       });
 
       responseReturn(res, 201, {
@@ -127,6 +157,9 @@ export const admin_login: RequestHandler = async (req, res) => {
           id: user.id,
           email: user.email,
           role: "admin",
+          followers: user.followers,
+          followings: user.followings,
+          about: user.about,
         },
       });
     } else {

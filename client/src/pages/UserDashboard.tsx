@@ -8,10 +8,10 @@ const UserDashboard = () => {
           <GamesPlayedChart />
         </div>
         <div className="bg-white rounded-md h-fit py-6 lg:w-[30%] w-full flex justify-center items-center">
-          Total Games Played : 45
+          <span className="font-medium">Total Games Played&nbsp;</span> : 45
         </div>
         <div className="bg-white rounded-md h-fit py-6 lg:w-[30%] w-full flex justify-center items-center">
-          Wins : 45
+          <span className="font-medium">Wins&nbsp;</span> : 45
         </div>
       </div>
     </div>
