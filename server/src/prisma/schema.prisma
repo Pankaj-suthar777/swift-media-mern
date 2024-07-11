@@ -26,8 +26,7 @@ model User {
     updated_at         DateTime @updatedAt
     friends              Chat[] @relation("ChatFriends")
     chats              Chat[] @relation("ChatSender")
-    messages           Message[]
-
+    messages           Message[] @relation("MessageSender")
 }
 
 model Chat {
@@ -49,5 +48,5 @@ model Message {
     created_at         DateTime @default(now())
     updated_at         DateTime @updatedAt
     senderId           Int
-    sender             User @relation(fields: [senderId], references: [id])
+    sender             User @relation("MessageSender",fields: [senderId], references: [id])
 }

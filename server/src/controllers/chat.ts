@@ -129,8 +129,6 @@ export const getUserChats: RequestHandler = async (req, res) => {
 export const getChatMessage: RequestHandler = async (req, res) => {
   const { chatId } = req.params;
 
-  console.log(chatId);
-
   const messages = await prisma.message.findMany({
     where: {
       chat_id: parseInt(chatId),
