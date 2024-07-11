@@ -18,4 +18,9 @@ export const userRoutes = [
     element: <Chats />,
     role: "user",
   },
+  {
+    path: "chats/:id",
+    element: <Chats />,
+    role: "user",
+  },
 ];

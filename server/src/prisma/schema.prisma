@@ -24,17 +24,30 @@ model User {
     about              String?
     created_at         DateTime @default(now())
     updated_at         DateTime @updatedAt
-    friends            Chat[]
+    friends              Chat[] @relation("ChatFriends")
+    chats              Chat[] @relation("ChatSender")
+    messages           Message[]
+
 }
 
 model Chat {
     id                 Int @id @default(autoincrement())
-    friends            User[]
+    friends            User[] @relation("ChatFriends")
     messages           Message[]
+    lastMessage        String
+    senderId           Int
+    sender             User @relation("ChatSender", fields: [senderId], references: [id])
+    created_at         DateTime @default(now())
+    updated_at         DateTime @updatedAt
 }
 
 model Message {
     id                 Int @id @default(autoincrement())
     chat_id            Int
     chat               Chat  @relation(fields: [chat_id],references: [id]) 
+    text               String
+    created_at         DateTime @default(now())
+    updated_at         DateTime @updatedAt
+    senderId           Int
+    sender             User @relation(fields: [senderId], references: [id])
 }

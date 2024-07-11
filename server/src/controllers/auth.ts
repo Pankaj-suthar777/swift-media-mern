@@ -40,6 +40,7 @@ export const user_register: RequestHandler = async (req, res) => {
       message: "User Register Success",
       token,
       userInfo: {
+        name: createUser.name,
         id: createUser.id,
         email: createUser.email,
         role: "user",
@@ -80,6 +81,7 @@ export const user_login: RequestHandler = async (req, res) => {
         message: "User Login Success",
         token,
         userInfo: {
+          name: user.name,
           id: user.id,
           email: user.email,
           role: "user",
@@ -116,6 +118,7 @@ export const get_user: RequestHandler = async (req, res) => {
 
   responseReturn(res, 200, {
     userInfo: {
+      name: user.name,
       id: user.id,
       email: user.email,
       role: "admin",
@@ -154,6 +157,7 @@ export const admin_login: RequestHandler = async (req, res) => {
         message: "User Login Success",
         token,
         userInfo: {
+          name: user.name,
           id: user.id,
           email: user.email,
           role: "admin",

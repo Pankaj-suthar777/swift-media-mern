@@ -3,6 +3,7 @@ import MainContent from "./MainContent";
 import Sidebar, { SidebarItem } from "./Sidebar";
 import { useLocation } from "react-router-dom";
 import { getNav } from "../../navigation";
+
 // import { useAppSelector } from "@/redux/hooks";
 
 const Layout = () => {
@@ -22,10 +23,8 @@ const Layout = () => {
     <div className="flex h-screen w-screen bg-slate-100">
       <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar}>
         {allNav.map((n, i) => {
-          const isActive =
-            pathname === n.path ||
-            pathname === `${n.path}/` ||
-            `${pathname}/` === n.path;
+          const isActive = new RegExp(`^${n.path}(/|$)`).test(pathname);
+
           return (
             <SidebarItem
               key={i}
