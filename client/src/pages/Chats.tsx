@@ -1,6 +1,7 @@
 import ChatUserList from "@/components/chat/ChatUserList";
 import { Button } from "@/components/custom/button";
 import { Input } from "@/components/ui/input";
+import { useSocketContext } from "@/context/SocketContext";
 import {
   useGetChatMessagesQuery,
   useGetMyChatsQuery,
@@ -19,6 +20,13 @@ const Chats = () => {
   const [selectedChat, setSelectedChat] = useState<any>(null);
   const [searchValue, setSearchValue] = useState("");
   const [message, setMessage] = useState("");
+  const [selectedSearchedUser, setSelectedSearchedUser] = useState<any>();
+
+  const [messages, setMessages] = useState<any[]>([]);
+
+  const [onlineUsersId, setOnlineUsersId] = useState<any[]>([]);
+
+  const [currentChatUser, setCurrentChatUserId] = useState("");
 
   const [getSearch, { data: searchUserChat }] =
     useLazyGetSearchChatUsersQuery();
@@ -52,13 +60,17 @@ const Chats = () => {
 
   const sendMessageHandler = async (e: FormEvent) => {
     e.preventDefault();
-    if (!selectedChat || !otherFriend) {
+
+    const receiverId = selectedSearchedUser
+      ? selectedSearchedUser.id
+      : otherFriend.id;
+
+    if (!message) {
       return;
     }
-
-    const receiverId = otherFriend.id;
-
     sendMessage({ message, receiverId }).unwrap();
+
+    setMessages([...messages, { text: message, senderId: userInfo.id }]);
 
     setMessage("");
 
@@ -76,11 +88,46 @@ const Chats = () => {
     }
   }, [id, ChatData, selectedChat]);
 
-  const scrollRef = useRef<any>(null);
+  const lastMessageRef = useRef<any>();
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  }, [messages]);
+
+  useEffect(() => {
+    if (messageData) {
+      setMessages(messageData);
+    }
   }, [messageData]);
+
+  const { socket } = useSocketContext() as any;
+
+  useEffect(() => {
+    socket?.on("newMessage", (newMessage: any) => {
+      setMessages([...messages, newMessage]);
+    });
+
+    return () => socket?.off("newMessage");
+  }, [socket, messages]);
+
+  useEffect(() => {
+    socket?.on("getOnlineUsers", (usersIds: any) => {
+      setOnlineUsersId(usersIds);
+    });
+
+    return () => socket?.off("getOnlineUsers");
+  }, [socket, messages]);
+
+  useEffect(() => {
+    if (selectedChat) {
+      const fri = selectedChat.friends.find(
+        (fri: any) => fri.id !== userInfo.id
+      );
+      setCurrentChatUserId(fri.id);
+    }
+  }, [selectedChat, userInfo.id]);
 
   return (
     <div className="flex w-full gap-4">
@@ -94,7 +141,7 @@ const Chats = () => {
       )}
       <div
         className={`fixed z-[10] bg-white transition-all duration-200 ease-in-out h-viewport-minus-100px ${
-          showSidebar ? "left-0" : "-left-[300px] lg:left-0 lg:relative"
+          showSidebar ? "left-0" : "-left-[350px] lg:left-0 lg:relative"
         }`}
       >
         <div className="p-4 flex gap-2 justify-center items-center">
@@ -105,7 +152,13 @@ const Chats = () => {
             type="text"
             placeholder="Search user to chat with"
           />
-          <span className="cursor-pointer" onClick={() => setSearchValue("")}>
+          <span
+            className="cursor-pointer"
+            onClick={() => {
+              setSearchValue("");
+              setShowSidebar(false);
+            }}
+          >
             <X />
           </span>
         </div>
@@ -116,6 +169,8 @@ const Chats = () => {
           searchedResultUser={searchUserChat}
           selectedChat={selectedChat}
           setSelectedChat={setSelectedChat}
+          setSelectedSearchedUser={setSelectedSearchedUser}
+          onlineUsersId={onlineUsersId}
         />
       </div>
       <div className="w-full">
@@ -123,11 +178,18 @@ const Chats = () => {
           <div className="h-12 bg-white flex justify-between items-center px-4 py-8 border border-[#111111]">
             {selectedChat ? (
               <div className="flex justify-between items-center w-full">
-                <img
-                  className="w-10 h-10 rounded-full object-cover mr-4"
-                  src="https://randomuser.me/api/portraits/women/72.jpg"
-                  alt="User avatar"
-                />
+                <div className="flex gap-4 items-center">
+                  <img
+                    className="w-10 h-10 rounded-full object-cover mr-4"
+                    src="https://randomuser.me/api/portraits/women/72.jpg"
+                    alt="User avatar"
+                  />
+                  {onlineUsersId.includes(String(currentChatUser)) && (
+                    <h3 className="text-sm font-medium text-gray-800 transition-all duration-800 ease-in">
+                      Online
+                    </h3>
+                  )}
+                </div>
                 <h3 className="text-sm font-medium text-gray-800">
                   {otherFriend?.name}
                 </h3>
@@ -142,23 +204,20 @@ const Chats = () => {
               <Menu />
             </div>
           </div>
-          <div className="flex-grow overflow-y-auto mb-20 px-2" ref={scrollRef}>
+          <div className="flex-grow overflow-y-auto mb-20 px-2 mt-3">
             {/* Chat messages */}
             {isMessageLoading ? (
               <div className="flex justify-center items-center h-full">
                 <Loader className="ml-2 h-12 w-12 animate-spin" />
               </div>
-            ) : messageData ? (
-              messageData.map((message: any, i: number) => {
+            ) : messages ? (
+              messages.map((message: any, i: number) => {
                 const senderId = message.senderId;
+
                 const isMyMessage = senderId === myId;
                 return (
-                  <>
-                    <div
-                      className="flex flex-col mb-1 py-1"
-                      key={i}
-                      ref={scrollRef}
-                    >
+                  <div key={i} ref={lastMessageRef}>
+                    <div className="flex flex-col mb-1 py-1">
                       {!isMyMessage && (
                         <div className="flex justify-start">
                           <div className="bg-white rounded-[10px]  px-4 py-2 max-w-[80%]">
@@ -177,7 +236,7 @@ const Chats = () => {
                         </div>
                       )}
                     </div>
-                  </>
+                  </div>
                 );
               })
             ) : (

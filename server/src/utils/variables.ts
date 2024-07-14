@@ -4,4 +4,4 @@ const { env } = process as {
   };
 };
 
-export const { SECRET } = env;
+export const { SECRET, CLIENT_URL } = env;

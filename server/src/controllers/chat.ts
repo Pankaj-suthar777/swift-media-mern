@@ -1,6 +1,7 @@
 import prisma from "#/prisma/prisma";
 import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
+import { getReceiverSocketId, io } from "#/socket/socket";
 
 export const serachUser: RequestHandler = async (req, res) => {
   const myId = req.user.id;
@@ -37,7 +38,7 @@ export const serachUser: RequestHandler = async (req, res) => {
 
 export const sendMessage: RequestHandler = async (req, res) => {
   const myId = req.user.id;
-  const receiverId = req.body.receiverId;
+  const receiverId = req.body?.receiverId;
   const message = req.body.message;
 
   const existingChat = await prisma.chat.findFirst({
@@ -46,20 +47,22 @@ export const sendMessage: RequestHandler = async (req, res) => {
         {
           friends: {
             some: {
-              id: myId,
+              id: parseInt(myId),
             },
           },
         },
         {
           friends: {
             some: {
-              id: receiverId,
+              id: parseInt(receiverId),
             },
           },
         },
       ],
     },
   });
+
+  let newMessage;
 
   if (!existingChat) {
     const newChat = await prisma.chat.create({
@@ -71,7 +74,7 @@ export const sendMessage: RequestHandler = async (req, res) => {
         },
       },
     });
-    await prisma.message.create({
+    newMessage = await prisma.message.create({
       data: {
         text: message,
         chat_id: newChat.id,
@@ -79,7 +82,7 @@ export const sendMessage: RequestHandler = async (req, res) => {
       },
     });
   } else {
-    await prisma.message.create({
+    newMessage = await prisma.message.create({
       data: {
         text: message,
         chat_id: existingChat.id,
@@ -94,6 +97,13 @@ export const sendMessage: RequestHandler = async (req, res) => {
         lastMessage: message,
       },
     });
+  }
+
+  // SOCKET IO FUNCTIONALITY WILL GO HERE
+  const receiverSocketId = getReceiverSocketId(receiverId);
+  if (receiverSocketId) {
+    // io.to(<socket_id>).emit() used to send events to specific client
+    io.to(receiverSocketId).emit("newMessage", newMessage);
   }
 
   responseReturn(res, 201, { message: "Message send successfully" });

@@ -38,13 +38,15 @@ const LandingPage = () => {
               Join the Fun: Play Swift Rivals with Friends!{" "}
             </p>
           </div>
-          <div className="button-borders mt-10 w-[250px] bg-transparent">
-            <button
-              className="primary-button w-[250px] bg-transparent"
-              onClick={redirect}
-            >
-              Let's Play
-            </button>
+          <div className="w-full flex justify-center">
+            <div className="button-borders mt-10 w-[250px] bg-transparent">
+              <button
+                className="primary-button w-[250px] bg-transparent"
+                onClick={redirect}
+              >
+                Let's Play
+              </button>
+            </div>
           </div>
         </div>
       </div>

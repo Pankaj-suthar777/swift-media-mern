@@ -12,6 +12,8 @@ interface Props {
   }[];
   chats: any[];
   isLoading: boolean;
+  setSelectedSearchedUser: React.Dispatch<React.SetStateAction<any>>;
+  onlineUsersId: string[];
 }
 
 const ChatUserList = ({
@@ -21,6 +23,8 @@ const ChatUserList = ({
   searchedResultUser,
   chats,
   isLoading,
+  setSelectedSearchedUser,
+  onlineUsersId,
 }: Props) => {
   const { userInfo } = useAppSelector((state) => state.auth);
 
@@ -43,6 +47,9 @@ const ChatUserList = ({
                 searchedResultUser.map((user, i) => {
                   return (
                     <Link
+                      onClick={() => {
+                        setSelectedSearchedUser(user);
+                      }}
                       key={i}
                       to={`/user/chats/${user.id}`}
                       className={`flex items-center py-4 px-6 ${
@@ -51,11 +58,13 @@ const ChatUserList = ({
                           : ""
                       }`}
                     >
-                      <img
-                        className="w-10 h-10 rounded-full object-cover mr-4"
-                        src="https://randomuser.me/api/portraits/women/72.jpg"
-                        alt="User avatar"
-                      />
+                      <div className="">
+                        <img
+                          className="w-10 h-10 rounded-full object-cover mr-4"
+                          src="https://randomuser.me/api/portraits/women/72.jpg"
+                          alt="User avatar"
+                        />
+                      </div>
                       <div className="flex-1">
                         <h3 className="text-sm font-medium text-gray-800">
                           {user.name}
@@ -79,7 +88,7 @@ const ChatUserList = ({
             chats &&
             chats.map((chat: any, i: number) => {
               const otherFriend = chat.friends.find(
-                (fri: number) => fri !== myId
+                (fri: any) => fri.id !== myId
               );
 
               return (
@@ -93,11 +102,16 @@ const ChatUserList = ({
                   }`}
                   onClick={() => setSelectedChat(chat)}
                 >
-                  <img
-                    className="w-10 h-10 rounded-full object-cover mr-4"
-                    src="https://randomuser.me/api/portraits/women/72.jpg"
-                    alt="User avatar"
-                  />
+                  <div className="relative">
+                    <img
+                      className="w-10 h-10 rounded-full object-cover mr-4"
+                      src="https://randomuser.me/api/portraits/women/72.jpg"
+                      alt="User avatar"
+                    />
+                    {onlineUsersId.includes(String(otherFriend.id)) && (
+                      <div className="bg-green-500 w-2 h-2 absolute rounded-full right-4 bottom-1"></div>
+                    )}
+                  </div>
                   <div className="flex-1">
                     <h3 className="text-sm font-medium text-gray-800">
                       {otherFriend.name}

@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { store } from "@/store/store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import { SocketContextProvider } from "@/context/SocketContext";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -10,7 +11,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
       <BrowserRouter>
         <Provider store={store}>
           <Toaster />
-          {children}
+          <SocketContextProvider>{children}</SocketContextProvider>
         </Provider>
       </BrowserRouter>
     </>
