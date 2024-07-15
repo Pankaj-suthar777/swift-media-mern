@@ -125,6 +125,7 @@ export const getUserChats: RequestHandler = async (req, res) => {
         select: {
           name: true,
           id: true,
+          avatar: true,
         },
       },
       lastMessage: true,

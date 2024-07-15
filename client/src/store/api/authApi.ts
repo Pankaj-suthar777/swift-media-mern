@@ -81,6 +81,15 @@ export const authApi = createApi({
         };
       },
     }),
+    updateUserProfile: builder.mutation({
+      query(body) {
+        return {
+          url: `/auth/update-user-info`,
+          method: "PUT",
+          body,
+        };
+      },
+    }),
   }),
 });
 
@@ -93,4 +102,5 @@ export const {
   useLogoutMutation,
   useAdminLoginMutation,
   useAdminGetUserInfoQuery,
+  useUpdateUserProfileMutation,
 } = authApi;

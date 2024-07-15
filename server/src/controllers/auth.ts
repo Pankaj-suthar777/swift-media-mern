@@ -125,6 +125,7 @@ export const get_user: RequestHandler = async (req, res) => {
       followers: user.followers,
       followings: user.followings,
       about: user.about,
+      avatar: user.avatar,
     },
   });
 };
@@ -171,5 +172,36 @@ export const admin_login: RequestHandler = async (req, res) => {
     }
   } else {
     responseReturn(res, 404, { error: "Email Not Found" });
+  }
+};
+
+export const update_user: RequestHandler = async (req, res) => {
+  const { about, name, avatar } = req.body;
+  const id = req.user.id;
+
+  try {
+    const user = await prisma.user.update({
+      data: {
+        about: about,
+        name: name,
+        avatar: avatar,
+      },
+      where: {
+        id: id,
+      },
+    });
+
+    if (!user) {
+      return responseReturn(res, 404, {
+        error: "User not found",
+      });
+    }
+
+    return responseReturn(res, 200, {
+      message: "User info updated",
+      user,
+    });
+  } catch (error: any) {
+    responseReturn(res, 404, { error: error.message });
   }
 };

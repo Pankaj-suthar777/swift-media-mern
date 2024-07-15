@@ -1,4 +1,4 @@
-import { Home, User, UsersRound } from "lucide-react";
+import { Cross, Home, User, UsersRound } from "lucide-react";
 
 export const allNav = [
   {
@@ -21,5 +21,12 @@ export const allNav = [
     icon: <UsersRound size={20} />,
     role: "user",
     path: "/user/chats",
+  },
+  {
+    id: 3,
+    title: "Posts",
+    icon: <Cross size={20} />,
+    role: "user",
+    path: "/user/posts",
   },
 ];

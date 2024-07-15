@@ -6,6 +6,7 @@ interface Props {
   setSelectedChat: React.Dispatch<React.SetStateAction<any>>;
   searchValue: string;
   searchedResultUser: {
+    avatar: string;
     email: string;
     id: number;
     name: string;
@@ -61,7 +62,11 @@ const ChatUserList = ({
                       <div className="">
                         <img
                           className="w-10 h-10 rounded-full object-cover mr-4"
-                          src="https://randomuser.me/api/portraits/women/72.jpg"
+                          src={
+                            user?.avatar
+                              ? user?.avatar
+                              : "https://randomuser.me/api/portraits/women/72.jpg"
+                          }
                           alt="User avatar"
                         />
                       </div>
@@ -105,7 +110,11 @@ const ChatUserList = ({
                   <div className="relative">
                     <img
                       className="w-10 h-10 rounded-full object-cover mr-4"
-                      src="https://randomuser.me/api/portraits/women/72.jpg"
+                      src={
+                        otherFriend?.avatar
+                          ? otherFriend?.avatar
+                          : "https://randomuser.me/api/portraits/women/72.jpg"
+                      }
                       alt="User avatar"
                     />
                     {onlineUsersId.includes(String(otherFriend.id)) && (

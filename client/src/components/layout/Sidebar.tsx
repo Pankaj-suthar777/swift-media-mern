@@ -37,7 +37,10 @@ export default function Sidebar({
         }`}
       >
         <nav className="h-full flex flex-col bg-white  ">
-          <Link to="#" className="mr-6 flex justify-center items-center py-6">
+          <Link
+            to="/"
+            className="no-underline text-black mr-6 flex justify-center items-center py-6"
+          >
             <MountainIcon className="h-8 w-8" />
             <span className="sr-only">Acme Inc</span>
             <span className="ml-4 text-black font-medium text-lg">
@@ -55,7 +58,7 @@ export function SidebarItem({ icon, text, active, to }: ItemProps) {
   return (
     <Link
       to={to}
-      className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
+      className={`relative no-underline flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
         active
           ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
           : "hover:bg-indigo-50 text-gray-600"

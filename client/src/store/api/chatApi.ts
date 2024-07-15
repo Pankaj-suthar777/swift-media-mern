@@ -13,6 +13,7 @@ export const chatApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Chat", "Message"],
   endpoints: (builder) => ({
     getSearchChatUsers: builder.query({
       query({ searchValue }) {
@@ -30,6 +31,7 @@ export const chatApi = createApi({
           body,
         };
       },
+      invalidatesTags: ["Message", "Chat"],
     }),
     getMyChats: builder.query({
       query() {
@@ -37,6 +39,8 @@ export const chatApi = createApi({
           url: `/chat/get-my-chats`,
         };
       },
+      providesTags: ["Chat"],
+      keepUnusedDataFor: 5,
     }),
 
     getChatMessages: builder.query({
@@ -45,6 +49,8 @@ export const chatApi = createApi({
           url: `/chat/get-chat-messages/${chatId}`,
         };
       },
+      providesTags: ["Message"],
+      keepUnusedDataFor: 5,
     }),
   }),
 });

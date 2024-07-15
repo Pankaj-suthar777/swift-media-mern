@@ -38,7 +38,11 @@ const Layout = () => {
       </Sidebar>
 
       <div
-        className={`ml-0 lg:ml-[260px] transition-all w-full max-h-[100vh] overflow-y-auto`}
+        className={`ml-0 lg:ml-[260px] transition-all w-full max-h-[100vh] ${
+          pathname === "/user/posts" ? "overflow-y-auto" : "global-unscroll"
+        }
+          ${pathname === "/user/posts/" ? "overflow-y-auto" : "global-unscroll"}
+         global-unscroll`}
       >
         <MainContent
           showSidebar={showSidebar}

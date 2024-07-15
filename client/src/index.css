@@ -71,17 +71,8 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
-::-webkit-scrollbar {
-  width: 5px; /* Width of the scrollbar */
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Track color */
-}
-
-::-webkit-scrollbar-thumb {
-  background: #171515; /* Thumb color */
-  border-radius: 0px; /* Rounded corners */
+.global-unscroll {
+  overflow-y: hidden;
 }
 
 .header-btn::before {
@@ -197,4 +188,21 @@ body {
 
 .h-viewport-minus-100px {
   height: calc(100vh - 120px);
+}
+
+.h-viewport-minus-80px {
+  height: calc(100vh - 100px);
+}
+
+.h-viewport-minus-300px {
+  height: calc(100vh - 300px);
+}
+
+.h-viewport-minus-400px {
+  height: calc(100vh - 260px);
+}
+
+.about a {
+  color: rgb(80, 80, 255);
+  text-decoration: underline;
 }

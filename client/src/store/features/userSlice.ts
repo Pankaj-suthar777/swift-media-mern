@@ -8,7 +8,8 @@ interface UserInfo {
   id: number;
   followings: number;
   followers: number;
-  about: string;
+  about?: string;
+  avatar?: string;
 }
 
 interface IUserState {

@@ -10,7 +10,10 @@ export default function Header() {
     <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6 z-50">
       <Sheet>
         <div className="w-full flex justify-between">
-          <Link to="#" className="mr-6 flex justify-center items-center">
+          <Link
+            to="/"
+            className="no-underline text-black mr-6 flex justify-center items-center"
+          >
             <MountainIcon className="h-6 w-6" />
             <span className="ml-4 text-white font-light">Swift Rivals</span>
           </Link>

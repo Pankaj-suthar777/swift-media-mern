@@ -1,4 +1,5 @@
 import ChatUserList from "@/components/chat/ChatUserList";
+import MessageContainer from "@/components/chat/MessageContainer";
 import { Button } from "@/components/custom/button";
 import { Input } from "@/components/ui/input";
 import { useSocketContext } from "@/context/SocketContext";
@@ -9,8 +10,8 @@ import {
   useSendMessageMutation,
 } from "@/store/api/chatApi";
 import { useAppSelector } from "@/store/hooks";
-import { Loader, Menu, UsersRound, X } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { FormEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const Chats = () => {
@@ -21,13 +22,9 @@ const Chats = () => {
   const [searchValue, setSearchValue] = useState("");
   const [message, setMessage] = useState("");
   const [selectedSearchedUser, setSelectedSearchedUser] = useState<any>();
-
   const [messages, setMessages] = useState<any[]>([]);
-
   const [onlineUsersId, setOnlineUsersId] = useState<any[]>([]);
-
   const [currentChatUser, setCurrentChatUserId] = useState("");
-
   const [getSearch, { data: searchUserChat }] =
     useLazyGetSearchChatUsersQuery();
 
@@ -53,10 +50,19 @@ const Chats = () => {
     (fri: any) => fri.id !== myId
   );
 
-  const { data: messageData, isLoading: isMessageLoading } =
-    useGetChatMessagesQuery({
-      chatId: id,
-    });
+  const {
+    data: messageData,
+    isLoading: isMessageLoading,
+    refetch: refetchMessages,
+  } = useGetChatMessagesQuery({
+    chatId: id,
+  });
+
+  useEffect(() => {
+    if (id) {
+      refetchMessages();
+    }
+  }, [id, refetchMessages]);
 
   const sendMessageHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -72,11 +78,11 @@ const Chats = () => {
 
     setMessages([...messages, { text: message, senderId: userInfo.id }]);
 
-    setMessage("");
-
     if (searchValue) {
       refetchChat();
     }
+
+    setMessage("");
   };
 
   useEffect(() => {
@@ -87,14 +93,6 @@ const Chats = () => {
       setSelectedChat(currentChat);
     }
   }, [id, ChatData, selectedChat]);
-
-  const lastMessageRef = useRef<any>();
-
-  useEffect(() => {
-    setTimeout(() => {
-      lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-  }, [messages]);
 
   useEffect(() => {
     if (messageData) {
@@ -140,7 +138,7 @@ const Chats = () => {
         ></div>
       )}
       <div
-        className={`fixed z-[10] bg-white transition-all duration-200 ease-in-out h-viewport-minus-100px ${
+        className={`fixed  z-[10] bg-white transition-all duration-200 ease-in-out h-viewport-minus-100px ${
           showSidebar ? "left-0" : "-left-[350px] lg:left-0 lg:relative"
         }`}
       >
@@ -173,15 +171,19 @@ const Chats = () => {
           onlineUsersId={onlineUsersId}
         />
       </div>
-      <div className="w-full">
-        <div className="flex flex-col h-viewport-minus-100px relative w-full">
+      <div className="w-full relative">
+        <div className="flex flex-col h-viewport-minus-100px w-full overflow-y-hidden">
           <div className="h-12 bg-white flex justify-between items-center px-4 py-8 border border-[#111111]">
             {selectedChat ? (
               <div className="flex justify-between items-center w-full">
                 <div className="flex gap-4 items-center">
                   <img
                     className="w-10 h-10 rounded-full object-cover mr-4"
-                    src="https://randomuser.me/api/portraits/women/72.jpg"
+                    src={
+                      otherFriend?.avatar
+                        ? otherFriend?.avatar
+                        : "https://randomuser.me/api/portraits/women/72.jpg"
+                    }
                     alt="User avatar"
                   />
                   {onlineUsersId.includes(String(currentChatUser)) && (
@@ -204,50 +206,10 @@ const Chats = () => {
               <Menu />
             </div>
           </div>
-          <div className="flex-grow overflow-y-auto mb-20 px-2 mt-3">
-            {/* Chat messages */}
-            {isMessageLoading ? (
-              <div className="flex justify-center items-center h-full">
-                <Loader className="ml-2 h-12 w-12 animate-spin" />
-              </div>
-            ) : messages ? (
-              messages.map((message: any, i: number) => {
-                const senderId = message.senderId;
-
-                const isMyMessage = senderId === myId;
-                return (
-                  <div key={i} ref={lastMessageRef}>
-                    <div className="flex flex-col mb-1 py-1">
-                      {!isMyMessage && (
-                        <div className="flex justify-start">
-                          <div className="bg-white rounded-[10px]  px-4 py-2 max-w-[80%]">
-                            <p className="text-gray-900 text-sm">
-                              {message.text}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-
-                      {isMyMessage && (
-                        <div className="flex justify-end">
-                          <div className="bg-blue-500 rounded-[10px] px-4 py-2 max-w-[80%]">
-                            <p className="text-white text-sm">{message.text}</p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="flex justify-center h-full items-center flex-col gap-4">
-                <span>
-                  <UsersRound size={35} />
-                </span>
-                <span>Select a user</span>
-              </div>
-            )}
-          </div>
+          <MessageContainer
+            isMessageLoading={isMessageLoading}
+            messages={messages}
+          />
 
           {id ? (
             <form
