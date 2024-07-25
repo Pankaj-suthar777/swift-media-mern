@@ -2,6 +2,7 @@ import { useAppSelector } from "@/store/hooks";
 import { Loader, UsersRound } from "lucide-react";
 import { useEffect, useRef } from "react";
 import moment from "moment";
+import { useParams } from "react-router-dom";
 
 interface Props {
   isMessageLoading: boolean;
@@ -20,6 +21,20 @@ const MessageContainer = ({ isMessageLoading, messages }: Props) => {
   const { userInfo } = useAppSelector((state) => state.auth);
 
   const myId = userInfo.id;
+
+  const { id } = useParams();
+
+  if (!id) {
+    return (
+      <div className="flex justify-center h-full items-center flex-col gap-4">
+        <span>
+          <UsersRound size={35} />
+        </span>
+        <span>Select a user</span>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen overflow-hidden">
       <div className="flex flex-col h-full">
@@ -39,7 +54,7 @@ const MessageContainer = ({ isMessageLoading, messages }: Props) => {
                   <div className="flex flex-col mb-1 py-1">
                     {!isMyMessage && (
                       <div className="flex flex-col gap-1 items-start">
-                        <div className="bg-white rounded-[10px]  px-8 py-2 max-w-[80%] relative">
+                        <div className="bg-white rounded-[10px] px-8 py-2 max-w-[80%] relative">
                           <p className="text-gray-900 text-sm">
                             {message.text}
                           </p>

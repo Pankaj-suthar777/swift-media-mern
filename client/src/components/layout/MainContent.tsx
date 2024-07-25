@@ -1,15 +1,5 @@
-import { userLogout } from "@/store/features/userSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "@/store/hooks";
+import { Outlet } from "react-router-dom";
 
 interface Props {
   showSidebar: boolean;
@@ -17,13 +7,13 @@ interface Props {
 }
 
 const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const logoutUser = async () => {
-    localStorage.removeItem("accessToken");
-    dispatch(userLogout());
-    navigate("/login");
-  };
+  // const dispatch = useAppDispatch();
+  // const navigate = useNavigate();
+  // const logoutUser = async () => {
+  //   localStorage.removeItem("accessToken");
+  //   dispatch(userLogout());
+  //   navigate("/login");
+  // };
 
   return (
     <div className="w-full h-full">
@@ -56,23 +46,13 @@ const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
             )} */}
           </div>
           <div className="flex items-center pr-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="outline-0">
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="mr-8">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem onClick={logoutUser}>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
           </div>
         </div>
-        <div className="p-4">
+        <div className="pt-4">
           <div className="max-w-full">
             <Outlet />
           </div>

@@ -15,7 +15,7 @@ export default function Header() {
             className="no-underline text-black mr-6 flex justify-center items-center"
           >
             <MountainIcon className="h-6 w-6" />
-            <span className="ml-4 text-white font-light">Swift Rivals</span>
+            <span className="ml-4 text-white font-light">Swift Chat Pro</span>
           </Link>
           <SheetTrigger asChild>
             <span className="lg:hidden">
@@ -54,7 +54,7 @@ export default function Header() {
                 to="/user/dashboard"
                 className="flex w-full items-center py-2 text-lg font-semibold"
               >
-                Go to console
+                Dashboard
               </Link>
             ) : (
               <Link
@@ -93,7 +93,7 @@ export default function Header() {
             className="header-btn relative inline-flex px-4 py-2 text-sm h-9 w-max items-center justify-center font-medium text-white border-3 border-pink-500 cursor-pointer bg-transparent overflow-hidden z-10"
             to="/user/dashboard"
           >
-            Go to console
+            Dashboard
           </Link>
         ) : (
           <Link

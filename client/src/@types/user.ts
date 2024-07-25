@@ -7,6 +7,7 @@ export interface User {
   password: string;
   followings: number;
   followers: number;
+  avatar?: string;
   about?: string;
   createdAt: Date;
   updatedAt: Date;

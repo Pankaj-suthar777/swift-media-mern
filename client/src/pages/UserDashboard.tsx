@@ -2,7 +2,7 @@ import { GamesPlayedChart } from "@/components/user-dashboard/GamesPlayedChart";
 
 const UserDashboard = () => {
   return (
-    <div>
+    <div className="pl-4 pr-4">
       <div className="flex lg:flex-row flex-col gap-4">
         <div className="lg:w-[40%] w-full">
           <GamesPlayedChart />

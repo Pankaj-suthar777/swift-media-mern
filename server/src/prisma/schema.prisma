@@ -20,8 +20,6 @@ model User {
     email              String @unique
     password           String
     avatar             String?
-    followings         Int @default(0)
-    followers          Int @default(0)
     about              String?
     created_at         DateTime @default(now())
     updated_at         DateTime @updatedAt

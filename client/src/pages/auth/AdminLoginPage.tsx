@@ -27,7 +27,7 @@ const AdminLoginPage = () => {
             <div className="z-[555] h-full flex justify-center w-full items-center">
               <MountainIcon className="h-40 w-40" />
               <span className="ml-4 text-white font-light text-3xl">
-                Swift Rivals
+                Swift Chat Pro
               </span>
             </div>
 

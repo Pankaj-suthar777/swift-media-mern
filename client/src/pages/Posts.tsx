@@ -1,7 +1,6 @@
 import { Button } from "@/components/custom/button";
 import Post from "@/components/post/Post";
 import WhoToFollow from "@/components/post/WhoToFollow";
-import { Textarea } from "@/components/ui/textarea";
 
 {
   /* <div className="flex gap-1">
@@ -11,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 const Posts = () => {
   return (
-    <div className="h-viewport-minus-80px w-full flex flex-col items-center">
+    <div className="h-viewport-minus-80px w-full flex flex-col items-center pl-4 pr-4">
       <div className="mt-2 flex gap-4 w-full h-full">
         <div className="sm:w-[60%] w-full flex flex-col gap-4 justify-center items-center border pt-4 pb-1 overflow-y-auto h-full">
           <h1>Your Feed</h1>

@@ -4,7 +4,7 @@ import { ArrowDown, ArrowUp, Pin, Share2 } from "lucide-react";
 
 const Post = () => {
   return (
-    <div>
+    <div className="overflow-auto h-viewport-minus-80px pl-4 pr-4">
       <div className="card rounded-xl flex gap-8">
         <div className="flex items-center">
           <div className="flex gap-4 flex-col">
@@ -18,10 +18,10 @@ const Post = () => {
         </div>
         <div className="h-auto max-w-md w-full border border-blue-200 bg-blue-100 hover:bg-blue-200 transition ease-in-out cursor-pointer  rounded-xl">
           <div className="body">
-            {/* <img
-        className="w-full object-cover rounded-xl"
-        src="https://deep-image.ai/_next/static/media/app-info-generator.bf08e63e.webp"
-      /> */}
+            <img
+              className="w-full object-cover rounded-xl"
+              src="https://deep-image.ai/_next/static/media/app-info-generator.bf08e63e.webp"
+            />
 
             <div className="px-3 py-3">
               <p className="text-xs">Posted by : Pankj</p>
@@ -47,7 +47,7 @@ const Post = () => {
       </div>
 
       {/*Comments*/}
-      <div className=" mt-10 border border-slate-500 h-viewport-minus-400px p-4 overflow-y-auto">
+      <div className=" mt-10 border border-slate-500 p-4">
         <h1 className="mb-2">Disscussion</h1>
         <Textarea
           className="md:w-[50%] mb-4 focus-visible:ring-0 focus-visible:ring-offset-0"

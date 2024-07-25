@@ -83,7 +83,7 @@ body {
   width: 100%;
   height: 100%;
   background-color: rgb(252, 70, 100);
-  transform: translateX(-100%);
+  transform: translateX(-110%);
   transition: all 0.3s;
   z-index: -1;
 }
@@ -191,7 +191,7 @@ body {
 }
 
 .h-viewport-minus-80px {
-  height: calc(100vh - 100px);
+  height: calc(100vh - 90px);
 }
 
 .h-viewport-minus-300px {

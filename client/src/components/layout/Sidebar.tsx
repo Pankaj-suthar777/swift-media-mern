@@ -44,7 +44,7 @@ export default function Sidebar({
             <MountainIcon className="h-8 w-8" />
             <span className="sr-only">Acme Inc</span>
             <span className="ml-4 text-black font-medium text-lg">
-              Swift Rivals
+              Swift Chat Pro
             </span>
           </Link>
           <ul className="flex-1 px-3">{children}</ul>

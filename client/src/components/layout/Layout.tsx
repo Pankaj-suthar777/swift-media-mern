@@ -3,6 +3,7 @@ import MainContent from "./MainContent";
 import Sidebar, { SidebarItem } from "./Sidebar";
 import { useLocation } from "react-router-dom";
 import { getNav } from "../../navigation";
+import Logout from "./Logout";
 
 // import { useAppSelector } from "@/redux/hooks";
 
@@ -35,6 +36,8 @@ const Layout = () => {
             />
           );
         })}
+
+        <Logout />
       </Sidebar>
 
       <div

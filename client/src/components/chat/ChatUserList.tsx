@@ -1,3 +1,4 @@
+import { User } from "@/@types/user";
 import { useAppSelector } from "@/store/hooks";
 import { Loader } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
@@ -5,12 +6,7 @@ interface Props {
   selectedChat: any;
   setSelectedChat: React.Dispatch<React.SetStateAction<any>>;
   searchValue: string;
-  searchedResultUser: {
-    avatar: string;
-    email: string;
-    id: number;
-    name: string;
-  }[];
+  searchedResultUser: User[];
   chats: any[];
   isLoading: boolean;
   setSelectedSearchedUser: React.Dispatch<React.SetStateAction<any>>;
@@ -63,9 +59,7 @@ const ChatUserList = ({
                         <img
                           className="w-10 h-10 rounded-full object-cover mr-4"
                           src={
-                            user?.avatar
-                              ? user?.avatar
-                              : "https://randomuser.me/api/portraits/women/72.jpg"
+                            user?.avatar ? user?.avatar : "/user-profile2.jpg"
                           }
                           alt="User avatar"
                         />
@@ -74,7 +68,7 @@ const ChatUserList = ({
                         <h3 className="text-sm font-medium text-gray-800">
                           {user.name}
                         </h3>
-                        <p className="text-gray-600 text-xs">1034 points</p>
+                        <p className="text-gray-600 text-xs">{user?.email}</p>
                       </div>
                     </Link>
                   );
@@ -113,7 +107,7 @@ const ChatUserList = ({
                       src={
                         otherFriend?.avatar
                           ? otherFriend?.avatar
-                          : "https://randomuser.me/api/portraits/women/72.jpg"
+                          : "/user-profile2.jpg"
                       }
                       alt="User avatar"
                     />

@@ -51,7 +51,7 @@ const Profile = () => {
 
   const { userInfo } = useAppSelector((state) => state.auth);
   return (
-    <div>
+    <div className="pl-4 pr-4">
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark relative">
         <Dialog>
           <DialogTrigger>

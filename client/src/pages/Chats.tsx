@@ -128,7 +128,7 @@ const Chats = () => {
   }, [selectedChat, userInfo.id]);
 
   return (
-    <div className="flex w-full gap-4">
+    <div className="flex w-full gap-4 pl-4 pr-4">
       {showSidebar && (
         <div
           onClick={() => setShowSidebar(false)}
@@ -182,7 +182,7 @@ const Chats = () => {
                     src={
                       otherFriend?.avatar
                         ? otherFriend?.avatar
-                        : "https://randomuser.me/api/portraits/women/72.jpg"
+                        : "/user-profile2.jpg"
                     }
                     alt="User avatar"
                   />
