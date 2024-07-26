@@ -16,7 +16,7 @@ const Post = () => {
             </div>
           </div>
         </div>
-        <div className="h-auto max-w-md w-full border border-blue-200 bg-blue-100 hover:bg-blue-200 transition ease-in-out cursor-pointer  rounded-xl">
+        <div className="h-auto max-w-md w-full border border-blue-200 bg-slate-100 transition ease-in-out cursor-pointer  rounded-xl">
           <div className="body">
             <img
               className="w-full object-cover rounded-xl"

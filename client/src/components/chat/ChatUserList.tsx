@@ -1,5 +1,6 @@
 import { User } from "@/@types/user";
 import { useAppSelector } from "@/store/hooks";
+import { truncateText } from "@/utils/helper";
 import { Loader } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 interface Props {
@@ -119,7 +120,9 @@ const ChatUserList = ({
                     <h3 className="text-sm font-medium text-gray-800">
                       {otherFriend.name}
                     </h3>
-                    <p className="text-gray-600 text-xs">{chat.lastMessage}</p>
+                    <p className="text-gray-600 text-xs">
+                      {truncateText(chat.lastMessage, 16)}
+                    </p>
                   </div>
                 </Link>
               );

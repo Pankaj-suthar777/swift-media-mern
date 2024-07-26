@@ -21,6 +21,8 @@ model User {
     password           String
     avatar             String?
     about              String?
+    // following          User[]?
+    // followers          User[]?
     created_at         DateTime @default(now())
     updated_at         DateTime @updatedAt
     friends            Chat[] @relation("ChatFriends")

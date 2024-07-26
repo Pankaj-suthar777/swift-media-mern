@@ -3,64 +3,6 @@ import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
 import { getReceiverSocketId, io } from "#/socket/socket";
 
-// export const searchUser: RequestHandler = async (req, res) => {
-//   const myId = req.user.id;
-//   const searchValue = req.query.search;
-
-//   if (
-//     !searchValue ||
-//     Array.isArray(searchValue) ||
-//     typeof searchValue !== "string"
-//   ) {
-//     return res.status(400).json({ error: "A valid search query is required" });
-//   }
-
-//   // Get the list of user IDs that are already in the user's chats
-//   const myChats = await prisma.chat.findMany({
-//     where: {
-//       OR: [{ friends: { some: { id: myId } } }, { senderId: myId }],
-//     },
-//     select: {
-//       friends: {
-//         select: {
-//           id: true,
-//         },
-//       },
-//       senderId: true,
-//     },
-//   });
-
-//   const excludedUserIds = new Set<number>();
-//   myChats.forEach((chat) => {
-//     chat.friends.forEach((friend) => {
-//       excludedUserIds.add(friend.id);
-//     });
-//     excludedUserIds.add(chat.senderId);
-//   });
-
-//   // Find users excluding those already in chats
-//   const users = await prisma.user.findMany({
-//     where: {
-//       id: {
-//         notIn: Array.from(excludedUserIds),
-//         not: myId,
-//       },
-//       name: {
-//         contains: searchValue,
-//         mode: "insensitive",
-//       },
-//     },
-//     take: 10,
-//     select: {
-//       id: true,
-//       name: true,
-//       email: true,
-//     },
-//   });
-
-//   res.status(200).json(users);
-// };
-
 export const serachUser: RequestHandler = async (req, res) => {
   const myId = req.user.id;
   const searchValue = req.query.search;

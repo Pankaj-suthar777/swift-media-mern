@@ -12,7 +12,7 @@ import {
 import { useAppSelector } from "@/store/hooks";
 import { Menu, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Chats = () => {
   const { id } = useParams();
@@ -27,6 +27,8 @@ const Chats = () => {
   const [currentChatUser, setCurrentChatUserId] = useState("");
   const [getSearch, { data: searchUserChat }] =
     useLazyGetSearchChatUsersQuery();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (searchValue) {
@@ -175,7 +177,10 @@ const Chats = () => {
         <div className="flex flex-col h-viewport-minus-100px w-full overflow-y-hidden">
           <div className="h-12 bg-white flex justify-between items-center px-4 py-8 border border-[#111111]">
             {selectedChat ? (
-              <div className="flex justify-between items-center w-full">
+              <div
+                className="flex justify-between items-center w-full cursor-pointer"
+                onClick={() => navigate(`/user/profile/${otherFriend.id}`)}
+              >
                 <div className="flex gap-4 items-center">
                   <img
                     className="w-10 h-10 rounded-full object-cover mr-4"

@@ -54,8 +54,8 @@ const MessageContainer = ({ isMessageLoading, messages }: Props) => {
                   <div className="flex flex-col mb-1 py-1">
                     {!isMyMessage && (
                       <div className="flex flex-col gap-1 items-start">
-                        <div className="bg-white rounded-[10px] px-8 py-2 max-w-[80%] relative">
-                          <p className="text-gray-900 text-sm">
+                        <div className="bg-white rounded-[10px] px-8 py-2 max-w-[80%] relative word-wrap">
+                          <p className="text-gray-900 text-sm break-words">
                             {message.text}
                           </p>
                         </div>
@@ -67,8 +67,10 @@ const MessageContainer = ({ isMessageLoading, messages }: Props) => {
 
                     {isMyMessage && (
                       <div className="flex items-end flex-col gap-1">
-                        <div className="bg-blue-500 rounded-[10px] px-4 py-2 max-w-[80%] ">
-                          <p className="text-white text-sm">{message.text}</p>
+                        <div className="bg-blue-500 rounded-[10px] px-4 py-2 max-w-[80vw] sm:max-w-[50vw] word-wrap">
+                          <p className="text-white text-sm break-words">
+                            {message.text}
+                          </p>
                         </div>
                         <span className="text-xs">
                           {moment(message?.created_at).format("LT")}
