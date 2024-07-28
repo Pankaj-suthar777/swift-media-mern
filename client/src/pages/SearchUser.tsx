@@ -1,14 +1,13 @@
 import { User } from "@/@types/user";
-import { Button } from "@/components/custom/button";
+import BackButton from "@/components/ui/back-button";
 import { useLazySearchUserQuery } from "@/store/api/userApi";
 import { useAppSelector } from "@/store/hooks";
-import { ChevronLeft, Loader, Users } from "lucide-react";
+import { Loader, Users } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SearchUser = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchUser, { data, isLoading }] = useLazySearchUserQuery();
 
@@ -46,13 +45,7 @@ const SearchUser = () => {
 
   return (
     <div className="pl-4 pr-4">
-      <Button
-        variant="outline"
-        className="flex gap-2 mb-2 text-md bg-slate-100"
-        onClick={() => navigate(-1)}
-      >
-        <ChevronLeft color="black" /> Back
-      </Button>
+      <BackButton />
       <div className="overflow-hidden rounded-sm border border-stroke  shadow-default dark:border-strokedark dark:bg-boxdark relative">
         {data?.map((user: User, i: number) => (
           <Link

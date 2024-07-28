@@ -1,10 +1,12 @@
 import CommentDiscussion from "@/components/post/CommentDiscussion";
+import BackButton from "@/components/ui/back-button";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowDown, ArrowUp, Pin, Share2 } from "lucide-react";
 
 const Post = () => {
   return (
     <div className="overflow-auto h-viewport-minus-80px pl-4 pr-4">
+      <BackButton />
       <div className="card rounded-xl flex gap-8">
         <div className="flex items-center">
           <div className="flex gap-4 flex-col">

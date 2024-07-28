@@ -5,6 +5,7 @@ import "express-async-errors";
 import authRouter from "./routes/auth.route";
 import chatRouter from "./routes/chat.route";
 import userRouter from "./routes/user.route";
+import postRouter from "./routes/post.route";
 
 import { errorHandler } from "./middleware/error";
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/user", userRouter);
+app.use("/api/post", postRouter);
 
 app.use(errorHandler);
 

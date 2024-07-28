@@ -30,3 +30,12 @@ export const UpdateUserSchema = yup.object().shape({
   about: yup.string().trim().min(3, "About is too short!").optional(),
   avatar: yup.string().optional(),
 });
+
+export const CreatePostSchema = yup.object().shape({
+  title: yup
+    .string()
+    .trim()
+    .min(3, "title is too short!")
+    .max(70, "title is to long!"),
+  image: yup.string().trim().optional(),
+});

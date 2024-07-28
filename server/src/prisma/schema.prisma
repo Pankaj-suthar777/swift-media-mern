@@ -60,9 +60,9 @@ model Post {
     updated_at         DateTime @updatedAt
     image              String?
     author             User @relation(fields: [authorId], references: [id])
-    authorId           Int 
-    upvote             Int
-    disvote            Int
+    authorId           Int
+    upvote             Int @default(0)
+    disvote            Int @default(0)
 }
 
 
