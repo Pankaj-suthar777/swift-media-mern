@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import SearchBox from "../SearchBox";
 
 interface Props {
   showSidebar: boolean;
@@ -7,14 +8,7 @@ interface Props {
 }
 
 const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
-  // const dispatch = useAppDispatch();
-  // const navigate = useNavigate();
-  // const logoutUser = async () => {
-  //   localStorage.removeItem("accessToken");
-  //   dispatch(userLogout());
-  //   navigate("/login");
-  // };
-
+  const { pathname } = useLocation();
   return (
     <div className="w-full h-full">
       <div className="flex flex-col flex-1 overflow-y-auto w-full">
@@ -39,11 +33,11 @@ const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
                 />
               </svg>
             </button>
-            {/* {userInfo?.companyName && (
-              <span className="mx-4 w-full border rounded-md px-4 py-2">
-                {userInfo.companyName}
-              </span>
-            )} */}
+          </div>
+          <div>
+            {pathname === "/user/posts" || pathname === "/user/search" ? (
+              <SearchBox />
+            ) : null}
           </div>
           <div className="flex items-center pr-4">
             <Avatar>

@@ -44,6 +44,13 @@ export const userApi = createApi({
         };
       },
     }),
+    searchUser: builder.query({
+      query(searchValue) {
+        return {
+          url: `/user/search-user?search=${searchValue}`,
+        };
+      },
+    }),
   }),
 });
 
@@ -52,4 +59,5 @@ export const {
   useGetRecommendedUserQuery,
   useFollowUserMutation,
   useIsFollowQuery,
+  useLazySearchUserQuery,
 } = userApi;

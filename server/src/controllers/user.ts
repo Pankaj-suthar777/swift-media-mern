@@ -129,3 +129,32 @@ export const isFollow: RequestHandler = async (req, res) => {
 
   responseReturn(res, 201, follow ? true : false);
 };
+
+export const serachUser: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  const searchValue = req.query.search as string;
+
+  if (searchValue === "") {
+    responseReturn(res, 201, []);
+  }
+
+  const users = await prisma.user.findMany({
+    where: {
+      name: {
+        contains: searchValue,
+        mode: "insensitive",
+      },
+      id: {
+        not: myId,
+      },
+    },
+    select: {
+      avatar: true,
+      email: true,
+      id: true,
+      name: true,
+    },
+  });
+
+  responseReturn(res, 201, users);
+};
