@@ -1,3 +1,4 @@
+import { User } from "@/@types/user";
 import ChatUserList from "@/components/chat/ChatUserList";
 import MessageContainer from "@/components/chat/MessageContainer";
 import { Button } from "@/components/custom/button";
@@ -12,17 +13,25 @@ import {
 import { useAppSelector } from "@/store/hooks";
 import { Menu, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+
+interface Message {
+  text: string;
+  senderId: any;
+}
 
 const Chats = () => {
   const { id } = useParams();
+  const { pathname, state } = useLocation();
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedChat, setSelectedChat] = useState<any>(null);
   const [searchValue, setSearchValue] = useState("");
   const [message, setMessage] = useState("");
-  const [selectedSearchedUser, setSelectedSearchedUser] = useState<any>();
-  const [messages, setMessages] = useState<any[]>([]);
+  const [selectedSearchedUser, setSelectedSearchedUser] = useState<User | null>(
+    null
+  );
+  const [messages, setMessages] = useState<Message[]>([]);
   const [onlineUsersId, setOnlineUsersId] = useState<any[]>([]);
   const [currentChatUser, setCurrentChatUserId] = useState("");
   const [getSearch, { data: searchUserChat }] =
@@ -66,27 +75,6 @@ const Chats = () => {
     }
   }, [id, refetchMessages]);
 
-  const sendMessageHandler = async (e: FormEvent) => {
-    e.preventDefault();
-
-    const receiverId = selectedSearchedUser
-      ? selectedSearchedUser.id
-      : otherFriend.id;
-
-    if (!message) {
-      return;
-    }
-    sendMessage({ message, receiverId }).unwrap();
-
-    setMessages([...messages, { text: message, senderId: userInfo.id }]);
-
-    if (searchValue) {
-      refetchChat();
-    }
-
-    setMessage("");
-  };
-
   useEffect(() => {
     if (id) {
       const currentChat = ChatData?.find(
@@ -128,6 +116,40 @@ const Chats = () => {
       setCurrentChatUserId(fri.id);
     }
   }, [selectedChat, userInfo.id]);
+
+  useEffect(() => {
+    if (pathname === "/user/chats/new") {
+      setMessages([]);
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    if (state) {
+      setSelectedSearchedUser(state.user);
+    }
+  }, [state]);
+
+  const sendMessageHandler = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const receiverId = selectedSearchedUser
+      ? selectedSearchedUser.id
+      : otherFriend.id;
+
+    if (!message) {
+      return;
+    }
+
+    sendMessage({ message, receiverId }).unwrap();
+
+    setMessages([...messages, { text: message, senderId: userInfo.id }]);
+
+    if (searchValue) {
+      refetchChat();
+    }
+
+    setMessage("");
+  };
 
   return (
     <div className="flex w-full gap-4 pl-4 pr-4">
@@ -171,6 +193,7 @@ const Chats = () => {
           setSelectedChat={setSelectedChat}
           setSelectedSearchedUser={setSelectedSearchedUser}
           onlineUsersId={onlineUsersId}
+          selectedSearchedUser={selectedSearchedUser}
         />
       </div>
       <div className="w-full relative">
@@ -199,6 +222,33 @@ const Chats = () => {
                 </div>
                 <h3 className="text-sm font-medium text-gray-800">
                   {otherFriend?.name}
+                </h3>
+              </div>
+            ) : selectedSearchedUser ? (
+              <div
+                className="flex justify-between items-center w-full cursor-pointer"
+                onClick={() =>
+                  navigate(`/user/profile/${selectedSearchedUser.id}`)
+                }
+              >
+                <div className="flex gap-4 items-center">
+                  <img
+                    className="w-10 h-10 rounded-full object-cover mr-4"
+                    src={
+                      selectedSearchedUser?.avatar
+                        ? selectedSearchedUser?.avatar
+                        : "/user-profile2.jpg"
+                    }
+                    alt="User avatar"
+                  />
+                  {onlineUsersId.includes(String(currentChatUser)) && (
+                    <h3 className="text-sm font-medium text-gray-800 transition-all duration-800 ease-in">
+                      Online
+                    </h3>
+                  )}
+                </div>
+                <h3 className="text-sm font-medium text-gray-800">
+                  {selectedSearchedUser?.name}
                 </h3>
               </div>
             ) : null}

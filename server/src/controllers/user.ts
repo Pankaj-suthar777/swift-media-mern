@@ -5,68 +5,127 @@ import { RequestHandler } from "express";
 export const getUser: RequestHandler = async (req, res) => {
   const { id } = req.params;
 
-  const messages = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       id: parseInt(id),
     },
   });
 
-  responseReturn(res, 201, messages);
+  const followersCount = await prisma.follow.count({
+    where: {
+      followerId: parseInt(id),
+    },
+  });
+
+  const followingCount = await prisma.follow.count({
+    where: {
+      followingId: parseInt(id),
+    },
+  });
+
+  const mUser: any = user;
+  mUser.followersCount = followersCount;
+  mUser.followingCount = followingCount;
+
+  responseReturn(res, 201, {
+    user: mUser,
+  });
 };
 
 export const getRecommendedUser: RequestHandler = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const myId = req.user.id;
 
-    // Get the most chatted user by the logged-in user
-    const mostChattedUser = await prisma.chat.findFirst({
-      where: {
-        senderId: userId,
-      },
-      orderBy: {
-        messages: {
-          _count: "desc",
-        },
-      },
-      select: {
-        friends: true,
-      },
-    });
-
-    if (!mostChattedUser || mostChattedUser.friends.length === 0) {
-      return res.status(404).json({ message: "No most chatted user found" });
-    }
-
-    const mostChattedUserId = mostChattedUser.friends[0].id;
-
-    // Get all users that the most chatted user has chatted with
-    const chatsOfMostChattedUser = await prisma.chat.findMany({
+    const chats = await prisma.chat.findMany({
       where: {
         friends: {
           some: {
-            id: mostChattedUserId,
+            id: myId,
           },
         },
       },
-      include: {
-        friends: true,
+      select: {
+        friends: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
 
-    const usersChattedWithMostChattedUser = chatsOfMostChattedUser.flatMap(
-      (chat) => chat.friends
+    const chatUserIds = chats.flatMap((chat) =>
+      chat.friends.map((friend) => friend.id)
     );
 
-    // Remove duplicates (if any) and the most chatted user themselves
-    const uniqueUsers = usersChattedWithMostChattedUser
-      .filter((user) => user.id !== mostChattedUserId)
-      .filter(
-        (user, index, self) => index === self.findIndex((u) => u.id === user.id)
-      );
+    const excludeUserIds = [...chatUserIds, myId];
 
-    return res.status(200).json(uniqueUsers);
+    const users = await prisma.user.findMany({
+      where: {
+        id: {
+          notIn: excludeUserIds,
+        },
+      },
+      take: 5,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatar: true,
+        about: true,
+      },
+    });
+    return res.status(200).json(users);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
   }
+};
+
+export const followUser: RequestHandler = async (req, res) => {
+  const { id } = req.params as any;
+  const myId = req.user.id;
+
+  const existingFollow = await prisma.follow.findUnique({
+    where: {
+      followerId_followingId: {
+        followerId: parseInt(id),
+        followingId: parseInt(myId),
+      },
+    },
+  });
+
+  if (existingFollow) {
+    await prisma.follow.delete({
+      where: {
+        id: existingFollow.id,
+      },
+    });
+  } else {
+    await prisma.follow.create({
+      data: {
+        follower: {
+          connect: { id: parseInt(id) },
+        },
+        following: {
+          connect: { id: parseInt(myId) },
+        },
+      },
+    });
+  }
+
+  responseReturn(res, 201, { success: true });
+};
+
+export const isFollow: RequestHandler = async (req, res) => {
+  const { id } = req.params as any;
+  const myId = req.user.id;
+
+  const follow = await prisma.follow.findFirst({
+    where: {
+      followerId: parseInt(id),
+      followingId: myId,
+    },
+  });
+
+  responseReturn(res, 201, follow ? true : false);
 };

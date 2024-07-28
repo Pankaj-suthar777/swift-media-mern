@@ -1,4 +1,4 @@
-import { IChat } from "./chat";
+import { Chat } from "./chat";
 
 export interface User {
   id: number;
@@ -11,5 +11,7 @@ export interface User {
   about?: string;
   createdAt: Date;
   updatedAt: Date;
-  friends: IChat[];
+  friends: Chat[];
+  followersCount?: number;
+  followingCount?: number;
 }

@@ -1,7 +1,11 @@
 import { Facebook, Github, Loader, Twitter } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { useGetProfileQuery } from "@/store/api/userApi";
+import {
+  useFollowUserMutation,
+  useGetProfileQuery,
+  useIsFollowQuery,
+} from "@/store/api/userApi";
 import { Button } from "@/components/custom/button";
 
 const Profile = () => {
@@ -11,6 +15,15 @@ const Profile = () => {
   const { data, isLoading } = useGetProfileQuery(id as string, {
     skip: !id,
   });
+
+  const { data: isFollow, refetch } = useIsFollowQuery(id);
+
+  const [followUser] = useFollowUserMutation();
+
+  const followHandler = async () => {
+    await followUser(id);
+    refetch();
+  };
 
   if (isLoading) {
     return (
@@ -27,7 +40,9 @@ const Profile = () => {
           <div className="flex w-full justify-center items-center mt-5">
             <div className="relative flex justify-center items-center">
               <img
-                src={data?.avatar ? data?.avatar : "/user-profile2.jpg"}
+                src={
+                  data?.user?.avatar ? data?.user?.avatar : "/user-profile2.jpg"
+                }
                 className="h-24 w-24 rounded-full object-cover border"
                 alt="profile"
               />
@@ -35,12 +50,22 @@ const Profile = () => {
           </div>
           <div className="mt-4">
             <h3 className="mb-4 text-2xl font-semibold text-black dark:text-white">
-              {data?.name}
+              {data?.user?.name}
             </h3>
 
             <div className="flex gap-2 w-full justify-end mb-4">
-              <Button>Follow</Button>
-              <Button onClick={() => navigate(`/user/chats/${data?.id}`)}>
+              <Button onClick={() => followHandler()}>
+                {isFollow ? "UnFollow" : "Follow"}
+              </Button>
+              <Button
+                onClick={() =>
+                  navigate(`/user/chats/new`, {
+                    state: {
+                      user: data?.user,
+                    },
+                  })
+                }
+              >
                 Chat
               </Button>
             </div>
@@ -54,13 +79,13 @@ const Profile = () => {
               </div>
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
-                  {data?.followers}
+                  {data?.user?.followersCount}
                 </span>
                 <span className="text-sm">Followers</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
-                  {data?.followings}
+                  {data?.user?.followingCount}
                 </span>
                 <span className="text-sm">Following</span>
               </div>
@@ -70,10 +95,10 @@ const Profile = () => {
               <h4 className="font-semibold text-black dark:text-white mb-6 mt-4">
                 About Me
               </h4>
-              {data?.about ? (
+              {data?.user?.about ? (
                 <div
                   className="mt-4.5 about"
-                  dangerouslySetInnerHTML={{ __html: data?.about }}
+                  dangerouslySetInnerHTML={{ __html: data?.user?.about }}
                 ></div>
               ) : null}
             </div>

@@ -1,10 +1,10 @@
-import { IMessage } from "./message";
+import { Message } from "./message";
 import { User } from "./user";
 
-export interface IChat {
+export interface Chat {
   id: number;
   friends: User[];
-  messages: IMessage[];
+  messages: Message[];
   lastMessage: string;
   senderId: number;
   sender: User;

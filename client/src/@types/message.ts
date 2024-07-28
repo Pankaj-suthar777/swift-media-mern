@@ -1,13 +1,13 @@
-import { IChat } from "./chat";
+import { Chat } from "./chat";
 import { User } from "./user";
 
-export interface IMessage {
+export interface Message {
   id: number;
   chatId: number;
-  chat: IChat;
+  chat: Chat;
   text: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   senderId: number;
   sender: User;
 }

@@ -31,8 +31,8 @@ export const user_register: RequestHandler = async (req, res) => {
       name: createUser.name,
       email: createUser.email,
       role: "user",
-      followers: createUser.followers,
-      followings: createUser.followings,
+      followersCount: 0,
+      followingCount: 0,
       about: createUser.about,
     });
 
@@ -44,8 +44,8 @@ export const user_register: RequestHandler = async (req, res) => {
         id: createUser.id,
         email: createUser.email,
         role: "user",
-        followers: createUser.followers,
-        followings: createUser.followings,
+        followersCount: 0,
+        followingCount: 0,
         about: createUser.about,
       },
     });
@@ -67,13 +67,25 @@ export const user_login: RequestHandler = async (req, res) => {
   if (user) {
     const match = await bcrypt.compare(password, user.password);
     if (match) {
+      const followersCount = await prisma.follow.count({
+        where: {
+          followerId: user.id,
+        },
+      });
+
+      const followingCount = await prisma.follow.count({
+        where: {
+          followingId: user.id,
+        },
+      });
+
       const token = await createToken({
         id: user.id,
         name: user.name,
         email: user.email,
         role: "user",
-        followers: user.followers,
-        followings: user.followings,
+        followersCount,
+        followingCount,
         about: user.about,
       });
 
@@ -85,8 +97,8 @@ export const user_login: RequestHandler = async (req, res) => {
           id: user.id,
           email: user.email,
           role: "user",
-          followers: user.followers,
-          followings: user.followings,
+          followersCount,
+          followingCount,
           about: user.about,
         },
       });
@@ -116,14 +128,26 @@ export const get_user: RequestHandler = async (req, res) => {
     });
   }
 
+  const followersCount = await prisma.follow.count({
+    where: {
+      followerId: user.id,
+    },
+  });
+
+  const followingCount = await prisma.follow.count({
+    where: {
+      followingId: user.id,
+    },
+  });
+
   responseReturn(res, 200, {
     userInfo: {
       name: user.name,
       id: user.id,
       email: user.email,
       role: "admin",
-      followers: user.followers,
-      followings: user.followings,
+      followersCount,
+      followingCount,
       about: user.about,
       avatar: user.avatar,
     },
@@ -149,8 +173,6 @@ export const admin_login: RequestHandler = async (req, res) => {
         name: user.name,
         email: user.email,
         role: "admin",
-        followers: user.followers,
-        followings: user.followings,
         about: user.about,
       });
 
@@ -162,8 +184,6 @@ export const admin_login: RequestHandler = async (req, res) => {
           id: user.id,
           email: user.email,
           role: "admin",
-          followers: user.followers,
-          followings: user.followings,
           about: user.about,
         },
       });

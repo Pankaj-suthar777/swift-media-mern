@@ -7,6 +7,23 @@ export const serachUser: RequestHandler = async (req, res) => {
   const myId = req.user.id;
   const searchValue = req.query.search;
 
+  const chats = await prisma.chat.findMany({
+    where: {
+      friends: {
+        some: {
+          id: myId,
+        },
+      },
+    },
+    select: {
+      friends: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
   if (
     !searchValue ||
     Array.isArray(searchValue) ||
@@ -15,10 +32,16 @@ export const serachUser: RequestHandler = async (req, res) => {
     return res.status(400).json({ error: "A valid search query is required" });
   }
 
+  const chatUserIds = chats.flatMap((chat) =>
+    chat.friends.map((friend) => friend.id)
+  );
+
+  const excludeUserIds = [...chatUserIds, myId];
+
   const users = await prisma.user.findMany({
     where: {
       id: {
-        not: myId,
+        notIn: excludeUserIds,
       },
       name: {
         contains: searchValue,
@@ -141,6 +164,8 @@ export const getUserChats: RequestHandler = async (req, res) => {
 
 export const getChatMessage: RequestHandler = async (req, res) => {
   const { chatId } = req.params;
+
+  console.log(chatId);
 
   const messages = await prisma.message.findMany({
     where: {

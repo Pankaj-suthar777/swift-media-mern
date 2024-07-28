@@ -2,7 +2,7 @@ import { User } from "@/@types/user";
 import { useAppSelector } from "@/store/hooks";
 import { truncateText } from "@/utils/helper";
 import { Loader } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 interface Props {
   selectedChat: any;
   setSelectedChat: React.Dispatch<React.SetStateAction<any>>;
@@ -10,8 +10,9 @@ interface Props {
   searchedResultUser: User[];
   chats: any[];
   isLoading: boolean;
-  setSelectedSearchedUser: React.Dispatch<React.SetStateAction<any>>;
+  setSelectedSearchedUser: React.Dispatch<React.SetStateAction<User | null>>;
   onlineUsersId: string[];
+  selectedSearchedUser: User | null;
 }
 
 const ChatUserList = ({
@@ -23,12 +24,11 @@ const ChatUserList = ({
   isLoading,
   setSelectedSearchedUser,
   onlineUsersId,
+  selectedSearchedUser,
 }: Props) => {
   const { userInfo } = useAppSelector((state) => state.auth);
 
   const myId = userInfo.id;
-
-  const { id } = useParams();
 
   return (
     <div>
@@ -49,9 +49,10 @@ const ChatUserList = ({
                         setSelectedSearchedUser(user);
                       }}
                       key={i}
-                      to={`/user/chats/${user.id}`}
+                      to={`/user/chats/new`}
                       className={`flex items-center py-4 px-6 ${
-                        selectedChat && selectedChat.id === id
+                        selectedSearchedUser?.id &&
+                        selectedSearchedUser?.id === user.id
                           ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
                           : ""
                       }`}

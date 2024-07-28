@@ -15,7 +15,7 @@ export const userApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getProfile: builder.query<User, string>({
+    getProfile: builder.query<{ user: User }, string>({
       query(id) {
         return {
           url: `/user/${id}`,
@@ -29,7 +29,27 @@ export const userApi = createApi({
         };
       },
     }),
+    isFollow: builder.query({
+      query(id) {
+        return {
+          url: `/user/is-follow/${id}`,
+        };
+      },
+    }),
+    followUser: builder.mutation({
+      query(id) {
+        return {
+          url: `/user/follow-user/${id}`,
+          method: "POST",
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetProfileQuery, useGetRecommendedUserQuery } = userApi;
+export const {
+  useGetProfileQuery,
+  useGetRecommendedUserQuery,
+  useFollowUserMutation,
+  useIsFollowQuery,
+} = userApi;

@@ -6,10 +6,10 @@ interface UserInfo {
   email: string;
   role: string;
   id: number;
-  followings: number;
-  followers: number;
   about?: string;
   avatar?: string;
+  followersCount?: number;
+  followingCount?: number;
 }
 
 interface IUserState {

@@ -21,13 +21,14 @@ model User {
     password           String
     avatar             String?
     about              String?
-    // following          User[]?
-    // followers          User[]?
+    following          Follow[]  @relation("Following")
+    followers          Follow[]  @relation("Followers")
     created_at         DateTime @default(now())
     updated_at         DateTime @updatedAt
     friends            Chat[] @relation("ChatFriends")
     chats              Chat[] @relation("ChatSender")
     messages           Message[] @relation("MessageSender")
+    posts              Post[] 
 }
 
 model Chat {
@@ -50,4 +51,28 @@ model Message {
     updated_at         DateTime @updatedAt
     senderId           Int
     sender             User @relation("MessageSender",fields: [senderId], references: [id])
+}
+
+model Post {
+    id                 Int @id @default(autoincrement())
+    text               String
+    created_at         DateTime @default(now())
+    updated_at         DateTime @updatedAt
+    image              String?
+    author             User @relation(fields: [authorId], references: [id])
+    authorId           Int 
+    upvote             Int
+    disvote            Int
+}
+
+
+model Follow {
+    id                 Int      @id @default(autoincrement())
+    followerId         Int
+    followingId        Int
+    follower           User     @relation("Followers", fields: [followerId], references: [id])
+    following          User     @relation("Following", fields: [followingId], references: [id])
+    created_at         DateTime @default(now())
+
+    @@unique([followerId, followingId])
 }
