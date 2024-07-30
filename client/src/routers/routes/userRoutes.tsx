@@ -3,7 +3,6 @@ import Chats from "@/pages/Chats";
 import Post from "@/pages/Post";
 import Posts from "@/pages/Posts";
 import Profile from "@/pages/Profile";
-import SearchUser from "@/pages/SearchUser";
 import UserDashboard from "@/pages/UserDashboard";
 import UserProfile from "@/pages/UserProfile";
 
@@ -43,11 +42,7 @@ export const userRoutes = [
     element: <Post />,
     role: "user",
   },
-  {
-    path: "search",
-    element: <SearchUser />,
-    role: "user",
-  },
+
   {
     path: "create-group",
     element: <GroupChat />,

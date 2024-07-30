@@ -3,7 +3,7 @@ import { ArrowDown, ArrowUp, MessageSquare } from "lucide-react";
 const CommentDiscussion = () => {
   return (
     <div>
-      <div className="w-fullbg-white rounded-lg">
+      <div className="w-full bg-white rounded-lg">
         <div className="flex flex-col gap-5 m-3">
           {/* Comment Container */}
           <div>

@@ -29,6 +29,7 @@ model User {
     chats              Chat[] @relation("ChatSender")
     messages           Message[] @relation("MessageSender")
     posts              Post[] 
+    votes              Vote[]
 }
 
 model Chat {
@@ -61,8 +62,7 @@ model Post {
     image              String?
     author             User @relation(fields: [authorId], references: [id])
     authorId           Int
-    upvote             Int @default(0)
-    disvote            Int @default(0)
+    vote               Vote[] 
 }
 
 
@@ -75,4 +75,15 @@ model Follow {
     created_at         DateTime @default(now())
 
     @@unique([followerId, followingId])
+}
+
+
+model Vote {
+   id              Int      @id @default(autoincrement())
+   created_at      DateTime @default(now())
+   vote            String
+   post_id         Int
+   author_id       Int
+   author          User  @relation(fields: [author_id], references: [id])
+   post            Post  @relation(fields: [post_id], references: [id])
 }

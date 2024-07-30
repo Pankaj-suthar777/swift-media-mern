@@ -91,7 +91,7 @@ const CreatePostModal = () => {
               </Button>
             </DialogClose>
             <Button disabled={isLoading} loading={isLoading} type="submit">
-              Save Changes
+              Save
             </Button>
           </CardFooter>
         </form>

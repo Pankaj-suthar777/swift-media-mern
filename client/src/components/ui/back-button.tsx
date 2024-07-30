@@ -8,7 +8,7 @@ const BackButton = () => {
   return (
     <Button
       variant="outline"
-      className="flex gap-2 mb-2 text-md bg-slate-100"
+      className="flex gap-2 text-md bg-slate-100"
       onClick={() => navigate(-1)}
     >
       <ChevronLeft color="black" /> Back

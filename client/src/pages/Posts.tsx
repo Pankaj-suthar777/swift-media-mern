@@ -1,4 +1,4 @@
-import Post from "@/components/post/Post";
+import Post from "@/components/post/PostItem";
 import CreatePost from "@/components/post/CreatePost";
 import FriendOfFriend from "@/components/post/FriendOfFriend";
 import { useGetFeedPostQuery } from "@/store/api/postApi";

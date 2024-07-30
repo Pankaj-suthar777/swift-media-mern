@@ -7,6 +7,11 @@ export interface Post {
   updated_at: string;
   image?: string;
   author: User;
-  upvote: number;
-  disvote: number;
+  vote: {
+    id: number;
+    created_at: Date;
+    vote: "up-vote" | "down-vote";
+    post_id: number;
+    author_id: number;
+  }[];
 }

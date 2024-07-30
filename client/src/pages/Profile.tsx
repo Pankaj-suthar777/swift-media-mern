@@ -9,11 +9,16 @@ import { uploadFilesToFirebaseAndGetUrl } from "@/utils/file-upload";
 import { useUpdateUserProfileMutation } from "@/store/api/authApi";
 import { toast } from "@/components/ui/use-toast";
 import { setUser } from "@/store/features/userSlice";
+import { useGetMyPostsQuery } from "@/store/api/postApi";
+import PostItem from "@/components/post/PostItem";
+import { Post } from "@/@types/post";
 
 const Profile = () => {
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
 
   const [updateUserProfile, { isLoading }] = useUpdateUserProfileMutation();
+
+  const { data } = useGetMyPostsQuery({});
 
   const dispatch = useAppDispatch();
 
@@ -51,8 +56,21 @@ const Profile = () => {
 
   const { userInfo } = useAppSelector((state) => state.auth);
   return (
-    <div className="pl-4 pr-4">
+    <div className="pl-4 pr-4 overflow-y-auto h-viewport-minus-80px">
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark relative">
+        <div className="mt-6.5 absolute top-5 left-5">
+          <div className="flex items-center justify-center gap-3.5">
+            <Link to={"#"}>
+              <Github size={25} />
+            </Link>
+            <Link to={"#"}>
+              <Twitter size={25} />
+            </Link>
+            <Link to={"#"}>
+              <Facebook size={25} />
+            </Link>
+          </div>
+        </div>
         <Dialog>
           <DialogTrigger>
             <div className="absolute top-4 right-4">
@@ -110,7 +128,7 @@ const Profile = () => {
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
-                  259
+                  {data?.posts?.length}
                 </span>
                 <span className="text-sm">Posts</span>
               </div>
@@ -133,26 +151,18 @@ const Profile = () => {
                 About Me
               </h4>
               <div
-                className="mt-4.5 about"
+                className="mt-4.5 about text-start"
                 dangerouslySetInnerHTML={{ __html: userInfo.about }}
               ></div>
             </div>
 
-            <div className="mt-6.5">
-              <h4 className="mb-3.5 font-medium text-black dark:text-white">
-                Follow me on
-              </h4>
-              <div className="flex items-center justify-center gap-3.5">
-                <Link to={"#"}>
-                  <Github size={25} />
-                </Link>
-                <Link to={"#"}>
-                  <Twitter size={25} />
-                </Link>
-                <Link to={"#"}>
-                  <Facebook size={25} />
-                </Link>
-              </div>
+            <div className="w-full mt-10 flex justify-start flex-col gap-2 items-start">
+              <h1 className="text-lg font-semibold self-center mb-5">
+                Recent Posts
+              </h1>
+              {data?.posts?.map((post: Post, i: number) => {
+                return <PostItem post={post} key={i} />;
+              })}
             </div>
           </div>
         </div>

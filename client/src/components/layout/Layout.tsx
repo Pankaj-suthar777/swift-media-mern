@@ -24,7 +24,7 @@ const Layout = () => {
     <div className="flex h-screen w-screen bg-slate-100">
       <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar}>
         {allNav.map((n, i) => {
-          const isActive = new RegExp(`^${n.path}(/|$)`).test(pathname);
+          const isActive = n.path === pathname;
 
           return (
             <SidebarItem
@@ -40,12 +40,15 @@ const Layout = () => {
         <Logout />
       </Sidebar>
 
-      <div
+      {/* <div
         className={`ml-0 lg:ml-[260px] transition-all w-full max-h-[100vh] ${
           pathname === "/user/posts" ? "overflow-y-auto" : "global-unscroll"
         }
           ${pathname === "/user/posts/" ? "overflow-y-auto" : "global-unscroll"}
          global-unscroll`}
+      > */}
+      <div
+        className={`ml-0 lg:ml-[260px] transition-all w-full max-h-[100vh] overflow-hidden`}
       >
         <MainContent
           showSidebar={showSidebar}

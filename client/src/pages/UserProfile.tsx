@@ -1,5 +1,6 @@
 import { Facebook, Github, Loader, Twitter } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import PostItem from "../components/post/PostItem";
 
 import {
   useFollowUserMutation,
@@ -34,8 +35,21 @@ const Profile = () => {
   }
 
   return (
-    <div className="pl-4 pr-4">
+    <div className="pl-4 pr-4 overflow-y-auto h-viewport-minus-80px">
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark relative">
+        <div className="mt-6.5 absolute top-5 left-5">
+          <div className="flex items-center justify-center gap-3.5">
+            <Link to={"#"}>
+              <Github size={25} />
+            </Link>
+            <Link to={"#"}>
+              <Twitter size={25} />
+            </Link>
+            <Link to={"#"}>
+              <Facebook size={25} />
+            </Link>
+          </div>
+        </div>
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="flex w-full justify-center items-center mt-5">
             <div className="relative flex justify-center items-center">
@@ -73,7 +87,7 @@ const Profile = () => {
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
-                  259
+                  {data?.post?.length}
                 </span>
                 <span className="text-sm">Posts</span>
               </div>
@@ -97,27 +111,19 @@ const Profile = () => {
               </h4>
               {data?.user?.about ? (
                 <div
-                  className="mt-4.5 about"
+                  className="mt-4.5 about text-start"
                   dangerouslySetInnerHTML={{ __html: data?.user?.about }}
                 ></div>
               ) : null}
             </div>
 
-            <div className="mt-6.5">
-              <h4 className="mb-3.5 font-medium text-black dark:text-white">
-                Follow me on
-              </h4>
-              <div className="flex items-center justify-center gap-3.5">
-                <Link to={"#"}>
-                  <Github size={25} />
-                </Link>
-                <Link to={"#"}>
-                  <Twitter size={25} />
-                </Link>
-                <Link to={"#"}>
-                  <Facebook size={25} />
-                </Link>
-              </div>
+            <div className="w-full mt-10 flex justify-start flex-col gap-2 items-start">
+              <h1 className="text-lg font-semibold self-center mb-5">
+                Recent Posts
+              </h1>
+              {data?.post?.map((post, i) => {
+                return <PostItem post={post} key={i} />;
+              })}
             </div>
           </div>
         </div>

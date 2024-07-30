@@ -33,6 +33,7 @@ export const chatApi = createApi({
       },
       invalidatesTags: ["Message", "Chat"],
     }),
+
     getMyChats: builder.query({
       query() {
         return {

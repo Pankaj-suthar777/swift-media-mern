@@ -39,3 +39,11 @@ export const CreatePostSchema = yup.object().shape({
     .max(70, "title is to long!"),
   image: yup.string().trim().optional(),
 });
+
+export const UpVoteDownVoteSchema = yup.object().shape({
+  vote: yup
+    .string()
+    .trim()
+    .min(3, "vote is required!")
+    .equals(["up-vote", "down-vote"]),
+});

@@ -44,7 +44,7 @@ export default function Header() {
             </Link>
 
             <Link
-              to="#"
+              to="/contact"
               className="flex w-full items-center py-2 text-lg font-semibold"
             >
               Contact
@@ -84,7 +84,7 @@ export default function Header() {
 
         <Link
           className="header-btn relative inline-flex px-4 py-2 text-sm h-9 w-max items-center justify-center font-medium text-white border-3 border-pink-500 cursor-pointer bg-transparent overflow-hidden z-10 "
-          to="#"
+          to="/contact"
         >
           Contact
         </Link>
