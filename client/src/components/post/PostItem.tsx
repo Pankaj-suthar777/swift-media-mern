@@ -8,7 +8,7 @@ import { useState } from "react";
 import { PostSkelton } from "../Skelton/PostSkelton";
 import moment from "moment";
 
-const Post = ({ post }: { post: IPost }) => {
+const Post = ({ post, refetch }: { post: IPost; refetch: () => void }) => {
   const navigate = useNavigate();
   const [upOrDownVote, { isLoading }] = useUpOrDownVoteMutation();
   const { userInfo } = useAppSelector((state) => state.auth);
@@ -26,6 +26,14 @@ const Post = ({ post }: { post: IPost }) => {
         id: String(id),
       }).unwrap();
 
+      post.vote.push({
+        author_id: userInfo.id,
+        created_at: new Date(Date.now()),
+        id: Math.floor(Math.random() * 32423),
+        post_id: post.id,
+        vote: vote,
+      });
+
       toast({
         title: data?.message,
         variant: "default",
@@ -35,6 +43,8 @@ const Post = ({ post }: { post: IPost }) => {
         title: error?.data?.error,
         variant: "destructive",
       });
+    } finally {
+      await refetch();
     }
   };
 
@@ -68,7 +78,7 @@ const Post = ({ post }: { post: IPost }) => {
           <div className="flex items-center gap-2">
             <div
               className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
-                vote?.vote === "down-vote" ? "bg-green-200" : ""
+                vote?.vote === "down-vote" ? "bg-red-200" : ""
               }`}
               onClick={() => upOrDownVoteHandler("down-vote", post.id)}
             >

@@ -31,16 +31,19 @@ export const getFeed: RequestHandler = async (req, res) => {
   try {
     const myId = req.user.id;
 
+    const { page } = req.query;
+
     const myFollowing = await prisma.follow.findMany({
       where: {
-        followerId: myId,
+        followingId: myId,
       },
       select: {
         followingId: true,
+        followerId: true,
       },
     });
 
-    const followingIds = myFollowing.map((follow) => follow.followingId);
+    const followingIds = myFollowing.map((follow) => follow.followerId);
 
     const posts = await prisma.post.findMany({
       where: {
@@ -52,6 +55,8 @@ export const getFeed: RequestHandler = async (req, res) => {
         author: true,
         vote: true,
       },
+      skip: Number(page) * 5,
+      take: Number(page) * 5 + 5,
       orderBy: {
         created_at: "desc",
       },

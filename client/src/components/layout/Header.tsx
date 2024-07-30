@@ -15,7 +15,7 @@ export default function Header() {
             className="no-underline text-black mr-6 flex justify-center items-center"
           >
             <MountainIcon className="h-6 w-6" />
-            <span className="ml-4 text-white font-light">Swift Chat Pro</span>
+            <span className="ml-4 text-white font-light">Swift Media</span>
           </Link>
           <SheetTrigger asChild>
             <span className="lg:hidden">
