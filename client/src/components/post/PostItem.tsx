@@ -1,18 +1,33 @@
 import { ArrowDown, ArrowUp, Loader, Pin, Share2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Post as IPost } from "../../@types/post";
-import { useUpOrDownVoteMutation } from "@/store/api/postApi";
+import {
+  useSavePostMutation,
+  useUpOrDownVoteMutation,
+} from "@/store/api/postApi";
 import { toast } from "../ui/use-toast";
 import { useAppSelector } from "@/store/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PostSkelton } from "../Skelton/PostSkelton";
 import moment from "moment";
 
-const Post = ({ post, refetch }: { post: IPost; refetch: () => void }) => {
+const Post = ({
+  post,
+  refetchSinglePost,
+}: {
+  post: IPost;
+  refetchSinglePost: (id: number) => Promise<IPost>;
+}) => {
   const navigate = useNavigate();
-  const [upOrDownVote, { isLoading }] = useUpOrDownVoteMutation();
   const { userInfo } = useAppSelector((state) => state.auth);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [vote, setVote] = useState<any>();
+  const [postData, setPostData] = useState<IPost>(post);
+  const [isSaved, setIsSaved] = useState(false);
+
+  const [upOrDownVote, { isLoading }] = useUpOrDownVoteMutation();
+
+  const [savePost] = useSavePostMutation();
 
   const upOrDownVoteHandler = async (
     vote: "up-vote" | "down-vote",
@@ -26,14 +41,6 @@ const Post = ({ post, refetch }: { post: IPost; refetch: () => void }) => {
         id: String(id),
       }).unwrap();
 
-      post.vote.push({
-        author_id: userInfo.id,
-        created_at: new Date(Date.now()),
-        id: Math.floor(Math.random() * 32423),
-        post_id: post.id,
-        vote: vote,
-      });
-
       toast({
         title: data?.message,
         variant: "default",
@@ -44,14 +51,47 @@ const Post = ({ post, refetch }: { post: IPost; refetch: () => void }) => {
         variant: "destructive",
       });
     } finally {
-      await refetch();
+      const p = await refetchSinglePost(post.id);
+      setPostData(p);
     }
   };
 
-  const vote = post.vote.find((vote) => vote.author_id === userInfo.id);
+  useEffect(() => {
+    if (postData) {
+      setVote(postData.vote.find((vote) => vote.author_id === userInfo.id));
+    }
+  }, [postData, userInfo.id]);
+
+  useEffect(() => {
+    if (postData?.savedPost) {
+      const isSaved = postData?.savedPost?.find(
+        (p) => p.author_id === userInfo.id
+      );
+      setIsSaved(isSaved ? true : false);
+    }
+  }, [postData, userInfo.id]);
 
   const onImageLoad = () => {
     setIsImageLoaded(true);
+  };
+
+  const savePostHandler = async () => {
+    try {
+      const data = await savePost({
+        id: post.id,
+      }).unwrap();
+      const p = await refetchSinglePost(post.id);
+      setPostData(p);
+      toast({
+        title: data?.message,
+        variant: "default",
+      });
+    } catch (error: any) {
+      toast({
+        title: error?.data?.error,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -63,7 +103,7 @@ const Post = ({ post, refetch }: { post: IPost; refetch: () => void }) => {
               className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
                 vote?.vote === "up-vote" ? "bg-green-200" : ""
               }`}
-              onClick={() => upOrDownVoteHandler("up-vote", post.id)}
+              onClick={() => upOrDownVoteHandler("up-vote", post?.id)}
             >
               {isLoading ? (
                 <Loader className="animate-spin" size={20} />
@@ -72,7 +112,7 @@ const Post = ({ post, refetch }: { post: IPost; refetch: () => void }) => {
               )}
             </div>
             <span>
-              {post.vote.filter((vote) => vote.vote === "up-vote").length}
+              {postData?.vote.filter((vote) => vote.vote === "up-vote").length}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -89,7 +129,10 @@ const Post = ({ post, refetch }: { post: IPost; refetch: () => void }) => {
               )}
             </div>
             <span>
-              {post.vote.filter((vote) => vote.vote === "down-vote").length}
+              {
+                postData?.vote.filter((vote) => vote.vote === "down-vote")
+                  .length
+              }
             </span>
           </div>
         </div>
@@ -100,33 +143,36 @@ const Post = ({ post, refetch }: { post: IPost; refetch: () => void }) => {
           <div className="">
             <div
               className="flex items-center py-2 px-2"
-              onClick={() => navigate(`/user/profile/${post.author.id}`)}
+              onClick={() => navigate(`/user/profile/${postData?.author.id}`)}
             >
               <img
                 className="w-10 h-10 rounded-full object-cover mr-2"
                 src={
-                  post?.author?.avatar
-                    ? post?.author?.avatar
+                  postData?.author?.avatar
+                    ? postData?.author?.avatar
                     : "/user-profile2.jpg"
                 }
                 alt="User avatar"
               />
-              <div className="flex flex-col">
-                <p className="text-xs">Posted by : {post?.author?.name}</p>
-                <p className="text-xs">
+              <div className="flex flex-col gap-1">
+                <p className="text-xs">posted by : {postData?.author?.name}</p>
+                <p className="text-[10px]">
                   Created At :{" "}
-                  {moment(post?.created_at).startOf("hour").fromNow()}
+                  {moment(postData?.created_at).startOf("hour").fromNow()}
                 </p>
               </div>
             </div>
-            <div onClick={() => navigate(`/user/posts/${post.id}`)}>
-              {post?.image ? (
-                <div className="p-2">
+            <div>
+              {postData?.image ? (
+                <div
+                  className="p-2"
+                  onClick={() => navigate(`/user/posts/${postData?.id}`)}
+                >
                   <img
                     className={`w-full object-cover rounded-xl h-full ${
                       isImageLoaded ? "block" : "hidden"
                     }`}
-                    src={post?.image}
+                    src={postData?.image}
                     onLoad={onImageLoad}
                   />
                 </div>
@@ -141,17 +187,20 @@ const Post = ({ post, refetch }: { post: IPost; refetch: () => void }) => {
               <div className=" px-3 pb-3 pt-1 rounded-xl">
                 <div
                   className="text-black whitespace-pre-line break-words text-start"
-                  dangerouslySetInnerHTML={{ __html: post.text }}
+                  dangerouslySetInnerHTML={{ __html: postData?.text || "" }}
+                  onClick={() => navigate(`/user/posts/${postData?.id}`)}
                 ></div>
                 <div className="footer flex justify-between mt-4">
                   <div className="flex space-x-4">
-                    <div className="flex items-center">
+                    <div
+                      className={`flex items-center border border-slate-300 rounded-full py-1 px-3 ${
+                        isSaved ? "bg-slate-300" : ""
+                      }`}
+                      onClick={() => savePostHandler()}
+                    >
                       <Pin size={18} />
                       <span className="ml-2">
-                        {
-                          post.vote.filter((vote) => vote.vote === "up-vote")
-                            .length
-                        }
+                        {postData?.savedPost?.length}
                       </span>
                     </div>
                     <div className="flex items-center">

@@ -7,11 +7,21 @@ export interface Post {
   updated_at: string;
   image?: string;
   author: User;
-  vote: {
-    id: number;
-    created_at: Date;
-    vote: "up-vote" | "down-vote";
-    post_id: number;
-    author_id: number;
-  }[];
+  vote: Vote[];
+  savedPost: SavedPost[];
+}
+
+export interface Vote {
+  id: number;
+  created_at: Date;
+  vote: "up-vote" | "down-vote";
+  post_id: number;
+  author_id: number;
+}
+
+export interface SavedPost {
+  author_id: number;
+  id: number;
+  created_at: string;
+  post_id: number;
 }

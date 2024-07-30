@@ -60,6 +60,28 @@ export const postApi = createApi({
         };
       },
     }),
+    getSavedPost: builder.query({
+      query() {
+        return {
+          url: `/post/get-saved-post`,
+        };
+      },
+    }),
+    isPostSaved: builder.query({
+      query(id) {
+        return {
+          url: `/post/is-post-saved/${id}`,
+        };
+      },
+    }),
+    savePost: builder.mutation({
+      query({ id }) {
+        return {
+          url: `/post/save/${id}`,
+          method: "POST",
+        };
+      },
+    }),
   }),
 });
 
@@ -69,4 +91,7 @@ export const {
   useGetSinglePostQuery,
   useUpOrDownVoteMutation,
   useGetMyPostsQuery,
+  useGetSavedPostQuery,
+  useSavePostMutation,
+  useIsPostSavedQuery,
 } = postApi;

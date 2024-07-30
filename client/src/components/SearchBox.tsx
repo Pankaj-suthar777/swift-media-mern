@@ -23,8 +23,8 @@ const SearchBox = () => {
   return (
     <div className="relative md:w-[600px] group">
       <input
-        onFocus={() => {}}
         value={searchValue}
+        onBlur={() => setSerachValue("")}
         onChange={onChangeHandler}
         type="text"
         name="q"

@@ -1,7 +1,11 @@
 import { ArrowDown, ArrowUp, Loader, Pin, Share2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Post as IPost } from "../../@types/post";
-import { useUpOrDownVoteMutation } from "@/store/api/postApi";
+import {
+  useIsPostSavedQuery,
+  useSavePostMutation,
+  useUpOrDownVoteMutation,
+} from "@/store/api/postApi";
 import { toast } from "../ui/use-toast";
 import { useAppSelector } from "@/store/hooks";
 
@@ -10,6 +14,9 @@ const SinglePost = ({ post }: { post: IPost }) => {
   const navigate = useNavigate();
   const [upOrDownVote, { isLoading }] = useUpOrDownVoteMutation();
   const { userInfo } = useAppSelector((state) => state.auth);
+
+  const [savePost] = useSavePostMutation();
+  const { data, refetch } = useIsPostSavedQuery(id);
 
   const upOrDownVoteHandler = async (vote: "up-vote" | "down-vote") => {
     if (!id) return;
@@ -20,6 +27,24 @@ const SinglePost = ({ post }: { post: IPost }) => {
         id,
       }).unwrap();
 
+      toast({
+        title: data?.message,
+        variant: "default",
+      });
+    } catch (error: any) {
+      toast({
+        title: error?.data?.error,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const savePostHandler = async () => {
+    try {
+      const data = await savePost({
+        id,
+      }).unwrap();
+      refetch();
       toast({
         title: data?.message,
         variant: "default",
@@ -72,14 +97,14 @@ const SinglePost = ({ post }: { post: IPost }) => {
 
                 <div className="footer flex justify-between mt-4">
                   <div className="flex space-x-4">
-                    <div className="flex items-center">
+                    <div
+                      className={`flex items-center border border-slate-300 rounded-full py-1 px-3 hover:bg-slate-200 ${
+                        data?.isSaved ? "bg-slate-300" : ""
+                      }`}
+                      onClick={() => savePostHandler()}
+                    >
                       <Pin size={18} />
-                      <span className="ml-2">
-                        {
-                          post.vote.filter((vote) => vote.vote === "up-vote")
-                            .length
-                        }
-                      </span>
+                      <span className="ml-2">{post.savedPost.length}</span>
                     </div>
                     <div className="flex items-center">
                       <Share2 size={18} />
@@ -115,7 +140,7 @@ const SinglePost = ({ post }: { post: IPost }) => {
                     <div className="flex items-center gap-2">
                       <div
                         className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
-                          vote?.vote === "down-vote" ? "bg-green-200" : ""
+                          vote?.vote === "down-vote" ? "bg-red-200" : ""
                         }`}
                         onClick={() => upOrDownVoteHandler("down-vote")}
                       >

@@ -2,7 +2,7 @@ import { Post } from "@/@types/post";
 import { getClient } from "@/api/client";
 import { useEffect, useState } from "react";
 
-const useFetchPosts = (page: number) => {
+const useFetchUserPosts = (authorId: number, page: number) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -15,7 +15,7 @@ const useFetchPosts = (page: number) => {
       try {
         const client = await getClient();
         const response = await client.get<{ posts: Post[] }>(
-          `/post/feed-post?page=${page}`
+          `/user/${authorId}?page=${page}`
         );
         setPosts((prevPosts) => {
           const newPosts = response.data?.posts.filter(
@@ -35,11 +35,11 @@ const useFetchPosts = (page: number) => {
 
   const refetchSinglePost = async (id: number): Promise<Post> => {
     const client = await getClient();
-    const response = await client.get<{ post: Post }>(`/post/${id}`);
-    return response.data.post;
+    const response = await client.get<{ user: Post }>(`/post/${id}`);
+    return response.data.user;
   };
 
   return { loading, error, posts, hasMore, refetchSinglePost };
 };
 
-export default useFetchPosts;
+export default useFetchUserPosts;

@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Outlet, useLocation } from "react-router-dom";
 import SearchBox from "../SearchBox";
+import { useAppSelector } from "@/store/hooks";
 
 interface Props {
   showSidebar: boolean;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
+  const { userInfo } = useAppSelector((state) => state.auth);
   const { pathname } = useLocation();
   return (
     <div className="w-full h-full">
@@ -41,8 +43,12 @@ const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
           </div>
           <div className="flex items-center pr-4">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage
+                src={
+                  userInfo ? userInfo?.avatar : "https://github.com/shadcn.png"
+                }
+              />
+              <AvatarFallback>{userInfo?.name}</AvatarFallback>
             </Avatar>
           </div>
         </div>
