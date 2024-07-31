@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "server": "tsnd --respawn -r tsconfig-paths/register --pretty --transpile-only ./src/index.ts",
-    "build": "tsc && tsc-alias"
+    "build": "npm i && tsc && tsc-alias",
+    "start": "node ./dist",
+    "afterbuild": "cp package.json dist/ && cd dist && npm install --production"
   },
   "keywords": [],
   "author": "",
