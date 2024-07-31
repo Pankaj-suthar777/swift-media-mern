@@ -1,7 +1,7 @@
 import express from "express";
 import "dotenv/config";
 import "express-async-errors";
-
+import cors from "cors";
 import authRouter from "./routes/auth.route";
 import chatRouter from "./routes/chat.route";
 import userRouter from "./routes/user.route";
@@ -10,7 +10,13 @@ import postRouter from "./routes/post.route";
 import { errorHandler } from "./middleware/error";
 
 import { app, server } from "./socket/socket";
+import { CLIENT_URL } from "./utils/variables";
 
+app.use(
+  cors({
+    origin: [CLIENT_URL],
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
