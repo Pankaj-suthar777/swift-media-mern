@@ -10,7 +10,7 @@ import postRouter from "./routes/post.route";
 import { errorHandler } from "./middleware/error";
 
 import { app, server } from "./socket/socket";
-import { CLIENT_URL } from "./utils/variables";
+import { CLIENT_URL, PORT } from "./utils/variables";
 
 app.use(
   cors({
@@ -27,8 +27,8 @@ app.use("/api/post", postRouter);
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+const PORT_IN_USE = PORT || 5000;
 
-server.listen(PORT, () => {
-  console.log("Port is listing on port " + PORT);
+server.listen(PORT_IN_USE, () => {
+  console.log("Port is listing on port " + PORT_IN_USE);
 });
