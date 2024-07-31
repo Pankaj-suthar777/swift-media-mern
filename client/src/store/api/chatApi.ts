@@ -4,7 +4,7 @@ export const chatApi = createApi({
   reducerPath: "chatApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
+    baseUrl: "https://swift-rivals-mern.onrender.com/api",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {
