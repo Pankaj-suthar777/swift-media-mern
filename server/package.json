@@ -9,9 +9,10 @@
   "scripts": {
     "server": "tsnd --respawn -r tsconfig-paths/register --pretty --transpile-only ./src/index.ts",
     "build": "npm i  && tsc && tsc-alias && cd src && npm run prisma:generate && cd ..",
-    "start": "node ./dist",
+    "start": "npm run prisma:migrate && node ./dist",
     "afterbuild": "cp package.json dist/ && cd dist && npm install --production",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init"
   },
   "keywords": [],
   "author": "",
