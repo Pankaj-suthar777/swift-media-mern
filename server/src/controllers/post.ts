@@ -196,17 +196,29 @@ export const toogleSavePost: RequestHandler = async (req, res) => {
 export const getSavedPost: RequestHandler = async (req, res) => {
   const myId = req.user.id;
 
+  const { page } = req.query;
+
   const posts = await prisma.savedPost.findMany({
     where: {
       author_id: myId,
     },
     include: {
       author: true,
-      post: true,
+      post: {
+        include: {
+          vote: true,
+          savedPost: true,
+          author: true,
+        },
+      },
     },
+    skip: Number(page) * 8,
+    take: Number(page) * 8 + 8,
   });
 
-  responseReturn(res, 201, { posts });
+  const mPost = posts.map((saved) => saved.post);
+
+  responseReturn(res, 201, { posts: mPost });
 };
 
 export const isPostSaved: RequestHandler = async (req, res) => {

@@ -9,7 +9,13 @@ import {
 import { toast } from "../ui/use-toast";
 import { useAppSelector } from "@/store/hooks";
 
-const SinglePost = ({ post }: { post: IPost }) => {
+const SinglePost = ({
+  post,
+  refetchPost,
+}: {
+  post: IPost;
+  refetchPost: () => void;
+}) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [upOrDownVote, { isLoading }] = useUpOrDownVoteMutation();
@@ -45,6 +51,7 @@ const SinglePost = ({ post }: { post: IPost }) => {
         id,
       }).unwrap();
       refetch();
+      refetchPost();
       toast({
         title: data?.message,
         variant: "default",

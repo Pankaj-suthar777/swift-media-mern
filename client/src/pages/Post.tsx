@@ -1,4 +1,3 @@
-import Post from "@/components/post/PostItem";
 import FriendOfFriend from "@/components/post/FriendOfFriend";
 import BackButton from "@/components/ui/back-button";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,7 +9,7 @@ import SinglePost from "@/components/post/SinglePost";
 
 const Posts = () => {
   const { id } = useParams();
-  const { data, isLoading } = useGetSinglePostQuery(id);
+  const { data, isLoading, refetch } = useGetSinglePostQuery(id);
 
   if (isLoading) {
     return (
@@ -32,7 +31,7 @@ const Posts = () => {
               {/*  ==============================  */}
 
               <div className="overflow-auto pl-4 pr-4 w-full">
-                <SinglePost post={data.post} />
+                <SinglePost post={data.post} refetchPost={refetch} />
 
                 {/*Comments*/}
                 <div className="mt-10 border w-full border-slate-500 p-4">

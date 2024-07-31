@@ -16,7 +16,7 @@ const Post = ({
   refetchSinglePost,
 }: {
   post: IPost;
-  refetchSinglePost: (id: number) => Promise<IPost>;
+  refetchSinglePost?: (id: number) => Promise<IPost>;
 }) => {
   const navigate = useNavigate();
   const { userInfo } = useAppSelector((state) => state.auth);
@@ -51,8 +51,10 @@ const Post = ({
         variant: "destructive",
       });
     } finally {
-      const p = await refetchSinglePost(post.id);
-      setPostData(p);
+      if (refetchSinglePost) {
+        const p = await refetchSinglePost(post.id);
+        setPostData(p);
+      }
     }
   };
 
@@ -80,8 +82,10 @@ const Post = ({
       const data = await savePost({
         id: post.id,
       }).unwrap();
-      const p = await refetchSinglePost(post.id);
-      setPostData(p);
+      if (refetchSinglePost) {
+        const p = await refetchSinglePost(post.id);
+        setPostData(p);
+      }
       toast({
         title: data?.message,
         variant: "default",

@@ -3,6 +3,7 @@ import Chats from "@/pages/Chats";
 import Post from "@/pages/Post";
 import Posts from "@/pages/Posts";
 import Profile from "@/pages/Profile";
+import SavedPosts from "@/pages/SavedPosts";
 import UserDashboard from "@/pages/UserDashboard";
 import UserProfile from "@/pages/UserProfile";
 
@@ -42,10 +43,14 @@ export const userRoutes = [
     element: <Post />,
     role: "user",
   },
-
   {
     path: "create-group",
     element: <GroupChat />,
+    role: "user",
+  },
+  {
+    path: "saved-posts",
+    element: <SavedPosts />,
     role: "user",
   },
 ];

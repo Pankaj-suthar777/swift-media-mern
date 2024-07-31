@@ -24,7 +24,12 @@ const SearchBox = () => {
     <div className="relative md:w-[600px] group">
       <input
         value={searchValue}
-        onBlur={() => setSerachValue("")}
+        onBlur={() => {
+          const id = setTimeout(() => {
+            setSerachValue("");
+          }, 1000);
+          return () => clearTimeout(id);
+        }}
         onChange={onChangeHandler}
         type="text"
         name="q"
