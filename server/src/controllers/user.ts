@@ -27,19 +27,8 @@ export const getUser: RequestHandler = async (req, res) => {
   mUser.followersCount = followersCount;
   mUser.followingCount = followingCount;
 
-  const post = await prisma.post.findMany({
-    where: {
-      authorId: parseInt(id),
-    },
-    include: {
-      author: true,
-      vote: true,
-    },
-  });
-
   responseReturn(res, 201, {
     user: mUser,
-    post,
   });
 };
 
@@ -168,4 +157,24 @@ export const serachUser: RequestHandler = async (req, res) => {
   });
 
   responseReturn(res, 201, users);
+};
+
+export const getUserPosts: RequestHandler = async (req, res) => {
+  const { page } = req.query;
+  const { userId } = req.params;
+
+  const posts = await prisma.post.findMany({
+    where: {
+      authorId: parseInt(userId),
+    },
+    include: {
+      author: true,
+      savedPost: true,
+      vote: true,
+    },
+    skip: Number(page) * 4,
+    take: Number(page) * 4 + 4,
+  });
+
+  responseReturn(res, 201, { posts });
 };

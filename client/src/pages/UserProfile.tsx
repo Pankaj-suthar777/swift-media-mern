@@ -15,15 +15,27 @@ import {
 } from "@/store/api/userApi";
 import { Button } from "@/components/custom/button";
 import { useAppSelector } from "@/store/hooks";
+import { useCallback, useRef, useState } from "react";
+import useFetchUserPosts from "@/hooks/useFetchUsersPosts";
 
 const Profile = () => {
-  const { pathname } = useLocation();
   const { id } = useParams();
+
+  const [page, setPage] = useState(0);
+
+  const {
+    loading: isLoading,
+    error,
+    posts,
+    hasMore,
+    refetchSinglePost,
+  } = useFetchUserPosts(id, page);
+  const { pathname } = useLocation();
   const navigate = useNavigate();
 
   const { userInfo } = useAppSelector((state) => state.auth);
 
-  const { data, isLoading } = useGetProfileQuery(id as string, {
+  const { data } = useGetProfileQuery(id as string, {
     skip: !id,
   });
 
@@ -35,6 +47,24 @@ const Profile = () => {
     await followUser(id);
     refetch();
   };
+
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const lastElementRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (isLoading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prev) => prev + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [isLoading, hasMore]
+  );
 
   if (isLoading) {
     return (
@@ -139,9 +169,36 @@ const Profile = () => {
                   <h1 className="text-lg font-semibold self-center mb-5">
                     Recent Posts
                   </h1>
-                  {data?.post?.map((post, i) => {
-                    return <PostItem post={post} key={i} />;
-                  })}
+                  {posts &&
+                    posts?.map((post, i: number) => {
+                      const isLastElement = posts.length === i + 1;
+                      return isLastElement ? (
+                        <div key={i} ref={lastElementRef}>
+                          <PostItem
+                            post={post}
+                            key={i}
+                            refetchSinglePost={refetchSinglePost}
+                          />
+                        </div>
+                      ) : (
+                        <div key={i}>
+                          <PostItem
+                            post={post}
+                            key={i}
+                            refetchSinglePost={refetchSinglePost}
+                          />
+                        </div>
+                      );
+                    })}
+                  <div className="absolute ">
+                    <div className="h-2"></div>
+                    {isLoading && (
+                      <div className="w-full overflow-hidden flex justify-center items-center py-12">
+                        <Loader className="animate-spin" size={30} />
+                      </div>
+                    )}
+                    {error && <p>Error loading posts...</p>}
+                  </div>
                 </div>
               </div>
             </div>

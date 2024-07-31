@@ -1,4 +1,3 @@
-import { Post } from "@/@types/post";
 import PostItem from "@/components/post/PostItem";
 import useFetchSavedPosts from "@/hooks/useFetchSavedPosts";
 import { Loader } from "lucide-react";
@@ -55,13 +54,15 @@ const SavedPosts = () => {
               </div>
             );
           })}
-        <div className="h-2"></div>
-        {isLoading && (
-          <div className="w-full overflow-hidden flex justify-center items-center py-12">
-            <Loader className="animate-spin" size={30} />
-          </div>
-        )}
-        {error && <p>Error loading posts...</p>}
+        <div className="col-span-2">
+          <div className="h-2"></div>
+          {isLoading && (
+            <div className="w-full overflow-hidden flex justify-center items-center py-12">
+              <Loader className="animate-spin" size={30} />
+            </div>
+          )}
+          {error && <p>Error loading posts...</p>}
+        </div>
       </div>
     </div>
   );
