@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import "express-async-errors";
 import cors from "cors";
+
 import authRouter from "./routes/auth.route";
 import chatRouter from "./routes/chat.route";
 import userRouter from "./routes/user.route";

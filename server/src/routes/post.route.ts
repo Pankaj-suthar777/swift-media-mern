@@ -7,12 +7,16 @@ import {
   toogleSavePost,
   getSavedPost,
   isPostSaved,
+  addComment,
+  getPostComment,
+  addReplayComment,
 } from "#/controllers/post";
 import { authMiddleware } from "#/middleware/authMiddleware";
 import { validate } from "#/middleware/validator";
 import {
   CreatePostSchema,
   UpVoteDownVoteSchema,
+  AddCommentSchema,
 } from "#/utils/validationSchema";
 import { Router } from "express";
 
@@ -32,6 +36,21 @@ router.get("/my-posts", authMiddleware, myPosts);
 router.post("/save/:postId", authMiddleware, toogleSavePost);
 router.get("/get-saved-post", authMiddleware, getSavedPost);
 router.get("/is-post-saved/:postId", authMiddleware, isPostSaved);
+
+router.post(
+  "/add-comment/:id",
+  validate(AddCommentSchema),
+  authMiddleware,
+  addComment
+);
+router.post(
+  "/add-replay-comment/:id",
+  validate(AddCommentSchema),
+  authMiddleware,
+  addReplayComment
+);
+
+router.get("/comment/:id", authMiddleware, getPostComment);
 
 router.get("/:id", authMiddleware, getSinglePost);
 

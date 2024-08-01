@@ -1,4 +1,4 @@
-const baseURL = "https://swift-rivals-mern.onrender.com/api";
+const baseURL = "/api";
 
 import axios, { CreateAxiosDefaults } from "axios";
 

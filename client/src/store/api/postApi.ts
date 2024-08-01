@@ -4,7 +4,7 @@ export const postApi = createApi({
   reducerPath: "postApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://swift-rivals-mern.onrender.com/api",
+    baseUrl: "/api",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {
@@ -13,7 +13,7 @@ export const postApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Post"],
+  tagTypes: ["Post", "Comment"],
   endpoints: (builder) => ({
     createPost: builder.mutation({
       query(body) {
@@ -82,6 +82,41 @@ export const postApi = createApi({
         };
       },
     }),
+
+    getPostComments: builder.query({
+      query(id) {
+        return {
+          url: `/post/comment/${id}`,
+        };
+      },
+      providesTags: ["Comment"],
+      keepUnusedDataFor: 5,
+    }),
+
+    addComment: builder.mutation({
+      query({ id, text }) {
+        return {
+          url: `/post/add-comment/${id}`,
+          method: "POST",
+          body: {
+            text,
+          },
+          invalidatesTags: ["Comment"],
+        };
+      },
+    }),
+    addReplayComment: builder.mutation({
+      query({ id, text }) {
+        return {
+          url: `/post/add-replay-comment/${id}`,
+          method: "POST",
+          body: {
+            text,
+          },
+          invalidatesTags: ["Comment"],
+        };
+      },
+    }),
   }),
 });
 
@@ -94,4 +129,7 @@ export const {
   useGetSavedPostQuery,
   useSavePostMutation,
   useIsPostSavedQuery,
+  useAddCommentMutation,
+  useGetPostCommentsQuery,
+  useAddReplayCommentMutation,
 } = postApi;

@@ -234,3 +234,62 @@ export const isPostSaved: RequestHandler = async (req, res) => {
 
   responseReturn(res, 201, { isSaved: post ? true : false });
 };
+
+export const addComment: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  const { id } = req.params;
+  const { text } = req.body;
+
+  await prisma.comment.create({
+    data: {
+      author_id: myId,
+      post_id: parseInt(id),
+      text: text,
+    },
+  });
+
+  responseReturn(res, 201, { message: "Comment added successfully" });
+};
+
+export const getPostComment: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+
+  const comments = await prisma.comment.findMany({
+    where: {
+      post_id: parseInt(id),
+    },
+    include: {
+      author: true,
+      post: true,
+      replayedComment: {
+        include: {
+          author: {
+            select: {
+              avatar: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  responseReturn(res, 201, { comments });
+};
+
+export const addReplayComment: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  const { id } = req.params;
+  const { text } = req.body;
+
+  await prisma.replayToComment.create({
+    data: {
+      author_id: myId,
+      comment_id: parseInt(id),
+      text: text,
+    },
+  });
+
+  responseReturn(res, 201, { message: "Replay added to comment successfully" });
+};

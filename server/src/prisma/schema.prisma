@@ -31,6 +31,8 @@ model User {
     posts              Post[] 
     votes              Vote[]
     savedPost          SavedPost[] 
+    comments           Comment[]
+    replayToComment    ReplayToComment[]
 
 }
 
@@ -66,7 +68,7 @@ model Post {
     authorId           Int
     vote               Vote[]
     savedPost          SavedPost[] 
-
+    comments           Comment[]
 }
 
 
@@ -100,4 +102,25 @@ model SavedPost {
    author_id       Int
    author          User  @relation(fields: [author_id], references: [id])
    post            Post  @relation(fields: [post_id], references: [id])
+}
+
+model Comment {
+   id              Int      @id @default(autoincrement())
+   created_at      DateTime @default(now())
+   text            String
+   post_id         Int
+   author_id       Int
+   author          User  @relation(fields: [author_id], references: [id])
+   post            Post  @relation(fields: [post_id], references: [id])
+   replayedComment ReplayToComment[]
+}
+
+model ReplayToComment {
+   id              Int      @id @default(autoincrement())
+   created_at      DateTime @default(now())
+   text            String
+   comment_id      Int
+   author_id       Int
+   author          User  @relation(fields: [author_id], references: [id])
+   comment         Comment  @relation(fields: [comment_id], references: [id])
 }

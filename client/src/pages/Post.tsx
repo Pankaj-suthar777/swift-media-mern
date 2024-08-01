@@ -2,14 +2,46 @@ import FriendOfFriend from "@/components/post/FriendOfFriend";
 import BackButton from "@/components/ui/back-button";
 import { Textarea } from "@/components/ui/textarea";
 import CommentDiscussion from "@/components/post/CommentDiscussion";
-import { useGetSinglePostQuery } from "@/store/api/postApi";
+import {
+  useAddCommentMutation,
+  useGetSinglePostQuery,
+} from "@/store/api/postApi";
 import { Loader } from "lucide-react";
 import { useParams } from "react-router-dom";
 import SinglePost from "@/components/post/SinglePost";
+import { Button } from "@/components/custom/button";
+import { FormEvent, useState } from "react";
+import { toast } from "@/components/ui/use-toast";
+import { Comment } from "@/@types/comment";
 
 const Posts = () => {
   const { id } = useParams();
   const { data, isLoading, refetch } = useGetSinglePostQuery(id);
+  const [text, setText] = useState("");
+  const [commentReplay, setCommentReplay] = useState<Comment | null>(null);
+
+  const [addComment, { isLoading: isCommentAdding }] = useAddCommentMutation();
+
+  const submitCommitHandler = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (text?.trim() === "") {
+      return;
+    }
+    try {
+      const { data } = await addComment({ id, text });
+      toast({
+        title: data?.message,
+        variant: "default",
+      });
+
+      setText("");
+    } catch (error: any) {
+      toast({
+        title: error?.data?.error,
+        variant: "default",
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -35,12 +67,27 @@ const Posts = () => {
 
                 {/*Comments*/}
                 <div className="mt-10 border w-full border-slate-500 p-4">
-                  <h1 className="mb-2">Disscussion</h1>
-                  <Textarea
-                    className="mb-4 focus-visible:ring-0 focus-visible:ring-offset-0"
-                    placeholder="add comment..."
+                  <form
+                    onSubmit={submitCommitHandler}
+                    className="flex flex-col"
+                  >
+                    <h1 className="mb-2">Disscussion</h1>
+                    <div className="relative">
+                      <Textarea
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        className="mb-4 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        placeholder="add comment..."
+                      />
+                    </div>
+                    <Button loading={isCommentAdding} className="self-end ">
+                      Submit
+                    </Button>
+                  </form>
+                  <CommentDiscussion
+                    commentReplay={commentReplay}
+                    setCommentReplay={setCommentReplay}
                   />
-                  <CommentDiscussion />
                 </div>
               </div>
               {/*  ==============================  */}

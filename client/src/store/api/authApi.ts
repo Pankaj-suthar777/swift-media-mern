@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://swift-rivals-mern.onrender.com/api",
+    baseUrl: "/api",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {

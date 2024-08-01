@@ -47,3 +47,7 @@ export const UpVoteDownVoteSchema = yup.object().shape({
     .min(3, "vote is required!")
     .equals(["up-vote", "down-vote"]),
 });
+
+export const AddCommentSchema = yup.object().shape({
+  text: yup.string().trim().min(1, "text is required!"),
+});
