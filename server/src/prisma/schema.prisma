@@ -123,4 +123,5 @@ model ReplayToComment {
    author_id       Int
    author          User  @relation(fields: [author_id], references: [id])
    comment         Comment  @relation(fields: [comment_id], references: [id])
+//    replayed        ReplayToComment[]
 }

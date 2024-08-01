@@ -5,11 +5,14 @@ import ReplayComment from "./ReplayComment";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../custom/button";
 import { FormEvent } from "react";
+import { ReplyToComment } from "@/@types/replayToComment";
 
 interface Props {
   comment: Comment;
-  setCommentReplay: React.Dispatch<React.SetStateAction<Comment | null>>;
-  commentReplay: Comment | null;
+  setCommentReplay: React.Dispatch<
+    React.SetStateAction<Comment | null | ReplyToComment>
+  >;
+  commentReplay: Comment | null | ReplyToComment;
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
   submitReplay: (e: FormEvent<HTMLFormElement>) => Promise<void>;
@@ -25,7 +28,7 @@ const PostComment = ({
   text,
   isReplayCommentAdding,
 }: Props) => {
-  const clickReplayHandler = () => {
+  const clickReplayHandler = (comment: Comment | ReplyToComment) => {
     setCommentReplay(comment);
   };
 
@@ -47,7 +50,7 @@ const PostComment = ({
 
             <div
               className="absolute top-4 right-4 cursor-pointer"
-              onClick={clickReplayHandler}
+              onClick={() => clickReplayHandler(comment)}
             >
               <Reply size={20} />
             </div>
@@ -82,30 +85,37 @@ const PostComment = ({
                 placeholder="add comment..."
               />
 
-              <div className="flex w-full items-center justify-between bg-white p-2 border border-slate-200 mb-2">
-                <div>
-                  <h1>Replaying to @{commentReplay?.author?.name}</h1>
-                  <p>{commentReplay?.text}</p>
+              <div className="flex w-full items-center bg-white p-2 border border-slate-200">
+                <div className="flex justify-between items-center w-full">
+                  <div>
+                    <h1>Replaying to @{commentReplay?.author?.name}</h1>
+                    <p>{commentReplay?.text}</p>
+                  </div>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => setCommentReplay(null)}
+                  >
+                    <X size={20} />
+                  </div>
                 </div>
-                <div
-                  className="cursor-pointer"
-                  onClick={() => setCommentReplay(null)}
-                >
-                  <X size={20} />
-                </div>
+                <Button loading={isReplayCommentAdding} className="ml-4">
+                  Submit
+                </Button>
               </div>
             </div>
-            <Button loading={isReplayCommentAdding} className="self-end ">
-              Submit
-            </Button>
           </form>
         )}
         {comment?.replayedComment?.map((replay, i: number) => {
           return (
             <ReplayComment
+              commentReplay={commentReplay}
+              setCommentReplay={setCommentReplay}
+              clickReplayHandler={clickReplayHandler}
               replay={replay}
               key={i}
               replayedTo={comment?.author?.name}
+              setText={setText}
+              text={text}
             />
           );
         })}

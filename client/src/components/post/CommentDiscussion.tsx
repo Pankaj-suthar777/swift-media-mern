@@ -7,9 +7,12 @@ import PostComment from "./PostComment";
 import { Comment } from "@/@types/comment";
 import { FormEvent, useState } from "react";
 import { toast } from "../ui/use-toast";
+import { ReplyToComment } from "@/@types/replayToComment";
 
 interface Props {
-  setCommentReplay: React.Dispatch<React.SetStateAction<Comment | null>>;
+  setCommentReplay: React.Dispatch<
+    React.SetStateAction<Comment | null | ReplyToComment>
+  >;
   commentReplay: Comment | null;
 }
 
@@ -34,6 +37,7 @@ const CommentDiscussion = ({ commentReplay, setCommentReplay }: Props) => {
       });
 
       setText("");
+      setCommentReplay(null);
     } catch (error: any) {
       toast({
         title: error?.data?.error,

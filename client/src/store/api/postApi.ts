@@ -100,8 +100,8 @@ export const postApi = createApi({
           method: "POST",
           body: {
             text,
+            invalidatesTags: ["Comment"],
           },
-          invalidatesTags: ["Comment"],
         };
       },
     }),
