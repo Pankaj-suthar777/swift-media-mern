@@ -1,4 +1,5 @@
 import { Comment } from "./comment";
+import { ReplayToReplayComment } from "./ReplyToReply";
 import { User } from "./user";
 
 export interface ReplyToComment {
@@ -9,4 +10,5 @@ export interface ReplyToComment {
   author_id: number;
   author: User;
   comment: Comment;
+  replies: ReplayToReplayComment[];
 }

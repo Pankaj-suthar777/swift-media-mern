@@ -270,6 +270,25 @@ export const getPostComment: RequestHandler = async (req, res) => {
               email: true,
             },
           },
+
+          replies: {
+            include: {
+              replay_to_author: {
+                select: {
+                  avatar: true,
+                  name: true,
+                  email: true,
+                },
+              },
+              author: {
+                select: {
+                  avatar: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -288,6 +307,22 @@ export const addReplayComment: RequestHandler = async (req, res) => {
       author_id: myId,
       comment_id: parseInt(id),
       text: text,
+    },
+  });
+
+  responseReturn(res, 201, { message: "Replay added to comment successfully" });
+};
+
+export const addReplayToReplayComment: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  const { text, replayToAuthorId, replayToCommentId } = req.body;
+
+  await prisma.replayToReplayComment.create({
+    data: {
+      author_id: myId,
+      text: text,
+      replay_to_author_id: parseInt(replayToAuthorId),
+      replay_to_comment_id: parseInt(replayToCommentId),
     },
   });
 

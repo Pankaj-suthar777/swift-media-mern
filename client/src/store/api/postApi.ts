@@ -100,10 +100,10 @@ export const postApi = createApi({
           method: "POST",
           body: {
             text,
-            invalidatesTags: ["Comment"],
           },
         };
       },
+      invalidatesTags: ["Comment"],
     }),
     addReplayComment: builder.mutation({
       query({ id, text }) {
@@ -113,9 +113,19 @@ export const postApi = createApi({
           body: {
             text,
           },
-          invalidatesTags: ["Comment"],
         };
       },
+      invalidatesTags: ["Comment"],
+    }),
+    addReplayToReply: builder.mutation({
+      query(body) {
+        return {
+          url: `/post/add-replay-to-replay`,
+          method: "POST",
+          body,
+        };
+      },
+      invalidatesTags: ["Comment"],
     }),
   }),
 });
@@ -132,4 +142,5 @@ export const {
   useAddCommentMutation,
   useGetPostCommentsQuery,
   useAddReplayCommentMutation,
+  useAddReplayToReplyMutation,
 } = postApi;

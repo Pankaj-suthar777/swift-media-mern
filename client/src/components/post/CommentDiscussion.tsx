@@ -7,12 +7,9 @@ import PostComment from "./PostComment";
 import { Comment } from "@/@types/comment";
 import { FormEvent, useState } from "react";
 import { toast } from "../ui/use-toast";
-import { ReplyToComment } from "@/@types/replayToComment";
 
 interface Props {
-  setCommentReplay: React.Dispatch<
-    React.SetStateAction<Comment | null | ReplyToComment>
-  >;
+  setCommentReplay: React.Dispatch<React.SetStateAction<any>>;
   commentReplay: Comment | null;
 }
 

@@ -51,3 +51,9 @@ export const UpVoteDownVoteSchema = yup.object().shape({
 export const AddCommentSchema = yup.object().shape({
   text: yup.string().trim().min(1, "text is required!"),
 });
+
+export const AddReplayToReplayCommentSchema = yup.object().shape({
+  text: yup.string().trim().min(1, "text is required!"),
+  replayToAuthorId: yup.number().min(1, "replay to author id is required!"),
+  replayToCommentId: yup.number().min(1, "replay to author id is required!"),
+});

@@ -33,7 +33,8 @@ model User {
     savedPost          SavedPost[] 
     comments           Comment[]
     replayToComment    ReplayToComment[]
-
+    repliesToReplies   ReplayToReplayComment[] @relation("ReplyAuthor")
+    repliesReceived    ReplayToReplayComment[] @relation("ReplayedToAuthor")
 }
 
 model Chat {
@@ -123,5 +124,18 @@ model ReplayToComment {
    author_id       Int
    author          User  @relation(fields: [author_id], references: [id])
    comment         Comment  @relation(fields: [comment_id], references: [id])
-//    replayed        ReplayToComment[]
+   replies         ReplayToReplayComment[] @relation("ReplayToReplayCommentReplies")
 }
+
+model ReplayToReplayComment {
+   id                     Int      @id @default(autoincrement())
+   created_at             DateTime @default(now())
+   text                   String
+   replay_to_author_id    Int
+   replay_to_author       User     @relation("ReplayedToAuthor", fields: [replay_to_author_id], references: [id])
+   author_id              Int
+   author                 User     @relation("ReplyAuthor", fields: [author_id], references: [id])
+   replay_to_comment_id   Int
+   replay_to_comment      ReplayToComment @relation("ReplayToReplayCommentReplies", fields: [replay_to_comment_id], references: [id])
+}
+

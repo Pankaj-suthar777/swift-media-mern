@@ -10,6 +10,7 @@ import {
   addComment,
   getPostComment,
   addReplayComment,
+  addReplayToReplayComment,
 } from "#/controllers/post";
 import { authMiddleware } from "#/middleware/authMiddleware";
 import { validate } from "#/middleware/validator";
@@ -17,6 +18,7 @@ import {
   CreatePostSchema,
   UpVoteDownVoteSchema,
   AddCommentSchema,
+  AddReplayToReplayCommentSchema,
 } from "#/utils/validationSchema";
 import { Router } from "express";
 
@@ -48,6 +50,12 @@ router.post(
   validate(AddCommentSchema),
   authMiddleware,
   addReplayComment
+);
+router.post(
+  "/add-replay-to-replay",
+  validate(AddReplayToReplayCommentSchema),
+  authMiddleware,
+  addReplayToReplayComment
 );
 
 router.get("/comment/:id", authMiddleware, getPostComment);
