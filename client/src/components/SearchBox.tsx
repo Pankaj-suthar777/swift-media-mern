@@ -21,7 +21,7 @@ const SearchBox = () => {
   }, [searchValue, searchUser]);
 
   return (
-    <div className="relative md:w-[600px] group">
+    <div className="relative md:w-[600px] group z-30">
       <input
         autoComplete="off"
         value={searchValue}

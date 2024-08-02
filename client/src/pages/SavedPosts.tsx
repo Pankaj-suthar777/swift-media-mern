@@ -33,7 +33,7 @@ const SavedPosts = () => {
   if (posts?.length === 0) {
     return (
       <div className="px-4">
-        <div className="flex w-full py-12 bg-white justify-center items-center">
+        <div className="flex w-full py-24 bg-white justify-center items-center">
           <p>No Saved Post</p>
         </div>
       </div>
