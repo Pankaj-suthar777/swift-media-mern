@@ -141,13 +141,13 @@ const Profile = () => {
                   </div>
                   <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                     <span className="font-semibold text-black dark:text-white">
-                      {data?.user?.followersCount}
+                      {data?.user?.followersCount || 0}
                     </span>
                     <span className="text-sm">Followers</span>
                   </div>
                   <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
                     <span className="font-semibold text-black dark:text-white">
-                      {data?.user?.followingCount}
+                      {data?.user?.followingCount || 0}
                     </span>
                     <span className="text-sm">Following</span>
                   </div>

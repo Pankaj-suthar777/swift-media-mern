@@ -100,8 +100,8 @@ const Post = ({
 
   return (
     <div className="card rounded-xl max-w-lg flex gap-8">
-      <div className="flex items-center">
-        <div className="flex gap-4 flex-col w-full">
+      <div className="flex items-center min-w-[45px]">
+        <div className="flex gap-4 flex-col ">
           <div className="flex items-center gap-2">
             <div
               className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
@@ -109,14 +109,14 @@ const Post = ({
               }`}
               onClick={() => upOrDownVoteHandler("up-vote", post?.id)}
             >
-              {isLoading ? (
-                <Loader className="animate-spin" size={20} />
-              ) : (
-                <ArrowUp size={20} />
-              )}
+              <ArrowUp size={20} />
             </div>
             <span>
-              {postData?.vote.filter((vote) => vote.vote === "up-vote").length}
+              {isLoading ? (
+                <Loader className="animate-spin" size={16} />
+              ) : (
+                postData?.vote.filter((vote) => vote.vote === "up-vote").length
+              )}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -126,17 +126,15 @@ const Post = ({
               }`}
               onClick={() => upOrDownVoteHandler("down-vote", post.id)}
             >
-              {isLoading ? (
-                <Loader className="animate-spin" size={20} />
-              ) : (
-                <ArrowDown size={20} />
-              )}
+              <ArrowDown size={20} />
             </div>
             <span>
-              {
+              {isLoading ? (
+                <Loader className="animate-spin" size={16} />
+              ) : (
                 postData?.vote.filter((vote) => vote.vote === "down-vote")
                   .length
-              }
+              )}
             </span>
           </div>
         </div>

@@ -32,6 +32,8 @@ const Posts = () => {
     [isLoading, hasMore]
   );
 
+  if (posts.length === 0) {
+  }
   return (
     <div className="h-viewport-minus-80px w-full flex flex-col items-center pl-4 pr-4">
       <div className="flex gap-4 w-full h-full">

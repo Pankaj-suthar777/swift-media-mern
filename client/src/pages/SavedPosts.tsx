@@ -30,6 +30,16 @@ const SavedPosts = () => {
     [isLoading, hasMore]
   );
 
+  if (posts?.length === 0) {
+    return (
+      <div className="px-4">
+        <div className="flex w-full py-12 bg-white justify-center items-center">
+          <p>No Saved Post</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="pl-4 pr-4 overflow-y-auto h-viewport-minus-80px">
       <div className="grid lg:grid-cols-2 grid-cols-1 bg-white p-4 gap-8">
