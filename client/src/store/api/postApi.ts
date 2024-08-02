@@ -4,7 +4,7 @@ export const postApi = createApi({
   reducerPath: "postApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
+    baseUrl: "https://swift-media-mern.onrender.com/api",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {

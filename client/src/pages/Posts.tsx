@@ -33,6 +33,13 @@ const Posts = () => {
   );
 
   if (posts.length === 0) {
+    return (
+      <div className="px-4">
+        <div className="flex w-full py-12 bg-white justify-center items-center">
+          <p>Follow peoples to get feed</p>
+        </div>
+      </div>
+    );
   }
   return (
     <div className="h-viewport-minus-80px w-full flex flex-col items-center pl-4 pr-4">
