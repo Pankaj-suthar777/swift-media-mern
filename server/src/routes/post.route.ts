@@ -11,6 +11,9 @@ import {
   getPostComment,
   addReplayComment,
   addReplayToReplayComment,
+  toogleCommentVote,
+  toogleCommentReplayVote,
+  toogleReplayedCommentReplyVote,
 } from "#/controllers/post";
 import { authMiddleware } from "#/middleware/authMiddleware";
 import { validate } from "#/middleware/validator";
@@ -56,6 +59,20 @@ router.post(
   validate(AddReplayToReplayCommentSchema),
   authMiddleware,
   addReplayToReplayComment
+);
+
+router.post("/toggle-comment-vote/:id", authMiddleware, toogleCommentVote);
+
+router.post(
+  "/toggle-reply-comment-vote/:id",
+  authMiddleware,
+  toogleCommentReplayVote
+);
+
+router.post(
+  "/toggle-reply-to-reply-comment-vote/:id",
+  authMiddleware,
+  toogleReplayedCommentReplyVote
 );
 
 router.get("/comment/:id", authMiddleware, getPostComment);

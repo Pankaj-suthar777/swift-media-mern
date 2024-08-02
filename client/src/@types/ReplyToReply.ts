@@ -1,4 +1,6 @@
+import { Comment } from "./comment";
 import { User } from "./user";
+import { ReplayToReplyCommentVote } from "./vote";
 
 export interface ReplayToReplayComment {
   id: number;
@@ -9,5 +11,6 @@ export interface ReplayToReplayComment {
   author_id: number;
   author: User;
   replay_to_comment_id: number;
-  replay_to_comment: ReplayToReplayComment;
+  replay_to_comment: Comment;
+  replayToReplyCommentVote: ReplayToReplyCommentVote[];
 }

@@ -1,4 +1,5 @@
 import { User } from "./user";
+import { VoteType } from "./vote";
 
 export interface Post {
   id: number;
@@ -14,7 +15,7 @@ export interface Post {
 export interface Vote {
   id: number;
   created_at: Date;
-  vote: "up-vote" | "down-vote";
+  vote: VoteType;
   post_id: number;
   author_id: number;
 }

@@ -261,6 +261,7 @@ export const getPostComment: RequestHandler = async (req, res) => {
     include: {
       author: true,
       post: true,
+      vote: true,
       replayedComment: {
         include: {
           author: {
@@ -270,6 +271,7 @@ export const getPostComment: RequestHandler = async (req, res) => {
               email: true,
             },
           },
+          vote: true,
 
           replies: {
             include: {
@@ -287,6 +289,7 @@ export const getPostComment: RequestHandler = async (req, res) => {
                   email: true,
                 },
               },
+              replayToReplyCommentVote: true,
             },
           },
         },
@@ -327,4 +330,138 @@ export const addReplayToReplayComment: RequestHandler = async (req, res) => {
   });
 
   responseReturn(res, 201, { message: "Replay added to comment successfully" });
+};
+
+export const toogleCommentVote: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  const { id } = req.params;
+
+  const isVoted = await prisma.commentVote.findFirst({
+    where: {
+      comment_id: parseInt(id),
+      author_id: myId,
+    },
+  });
+
+  if (isVoted) {
+    await prisma.commentVote.delete({
+      where: {
+        id: isVoted?.id,
+      },
+    });
+  }
+
+  const vote = req.body?.vote;
+
+  if (vote === "up-vote") {
+    await prisma.commentVote.create({
+      data: {
+        author_id: myId,
+        vote: vote,
+        comment_id: parseInt(id),
+      },
+    });
+  } else if (vote === "down-vote") {
+    await prisma.commentVote.create({
+      data: {
+        author_id: myId,
+        vote: vote,
+        comment_id: parseInt(id),
+      },
+    });
+  }
+
+  const message = vote === "up-vote" ? "Upvoted" : "Devoted";
+
+  responseReturn(res, 201, { message });
+};
+
+export const toogleCommentReplayVote: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  const { id } = req.params;
+
+  const isVoted = await prisma.replayToCommentVote.findFirst({
+    where: {
+      reply_to_comment_id: parseInt(id),
+      author_id: myId,
+    },
+  });
+
+  if (isVoted) {
+    await prisma.replayToCommentVote.delete({
+      where: {
+        id: isVoted?.id,
+      },
+    });
+  }
+
+  const vote = req.body?.vote;
+
+  if (vote === "up-vote") {
+    await prisma.replayToCommentVote.create({
+      data: {
+        author_id: myId,
+        vote: vote,
+        reply_to_comment_id: parseInt(id),
+      },
+    });
+  } else if (vote === "down-vote") {
+    await prisma.replayToCommentVote.create({
+      data: {
+        author_id: myId,
+        vote: vote,
+        reply_to_comment_id: parseInt(id),
+      },
+    });
+  }
+
+  const message = vote === "up-vote" ? "Upvoted" : "Devoted";
+
+  responseReturn(res, 201, { message });
+};
+export const toogleReplayedCommentReplyVote: RequestHandler = async (
+  req,
+  res
+) => {
+  const myId = req.user.id;
+  const { id } = req.params;
+
+  const isVoted = await prisma.replayToReplyCommentVote.findFirst({
+    where: {
+      reply_to_reply_comment_id: parseInt(id),
+      author_id: myId,
+    },
+  });
+
+  if (isVoted) {
+    await prisma.replayToReplyCommentVote.delete({
+      where: {
+        id: isVoted?.id,
+      },
+    });
+  }
+
+  const vote = req.body?.vote;
+
+  if (vote === "up-vote") {
+    await prisma.replayToReplyCommentVote.create({
+      data: {
+        author_id: myId,
+        vote: vote,
+        reply_to_reply_comment_id: parseInt(id),
+      },
+    });
+  } else if (vote === "down-vote") {
+    await prisma.replayToReplyCommentVote.create({
+      data: {
+        author_id: myId,
+        vote: vote,
+        reply_to_reply_comment_id: parseInt(id),
+      },
+    });
+  }
+
+  const message = vote === "up-vote" ? "Upvoted" : "Devoted";
+
+  responseReturn(res, 201, { message });
 };

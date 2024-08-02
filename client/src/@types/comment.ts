@@ -1,6 +1,7 @@
 import { Post } from "./post";
 import { ReplyToComment } from "./replayToComment";
 import { User } from "./user";
+import { CommentVote } from "./vote";
 
 export interface Comment {
   id: number;
@@ -11,4 +12,5 @@ export interface Comment {
   author: User;
   post: Post;
   replayedComment: ReplyToComment[];
+  vote: CommentVote[];
 }

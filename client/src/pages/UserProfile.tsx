@@ -135,7 +135,7 @@ const Profile = () => {
                 <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
                   <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                     <span className="font-semibold text-black dark:text-white">
-                      {data?.post?.length}
+                      {data?.totalPosts}
                     </span>
                     <span className="text-sm">Posts</span>
                   </div>
@@ -190,7 +190,7 @@ const Profile = () => {
                         </div>
                       );
                     })}
-                  <div className="absolute ">
+                  <div className="">
                     <div className="h-2"></div>
                     {isLoading && (
                       <div className="w-full overflow-hidden flex justify-center items-center py-12">

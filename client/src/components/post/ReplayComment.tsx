@@ -4,10 +4,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../custom/button";
 import { Comment } from "@/@types/comment";
-import { useAddReplayToReplyMutation } from "@/store/api/postApi";
+import {
+  useAddReplayToReplyMutation,
+  useToogleReplayCommentVoteMutation,
+} from "@/store/api/postApi";
 import { FormEvent } from "react";
 import { toast } from "../ui/use-toast";
 import ReplayToReplayComment from "./ReplayToReplyComment";
+import { VoteType } from "@/@types/vote";
+import { useAppSelector } from "@/store/hooks";
 
 interface Props {
   replay: ReplyToComment;
@@ -30,6 +35,31 @@ const ReplayComment = ({
 }: Props) => {
   console.log(replay);
   const [addReplayToReply, { isLoading }] = useAddReplayToReplyMutation();
+
+  const [toogleComment] = useToogleReplayCommentVoteMutation();
+
+  const { userInfo } = useAppSelector((state) => state.auth);
+
+  const ToogleVoteHandler = async (vote: VoteType) => {
+    if (!replay?.id) return;
+
+    try {
+      const data = await toogleComment({
+        vote,
+        id: replay?.id,
+      }).unwrap();
+
+      toast({
+        title: data?.message,
+        variant: "default",
+      });
+    } catch (error: any) {
+      toast({
+        title: error?.data?.error,
+        variant: "destructive",
+      });
+    }
+  };
 
   const submitCommitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -59,6 +89,8 @@ const ReplayComment = ({
     }
   };
 
+  const vote = replay.vote?.find((vote) => vote.author_id === userInfo.id);
+
   return (
     <div>
       <div className="relative">
@@ -68,17 +100,44 @@ const ReplayComment = ({
         >
           <Reply size={20} />
         </div>
-        <div className="text-gray-300 font-bold pl-14 ">|</div>
+        <div className="text-gray-300 font-bold pl-14">|</div>
 
         <div className="flex justify-between border ml-5  rounded-md">
           <div className="p-3 flex">
             <div className="flex items-center mr-4">
-              <div className="flex gap-4 flex-col">
-                <div className="border rounded-full border-slate-300 p-1 cursor-pointer">
-                  <ArrowUp size={15} />
+              <div className="flex gap-3 flex-col">
+                <div className="flex gap-2 items-center">
+                  {replay?.vote && (
+                    <div className="min-w-[10px]">
+                      {replay?.vote?.filter((v) => v.vote === "up-vote").length}
+                    </div>
+                  )}
+                  <div
+                    className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+                      vote?.vote === "up-vote" ? "bg-green-200" : ""
+                    }`}
+                    onClick={() => ToogleVoteHandler("up-vote")}
+                  >
+                    <ArrowUp size={15} />
+                  </div>
                 </div>
-                <div className="border rounded-full border-slate-300 p-1 cursor-pointer">
-                  <ArrowDown size={15} />
+                <div className="flex gap-2 items-center">
+                  {replay?.vote && (
+                    <div className="min-w-[10px]">
+                      {
+                        replay?.vote?.filter((v) => v.vote === "down-vote")
+                          .length
+                      }
+                    </div>
+                  )}
+                  <div
+                    className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+                      vote?.vote === "down-vote" ? "bg-red-200" : ""
+                    }`}
+                    onClick={() => ToogleVoteHandler("down-vote")}
+                  >
+                    <ArrowDown size={15} />
+                  </div>
                 </div>
               </div>
             </div>

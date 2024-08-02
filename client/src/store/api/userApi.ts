@@ -1,5 +1,3 @@
-import { Post } from "@/@types/post";
-import { User } from "@/@types/user";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const userApi = createApi({
@@ -16,7 +14,7 @@ export const userApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getProfile: builder.query<{ user: User; post: Post[] }, string>({
+    getProfile: builder.query({
       query(id) {
         return {
           url: `/user/${id}`,

@@ -35,6 +35,9 @@ model User {
     replayToComment    ReplayToComment[]
     repliesToReplies   ReplayToReplayComment[] @relation("ReplyAuthor")
     repliesReceived    ReplayToReplayComment[] @relation("ReplayedToAuthor")
+    commentVote        CommentVote[]
+    replayToCommentVote ReplayToCommentVote[]
+    replayToReplyCommentVote ReplayToReplyCommentVote[]
 }
 
 model Chat {
@@ -114,6 +117,7 @@ model Comment {
    author          User  @relation(fields: [author_id], references: [id])
    post            Post  @relation(fields: [post_id], references: [id])
    replayedComment ReplayToComment[]
+   vote            CommentVote[]
 }
 
 model ReplayToComment {
@@ -125,6 +129,10 @@ model ReplayToComment {
    author          User  @relation(fields: [author_id], references: [id])
    comment         Comment  @relation(fields: [comment_id], references: [id])
    replies         ReplayToReplayComment[] @relation("ReplayToReplayCommentReplies")
+   upvotes         Int @default(0)
+   disvotes        Int @default(0)
+   vote            ReplayToCommentVote[]
+
 }
 
 model ReplayToReplayComment {
@@ -137,5 +145,39 @@ model ReplayToReplayComment {
    author                 User     @relation("ReplyAuthor", fields: [author_id], references: [id])
    replay_to_comment_id   Int
    replay_to_comment      ReplayToComment @relation("ReplayToReplayCommentReplies", fields: [replay_to_comment_id], references: [id])
+
+   replayToReplyCommentVote ReplayToReplyCommentVote[]  
 }
 
+
+model CommentVote {
+   id              Int      @id @default(autoincrement())
+   created_at      DateTime @default(now())
+   vote            String
+   comment_id      Int
+   author_id       Int
+   author          User  @relation(fields: [author_id], references: [id])
+   comment         Comment  @relation(fields: [comment_id], references: [id])
+}
+
+
+
+model ReplayToCommentVote {
+   id                       Int      @id @default(autoincrement())
+   created_at               DateTime @default(now())
+   vote                     String
+   reply_to_comment_id      Int
+   author_id                Int
+   author                   User  @relation(fields: [author_id], references: [id])
+   reply_to_comment         ReplayToComment  @relation(fields: [reply_to_comment_id], references: [id])
+}
+
+model ReplayToReplyCommentVote {
+   id                             Int      @id @default(autoincrement())
+   created_at                     DateTime @default(now())
+   vote                           String
+   reply_to_reply_comment_id      Int
+   author_id                      Int
+   author                         User  @relation(fields: [author_id], references: [id])
+   reply_to_reply_comment         ReplayToReplayComment  @relation(fields: [reply_to_reply_comment_id], references: [id])
+}

@@ -27,8 +27,15 @@ export const getUser: RequestHandler = async (req, res) => {
   mUser.followersCount = followersCount;
   mUser.followingCount = followingCount;
 
+  const totalPosts = await prisma.post.count({
+    where: {
+      authorId: parseInt(id),
+    },
+  });
+
   responseReturn(res, 201, {
     user: mUser,
+    totalPosts,
   });
 };
 

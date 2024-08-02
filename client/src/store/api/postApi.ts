@@ -127,6 +127,42 @@ export const postApi = createApi({
       },
       invalidatesTags: ["Comment"],
     }),
+    toogleCommentVote: builder.mutation({
+      query({ id, vote }) {
+        return {
+          url: `/post/toggle-comment-vote/${id}`,
+          method: "POST",
+          body: {
+            vote,
+          },
+        };
+      },
+      invalidatesTags: ["Comment"],
+    }),
+    toogleReplayCommentVote: builder.mutation({
+      query({ id, vote }) {
+        return {
+          url: `/post/toggle-reply-comment-vote/${id}`,
+          method: "POST",
+          body: {
+            vote,
+          },
+        };
+      },
+      invalidatesTags: ["Comment"],
+    }),
+    toogleReplayedToReplyCommentVote: builder.mutation({
+      query({ id, vote }) {
+        return {
+          url: `/post/toggle-reply-to-reply-comment-vote/${id}`,
+          method: "POST",
+          body: {
+            vote,
+          },
+        };
+      },
+      invalidatesTags: ["Comment"],
+    }),
   }),
 });
 
@@ -143,4 +179,7 @@ export const {
   useGetPostCommentsQuery,
   useAddReplayCommentMutation,
   useAddReplayToReplyMutation,
+  useToogleCommentVoteMutation,
+  useToogleReplayCommentVoteMutation,
+  useToogleReplayedToReplyCommentVoteMutation,
 } = postApi;

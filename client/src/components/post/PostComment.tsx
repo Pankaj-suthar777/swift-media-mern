@@ -6,6 +6,10 @@ import { Textarea } from "../ui/textarea";
 import { Button } from "../custom/button";
 import { FormEvent } from "react";
 import { ReplyToComment } from "@/@types/replayToComment";
+import { VoteType } from "@/@types/vote";
+import { useToogleCommentVoteMutation } from "@/store/api/postApi";
+import { toast } from "../ui/use-toast";
+import { useAppSelector } from "@/store/hooks";
 
 interface Props {
   comment: Comment;
@@ -28,22 +32,79 @@ const PostComment = ({
   text,
   isReplayCommentAdding,
 }: Props) => {
+  const [toogleComment] = useToogleCommentVoteMutation();
+
+  const { userInfo } = useAppSelector((state) => state.auth);
+
   const clickReplayHandler = (comment: Comment | ReplyToComment) => {
     setCommentReplay(comment);
   };
+
+  const ToogleVoteHandler = async (vote: VoteType) => {
+    if (!comment?.id) return;
+
+    try {
+      const data = await toogleComment({
+        vote,
+        id: comment?.id,
+      }).unwrap();
+
+      toast({
+        title: data?.message,
+        variant: "default",
+      });
+    } catch (error: any) {
+      toast({
+        title: error?.data?.error,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const vote = comment.vote.find((vote) => vote.author_id === userInfo.id);
 
   return (
     <div>
       <div className="mt-4">
         <div className="flex w-full justify-between border rounded-md relative">
-          <div className="p-3 flex gap-4">
+          <div className="p-3 flex ">
             <div className="flex items-center mr-4">
-              <div className="flex gap-4 flex-col">
-                <div className="border rounded-full border-slate-300 p-2 cursor-pointer">
-                  <ArrowUp size={20} />
+              <div className="flex gap-3 flex-col ">
+                <div className="flex gap-2 items-center ">
+                  {comment?.vote && (
+                    <div className="min-w-[10px]">
+                      {
+                        comment?.vote?.filter((v) => v.vote === "up-vote")
+                          .length
+                      }
+                    </div>
+                  )}
+                  <div
+                    className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+                      vote?.vote === "up-vote" ? "bg-green-200" : ""
+                    }`}
+                    onClick={() => ToogleVoteHandler("up-vote")}
+                  >
+                    <ArrowUp size={20} />
+                  </div>
                 </div>
-                <div className="border rounded-full border-slate-300 p-2 cursor-pointer">
-                  <ArrowDown size={20} />
+                <div className="flex gap-2 items-center">
+                  {comment?.vote && (
+                    <div className="min-w-[10px]">
+                      {
+                        comment?.vote?.filter((v) => v.vote === "down-vote")
+                          .length
+                      }
+                    </div>
+                  )}
+                  <div
+                    className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+                      vote?.vote === "down-vote" ? "bg-red-200" : ""
+                    }`}
+                    onClick={() => ToogleVoteHandler("down-vote")}
+                  >
+                    <ArrowDown size={20} />
+                  </div>
                 </div>
               </div>
             </div>
