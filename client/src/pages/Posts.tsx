@@ -40,7 +40,7 @@ const Posts = () => {
           <div className="flex flex-col gap-4 overflow-y-auto border-t border-slate-300 h-full w-full px-4 items-center">
             {posts.length === 0 ? (
               <div className="px-4">
-                <div className="flex w-full py-24 bg-white justify-center items-center">
+                <div className="flex w-full py-24justify-center items-center">
                   <p>Follow peoples to get feed</p>
                 </div>
               </div>
