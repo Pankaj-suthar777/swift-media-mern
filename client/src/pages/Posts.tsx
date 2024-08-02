@@ -32,21 +32,19 @@ const Posts = () => {
     [isLoading, hasMore]
   );
 
-  if (posts.length === 0) {
-    return (
-      <div className="px-4">
-        <div className="flex w-full py-12 bg-white justify-center items-center">
-          <p>Follow peoples to get feed</p>
-        </div>
-      </div>
-    );
-  }
   return (
     <div className="h-viewport-minus-80px w-full flex flex-col items-center pl-4 pr-4">
       <div className="flex gap-4 w-full h-full">
         <div className="sm:w-[60%] bg-slate-50 w-full flex flex-col gap-4 justify-center items-center border pt-4 pb-1 overflow-y-auto h-full">
           <h1>Your Feed</h1>
           <div className="flex flex-col gap-4 overflow-y-auto border-t border-slate-300 h-full w-full px-4 items-center">
+            {posts.length === 0 ? (
+              <div className="px-4">
+                <div className="flex w-full py-24 bg-white justify-center items-center">
+                  <p>Follow peoples to get feed</p>
+                </div>
+              </div>
+            ) : null}
             <div className="h-2"></div>
             {posts &&
               posts?.map((post, i: number) => {
