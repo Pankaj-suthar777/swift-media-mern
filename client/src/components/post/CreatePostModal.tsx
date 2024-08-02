@@ -16,7 +16,11 @@ import { useCreatePostMutation } from "@/store/api/postApi";
 import { Label } from "../ui/label";
 import { uploadFilesToFirebaseAndGetUrl } from "@/utils/file-upload";
 
-const CreatePostModal = () => {
+const CreatePostModal = ({
+  setModelOpen,
+}: {
+  setModelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +51,7 @@ const CreatePostModal = () => {
         title: data?.message,
         variant: "default",
       });
+      setModelOpen(false);
     } catch (error: any) {
       toast({
         title: error?.data?.error,

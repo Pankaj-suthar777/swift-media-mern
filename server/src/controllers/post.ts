@@ -44,6 +44,7 @@ export const getFeed: RequestHandler = async (req, res) => {
     });
 
     const followingIds = myFollowing.map((follow) => follow.followerId);
+    followingIds.push(myId);
 
     const posts = await prisma.post.findMany({
       where: {

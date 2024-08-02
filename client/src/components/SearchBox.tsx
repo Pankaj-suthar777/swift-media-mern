@@ -23,6 +23,7 @@ const SearchBox = () => {
   return (
     <div className="relative md:w-[600px] group">
       <input
+        autoComplete="off"
         value={searchValue}
         onBlur={() => {
           const id = setTimeout(() => {
