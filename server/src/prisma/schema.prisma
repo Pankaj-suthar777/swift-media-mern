@@ -38,8 +38,8 @@ model User {
     commentVote        CommentVote[]
     replayToCommentVote ReplayToCommentVote[]
     replayToReplyCommentVote ReplayToReplyCommentVote[]
-    github             String?
-    twitter            String?
+    github             String? @default("")
+    twitter            String? @default("")
 }
 
 model Chat {

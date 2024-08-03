@@ -7,6 +7,8 @@ export interface UserDocument {
   favorites: string[];
   followers: string[];
   followings: string[];
+  github?: string;
+  twitter?: string;
 }
 
 import { Request } from "express";
