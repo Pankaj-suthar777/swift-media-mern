@@ -1,6 +1,6 @@
 import { Button } from "@/components/custom/button";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { Edit, Edit3, Facebook, Github, Loader, Twitter } from "lucide-react";
+import { Edit, Edit3, Github, Loader, Plus, Twitter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import ChangeDetails from "@/components/profile/ChangeDetails";
@@ -12,6 +12,7 @@ import { setUser } from "@/store/features/userSlice";
 import { useGetMyPostsQuery } from "@/store/api/postApi";
 import PostItem from "@/components/post/PostItem";
 import { Post } from "@/@types/post";
+import AddLinks from "@/components/profile/AddLinks";
 
 const Profile = () => {
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
@@ -60,15 +61,24 @@ const Profile = () => {
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark relative">
         <div className="mt-6.5 absolute top-5 left-5">
           <div className="flex items-center justify-center gap-3.5">
-            <Link to={"#"}>
-              <Github size={25} />
-            </Link>
-            <Link to={"#"}>
-              <Twitter size={25} />
-            </Link>
-            <Link to={"#"}>
-              <Facebook size={25} />
-            </Link>
+            {userInfo?.github && (
+              <Link
+                to={userInfo?.github}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github size={25} />
+              </Link>
+            )}
+            {userInfo?.twitter && (
+              <Link
+                to={userInfo?.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Twitter size={25} />
+              </Link>
+            )}
           </div>
         </div>
         <Dialog>
@@ -81,6 +91,18 @@ const Profile = () => {
           </DialogTrigger>
           <DialogContent className="p-0">
             <ChangeDetails />
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger>
+            <div className="absolute top-16 right-4">
+              <Button variant="outline">
+                <Plus size={20} />
+              </Button>
+            </div>
+          </DialogTrigger>
+          <DialogContent className="p-0">
+            <AddLinks />
           </DialogContent>
         </Dialog>
 

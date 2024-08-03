@@ -10,6 +10,8 @@ interface UserInfo {
   avatar?: string;
   followersCount?: number;
   followingCount?: number;
+  github: string;
+  twitter: string;
 }
 
 interface IUserState {

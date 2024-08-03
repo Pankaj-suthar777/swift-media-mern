@@ -1,5 +1,6 @@
 import { User } from "@/@types/user";
 import { useLazySearchUserQuery } from "@/store/api/userApi";
+import { truncateText } from "@/utils/helper";
 import { Loader } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -71,9 +72,15 @@ const SearchBox = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-medium text-gray-800">
-                    {user.name}
+                    <span className="md:block hidden">{user.name}</span>
+                    <span className="md:hidden block">
+                      {truncateText(user.name, 7)}
+                    </span>
                   </h3>
-                  <p className="text-gray-600 text-xs">{user.email}</p>
+                  <span className="md:block hidden">{user.email}</span>
+                  <span className="md:hidden block">
+                    {truncateText(user.email, 10)}
+                  </span>
                 </div>
               </Link>
             ))

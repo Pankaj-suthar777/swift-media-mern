@@ -23,12 +23,10 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUpdateUserProfileMutation } from "@/store/api/authApi";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import { useState } from "react";
 
 const profileDetailsChangeSchema = z.object({
-  name: z.string().optional(),
+  github: z.string().optional(),
+  twitter: z.string().optional(),
 });
 
 const ChangeDetails = () => {
@@ -36,12 +34,11 @@ const ChangeDetails = () => {
 
   const { userInfo } = useAppSelector((state) => state.auth);
 
-  const [about, setAbout] = useState(userInfo?.about || "");
-
   const form = useForm<z.infer<typeof profileDetailsChangeSchema>>({
     resolver: zodResolver(profileDetailsChangeSchema),
     defaultValues: {
-      name: userInfo?.name,
+      github: userInfo?.github,
+      twitter: userInfo?.twitter,
     },
   });
 
@@ -51,7 +48,7 @@ const ChangeDetails = () => {
     formData: z.infer<typeof profileDetailsChangeSchema>
   ) => {
     try {
-      const data = await updateUserProfile({ ...formData, about }).unwrap();
+      const data = await updateUserProfile({ ...formData }).unwrap();
       dispatch(setUser(data?.user));
 
       toast({
@@ -77,32 +74,36 @@ const ChangeDetails = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             <FormField
               control={form.control}
-              name="name"
+              name="github"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Github Link</FormLabel>
                   <FormControl>
-                    <Input placeholder="first name" {...field} />
+                    <Input placeholder="your github account link" {...field} />
                   </FormControl>
 
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <div>
-              <FormLabel>About</FormLabel>
-              <div className="h-[250px] pb-10">
-                <FormControl>
-                  <ReactQuill
-                    defaultValue={userInfo?.about}
-                    theme="snow"
-                    value={about}
-                    onChange={(e) => setAbout(e)}
-                    className="h-full"
-                  />
-                </FormControl>
-              </div>
-            </div>
+
+            <FormField
+              control={form.control}
+              name="twitter"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Twitter/X Link</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="your twitter/X account link"
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <CardFooter className="flex w-full justify-between p-0 pt-8">
               <DialogClose>

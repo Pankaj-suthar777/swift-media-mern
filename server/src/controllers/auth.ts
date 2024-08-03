@@ -150,6 +150,8 @@ export const get_user: RequestHandler = async (req, res) => {
       followingCount,
       about: user.about,
       avatar: user.avatar,
+      github: user.github,
+      twitter: user.twitter,
     },
   });
 };
@@ -196,7 +198,7 @@ export const admin_login: RequestHandler = async (req, res) => {
 };
 
 export const update_user: RequestHandler = async (req, res) => {
-  const { about, name, avatar } = req.body;
+  const { about, name, avatar, github, twitter } = req.body;
   const id = req.user.id;
 
   try {
@@ -205,6 +207,8 @@ export const update_user: RequestHandler = async (req, res) => {
         about: about,
         name: name,
         avatar: avatar,
+        github: github,
+        twitter: twitter,
       },
       where: {
         id: id,

@@ -27,6 +27,30 @@ export const UpdateUserSchema = yup.object().shape({
     .min(3, "Name is too short!")
     .max(20, "Name is to long!")
     .optional(),
+  github: yup
+    .string()
+    .trim()
+    .test(
+      "is-optional-url",
+      'GitHub URL must start with "https://github.com/"',
+      (value) =>
+        value === "" ||
+        value === undefined ||
+        value === null ||
+        /^https:\/\/github\.com\//.test(value)
+    ),
+  twitter: yup
+    .string()
+    .trim()
+    .test(
+      "is-optional-url",
+      'Twitter URL must start with "https://x.com/"',
+      (value) =>
+        value === "" ||
+        value === undefined ||
+        value === null ||
+        /^https:\/\/x\.com\//.test(value)
+    ),
   about: yup.string().trim().min(3, "About is too short!").optional(),
   avatar: yup.string().optional(),
 });

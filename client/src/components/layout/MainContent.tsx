@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import SearchBox from "../SearchBox";
 import { useAppSelector } from "@/store/hooks";
 
@@ -11,6 +11,7 @@ interface Props {
 const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
   const { userInfo } = useAppSelector((state) => state.auth);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   return (
     <div className="w-full h-full">
       <div className="flex flex-col flex-1 overflow-y-auto w-full">
@@ -42,7 +43,10 @@ const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
             ) : null}
           </div>
           <div className="flex items-center pr-4">
-            <Avatar>
+            <Avatar
+              onClick={() => navigate("/user/profile")}
+              className="cursor-pointer"
+            >
               <AvatarImage
                 src={
                   userInfo ? userInfo?.avatar : "https://github.com/shadcn.png"

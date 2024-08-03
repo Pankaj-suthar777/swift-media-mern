@@ -38,9 +38,9 @@ const Posts = () => {
         <div className="sm:w-[60%] bg-slate-50 w-full flex flex-col gap-4 justify-center items-center border pt-4 pb-1 overflow-y-auto h-full">
           <h1>Your Feed</h1>
           <div className="flex flex-col gap-4 overflow-y-auto border-t border-slate-300 h-full w-full px-4 items-center">
-            {posts.length === 0 ? (
+            {posts.length === 0 && isLoading === false ? (
               <div className="px-4">
-                <div className="flex w-full py-24justify-center items-center">
+                <div className="flex w-full py-24 justify-center items-center">
                   <p>Follow peoples to get feed</p>
                 </div>
               </div>

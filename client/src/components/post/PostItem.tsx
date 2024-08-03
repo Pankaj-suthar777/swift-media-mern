@@ -98,49 +98,58 @@ const Post = ({
     }
   };
 
-  return (
-    <div className="card rounded-xl max-w-lg flex gap-8">
-      <div className="flex items-center min-w-[45px]">
-        <div className="flex gap-4 flex-col ">
-          <div className="flex items-center gap-2">
-            <div
-              className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
-                vote?.vote === "up-vote" ? "bg-green-200" : ""
-              }`}
-              onClick={() => upOrDownVoteHandler("up-vote", post?.id)}
-            >
-              <ArrowUp size={20} />
-            </div>
-            <span>
-              {isLoading ? (
-                <Loader className="animate-spin" size={16} />
-              ) : (
-                postData?.vote.filter((vote) => vote.vote === "up-vote").length
-              )}
-            </span>
+  const Vote = ({ type }: { type: "horizontal" | "vertical" }) => {
+    return (
+      <div
+        className={`flex ${
+          type === "horizontal" ? "flex-row" : "flex-col"
+        }  gap-4`}
+      >
+        <div className="flex items-center gap-2">
+          <div
+            className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+              vote?.vote === "up-vote" ? "bg-green-200" : ""
+            }`}
+            onClick={() => upOrDownVoteHandler("up-vote", post?.id)}
+          >
+            <ArrowUp size={20} />
           </div>
-          <div className="flex items-center gap-2">
-            <div
-              className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
-                vote?.vote === "down-vote" ? "bg-red-200" : ""
-              }`}
-              onClick={() => upOrDownVoteHandler("down-vote", post.id)}
-            >
-              <ArrowDown size={20} />
-            </div>
-            <span>
-              {isLoading ? (
-                <Loader className="animate-spin" size={16} />
-              ) : (
-                postData?.vote.filter((vote) => vote.vote === "down-vote")
-                  .length
-              )}
-            </span>
+          <span>
+            {isLoading ? (
+              <Loader className="animate-spin" size={16} />
+            ) : (
+              postData?.vote.filter((vote) => vote.vote === "up-vote").length
+            )}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div
+            className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+              vote?.vote === "down-vote" ? "bg-red-200" : ""
+            }`}
+            onClick={() => upOrDownVoteHandler("down-vote", post.id)}
+          >
+            <ArrowDown size={20} />
           </div>
+          <span>
+            {isLoading ? (
+              <Loader className="animate-spin" size={16} />
+            ) : (
+              postData?.vote.filter((vote) => vote.vote === "down-vote").length
+            )}
+          </span>
         </div>
       </div>
+    );
+  };
 
-      <div className="h-auto min-w-[460px] border border-slate-400 transition ease-in-out cursor-pointer rounded-xl">
+  return (
+    <div className="lg:card rounded-xl lg:max-w-lg flex lg:gap-8">
+      <div className="lg:flex items-center min-w-[45px] hidden">
+        <Vote type="vertical" />
+      </div>
+
+      <div className="h-auto lg:min-w-[460px] border border-slate-400 transition ease-in-out cursor-pointer rounded-xl w-full">
         <div className="body">
           <div className="">
             <div
@@ -192,21 +201,27 @@ const Post = ({
                   dangerouslySetInnerHTML={{ __html: postData?.text || "" }}
                   onClick={() => navigate(`/user/posts/${postData?.id}`)}
                 ></div>
-                <div className="footer flex justify-between mt-4">
-                  <div className="flex space-x-4">
-                    <div
-                      className={`flex items-center border border-slate-300 rounded-full py-1 px-3 ${
-                        isSaved ? "bg-slate-300" : ""
-                      }`}
-                      onClick={() => savePostHandler()}
-                    >
-                      <Pin size={18} />
-                      <span className="ml-2">
-                        {postData?.savedPost?.length}
-                      </span>
+                <div className="footer flex w-full mt-4">
+                  <div className="flex space-x-4  w-full justify-between">
+                    <div className="flex gap-4">
+                      <div
+                        className={`flex items-center border border-slate-300 rounded-full py-1 px-3 ${
+                          isSaved ? "bg-slate-300" : ""
+                        }`}
+                        onClick={() => savePostHandler()}
+                      >
+                        <Pin size={18} />
+                        <span className="ml-2">
+                          {postData?.savedPost?.length}
+                        </span>
+                      </div>
+                      <div className="flex items-center">
+                        <Share2 size={18} />
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <Share2 size={18} />
+
+                    <div className="flex items-center min-w-[45px] lg:hidden">
+                      <Vote type="horizontal" />
                     </div>
                   </div>
                 </div>

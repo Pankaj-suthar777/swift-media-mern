@@ -1,4 +1,4 @@
-import { Facebook, Github, Loader, Twitter } from "lucide-react";
+import { Github, Loader, Twitter } from "lucide-react";
 import {
   Link,
   Navigate,
@@ -41,7 +41,8 @@ const Profile = () => {
 
   const { data: isFollow, refetch } = useIsFollowQuery(id);
 
-  const [followUser] = useFollowUserMutation();
+  const [followUser, { isLoading: isFollowingLoading }] =
+    useFollowUserMutation();
 
   const followHandler = async () => {
     await followUser(id);
@@ -85,15 +86,24 @@ const Profile = () => {
           <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark relative">
             <div className="mt-6.5 absolute top-5 left-5">
               <div className="flex items-center justify-center gap-3.5">
-                <Link to={"#"}>
-                  <Github size={25} />
-                </Link>
-                <Link to={"#"}>
-                  <Twitter size={25} />
-                </Link>
-                <Link to={"#"}>
-                  <Facebook size={25} />
-                </Link>
+                {data?.user?.github && (
+                  <Link
+                    to={data?.user?.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Github size={25} />
+                  </Link>
+                )}
+                {data?.user?.twitter && (
+                  <Link
+                    to={data?.user?.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Twitter size={25} />
+                  </Link>
+                )}
               </div>
             </div>
             <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
@@ -116,7 +126,10 @@ const Profile = () => {
                 </h3>
 
                 <div className="flex gap-2 w-full justify-end mb-4">
-                  <Button onClick={() => followHandler()}>
+                  <Button
+                    loading={isFollowingLoading}
+                    onClick={() => followHandler()}
+                  >
                     {isFollow ? "UnFollow" : "Follow"}
                   </Button>
                   <Button
