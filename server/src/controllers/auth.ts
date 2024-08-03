@@ -150,8 +150,8 @@ export const get_user: RequestHandler = async (req, res) => {
       followingCount,
       about: user.about,
       avatar: user.avatar,
-      github: user.github,
-      twitter: user.twitter,
+      github: user?.github,
+      twitter: user?.twitter,
     },
   });
 };

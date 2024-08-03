@@ -58,7 +58,7 @@ const Profile = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
   return (
     <div className="pl-4 pr-4 overflow-y-auto h-viewport-minus-80px">
-      <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark relative">
+      <div className="overflow-hidden rounded-lsm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark relative">
         <div className="mt-6.5 absolute top-5 left-5">
           <div className="flex items-center justify-center gap-3.5">
             {userInfo?.github && (
