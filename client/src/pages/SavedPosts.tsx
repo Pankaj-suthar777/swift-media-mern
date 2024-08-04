@@ -30,6 +30,16 @@ const SavedPosts = () => {
     [isLoading, hasMore]
   );
 
+  if (isLoading) {
+    return (
+      <div className="px-4">
+        <div className="flex w-full py-24 justify-center items-center">
+          <Loader className="animate-spin" size={30} />
+        </div>
+      </div>
+    );
+  }
+
   if (posts?.length === 0) {
     return (
       <div className="px-4">
@@ -41,21 +51,24 @@ const SavedPosts = () => {
   }
 
   return (
-    <div className="pl-4 pr-4 overflow-y-auto h-viewport-minus-80px">
-      <div className="grid lg:grid-cols-2 grid-cols-1 bg-white p-4 gap-8">
+    <div className="pl-2 pr-2 lg:pl-4 lg:pr-4 overflow-y-auto h-viewport-minus-80px">
+      <div className="grid lg:grid-cols-2 grid-cols-1 lg:p-4 lg:gap-8 gap-4">
         {posts &&
           posts?.map((post, i: number) => {
             const isLastElement = posts.length === i + 1;
             return isLastElement ? (
-              <div key={i} ref={lastElementRef}>
-                <PostItem
-                  post={post}
-                  key={i}
-                  refetchSinglePost={refetchSavedSinglePost}
-                />
-              </div>
+              <>
+                <div key={i} ref={lastElementRef} className="bg-white">
+                  <PostItem
+                    post={post}
+                    key={i}
+                    refetchSinglePost={refetchSavedSinglePost}
+                  />
+                </div>
+                <div className="h-6"></div>
+              </>
             ) : (
-              <div key={i}>
+              <div key={i} className="bg-white">
                 <PostItem
                   post={post}
                   key={i}
@@ -64,7 +77,7 @@ const SavedPosts = () => {
               </div>
             );
           })}
-        <div className="col-span-2">
+        <div className="lg:col-span-2">
           <div className="h-2"></div>
           {isLoading && (
             <div className="w-full overflow-hidden flex justify-center items-center py-12">

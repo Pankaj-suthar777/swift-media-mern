@@ -16,7 +16,7 @@ const MobileBottomTab = () => {
             data-tooltip-target="tooltip-home"
             type="button"
             className={`inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800 group ${
-              pathname === "/user/posts" ? "bg-blue-400" : ""
+              pathname === "/user/posts" ? "bg-blue-200" : ""
             }`}
           >
             <svg
@@ -47,7 +47,7 @@ const MobileBottomTab = () => {
             data-tooltip-target="tooltip-bookmark"
             type="button"
             className={`inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800 group ${
-              pathname === "/user/saved-posts" ? "bg-blue-400" : ""
+              pathname === "/user/saved-posts" ? "bg-blue-200" : ""
             }`}
           >
             <svg
@@ -103,7 +103,7 @@ const MobileBottomTab = () => {
               navigate("/user/profile");
             }}
             className={`inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800 group ${
-              pathname === "/user/profile" ? "bg-blue-400" : ""
+              pathname === "/user/profile" ? "bg-blue-200" : ""
             }`}
           >
             <svg
@@ -141,7 +141,7 @@ const MobileBottomTab = () => {
               navigate("/user/chats");
             }}
             className={`inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800 group ${
-              pathname === "/user/chats" ? "bg-blue-400" : ""
+              pathname === "/user/chats" ? "bg-blue-200" : ""
             }`}
           >
             <svg

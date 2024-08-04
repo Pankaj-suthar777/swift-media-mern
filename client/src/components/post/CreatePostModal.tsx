@@ -73,7 +73,7 @@ const CreatePostModal = ({
       </CardHeader>
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-2">
-          <div className="w-full pb-1">
+          <div className="w-full pb-7">
             <Label>Title</Label>
             <div className="h-[150px] mb-10 max-w-full">
               <ReactQuill

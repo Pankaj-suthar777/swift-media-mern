@@ -7,6 +7,7 @@ import PostComment from "./PostComment";
 import { Comment } from "@/@types/comment";
 import { FormEvent, useState } from "react";
 import { toast } from "../ui/use-toast";
+import { Loader } from "lucide-react";
 
 interface Props {
   setCommentReplay: React.Dispatch<React.SetStateAction<any>>;
@@ -15,7 +16,7 @@ interface Props {
 
 const CommentDiscussion = ({ commentReplay, setCommentReplay }: Props) => {
   const { id } = useParams();
-  const { data } = useGetPostCommentsQuery(id);
+  const { data, isLoading: isCommentsLoading } = useGetPostCommentsQuery(id);
   const [text, setText] = useState("");
 
   const [addReplayComment, { isLoading }] = useAddReplayCommentMutation();
@@ -49,18 +50,24 @@ const CommentDiscussion = ({ commentReplay, setCommentReplay }: Props) => {
         <div className="flex flex-col gap-5">
           {/* Comment Container */}
           <div>
-            {data?.comments?.map((comment: Comment, i: number) => (
-              <PostComment
-                setCommentReplay={setCommentReplay}
-                commentReplay={commentReplay}
-                comment={comment}
-                key={i}
-                submitReplay={submitCommitHandler}
-                isReplayCommentAdding={isLoading}
-                setText={setText}
-                text={text}
-              />
-            ))}
+            {isCommentsLoading ? (
+              <div className="w-full flex justify-center">
+                <Loader className="animate-spin" />
+              </div>
+            ) : (
+              data?.comments?.map((comment: Comment, i: number) => (
+                <PostComment
+                  setCommentReplay={setCommentReplay}
+                  commentReplay={commentReplay}
+                  comment={comment}
+                  key={i}
+                  submitReplay={submitCommitHandler}
+                  isReplayCommentAdding={isLoading}
+                  setText={setText}
+                  text={text}
+                />
+              ))
+            )}
             <div className="h-20"></div>
           </div>
         </div>

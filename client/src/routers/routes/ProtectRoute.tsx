@@ -1,6 +1,6 @@
-//import { useAppSelector } from "@/redux/hooks";
 import { useAppSelector } from "@/store/hooks";
-import { ReactNode } from "react";
+import { Loader } from "lucide-react";
+import { ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 interface Props {
@@ -10,6 +10,21 @@ interface Props {
 
 const ProtectRoute = ({ route, children }: Props) => {
   const { role, userInfo } = useAppSelector((state) => state.auth);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (role !== undefined && userInfo !== undefined) {
+      setLoading(false);
+    }
+  }, [role, userInfo]);
+
+  if (loading) {
+    return (
+      <div className="h-screen w-screen flex justify-center items-center">
+        <Loader className="animate-spin" />
+      </div>
+    );
+  }
 
   if (role) {
     if (route.role) {
