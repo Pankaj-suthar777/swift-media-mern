@@ -35,9 +35,12 @@ const Profile = () => {
 
   const { userInfo } = useAppSelector((state) => state.auth);
 
-  const { data } = useGetProfileQuery(id as string, {
-    skip: !id,
-  });
+  const { data, isLoading: isLoadingProfile } = useGetProfileQuery(
+    id as string,
+    {
+      skip: !id,
+    }
+  );
 
   const { data: isFollow, refetch } = useIsFollowQuery(id);
 
@@ -67,7 +70,7 @@ const Profile = () => {
     [isLoading, hasMore]
   );
 
-  if (isLoading) {
+  if (isLoadingProfile) {
     return (
       <div className="w-full flex justify-center items-center py-12">
         <Loader className="animate-spin h-12 w-12" />
@@ -82,7 +85,7 @@ const Profile = () => {
       {path ? (
         <Navigate to={"/user/profile"} />
       ) : (
-        <div className="pl-4 pr-4 overflow-y-auto h-viewport-minus-80px">
+        <div className="lg:pl-4 lg:pr-4 pl-2 pr-2 overflow-y-auto h-viewport-minus-80px">
           <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark relative">
             <div className="mt-6.5 absolute top-5 left-5">
               <div className="flex items-center justify-center gap-3.5">
@@ -106,7 +109,7 @@ const Profile = () => {
                 )}
               </div>
             </div>
-            <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
+            <div className="pb-6 text-center lg:pb-8 xl:pb-11.5">
               <div className="flex w-full justify-center items-center mt-5">
                 <div className="relative flex justify-center items-center">
                   <img
@@ -125,7 +128,7 @@ const Profile = () => {
                   {data?.user?.name}
                 </h3>
 
-                <div className="flex gap-2 w-full justify-end mb-4">
+                <div className="flex gap-2 w-full justify-end mb-4 px-2">
                   <Button
                     loading={isFollowingLoading}
                     onClick={() => followHandler()}
@@ -166,7 +169,7 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <div className="mx-auto max-w-2xl clear-start">
+                <div className="mx-auto max-w-2xl clear-start px-4">
                   <h4 className="font-semibold text-black dark:text-white mb-6 mt-4">
                     About Me
                   </h4>
@@ -178,7 +181,7 @@ const Profile = () => {
                   ) : null}
                 </div>
 
-                <div className="w-full mt-10 flex justify-start flex-col gap-2 items-start">
+                <div className="w-full mt-10 flex justify-start flex-col gap-2 items-start px-2">
                   <h1 className="text-lg font-semibold self-center mb-5">
                     Recent Posts
                   </h1>
@@ -186,13 +189,16 @@ const Profile = () => {
                     posts?.map((post, i: number) => {
                       const isLastElement = posts.length === i + 1;
                       return isLastElement ? (
-                        <div key={i} ref={lastElementRef}>
-                          <PostItem
-                            post={post}
-                            key={i}
-                            refetchSinglePost={refetchSinglePost}
-                          />
-                        </div>
+                        <>
+                          <div key={i} ref={lastElementRef}>
+                            <PostItem
+                              post={post}
+                              key={i}
+                              refetchSinglePost={refetchSinglePost}
+                            />
+                          </div>
+                          <div className="h-6"></div>
+                        </>
                       ) : (
                         <div key={i}>
                           <PostItem
@@ -203,13 +209,12 @@ const Profile = () => {
                         </div>
                       );
                     })}
+                  {isLoading ? (
+                    <div className="w-full flex justify-center items-center py-12">
+                      <Loader className="animate-spin h-8 w-8" />
+                    </div>
+                  ) : null}
                   <div className="">
-                    <div className="h-2"></div>
-                    {isLoading && (
-                      <div className="w-full overflow-hidden flex justify-center items-center py-12">
-                        <Loader className="animate-spin" size={30} />
-                      </div>
-                    )}
                     {error && <p>Error loading posts...</p>}
                   </div>
                 </div>

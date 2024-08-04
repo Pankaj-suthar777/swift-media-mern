@@ -30,7 +30,7 @@ const MessageContainer = ({ isMessageLoading, messages }: Props) => {
         <span>
           <UsersRound size={35} />
         </span>
-        <span>Select a user</span>
+        <span>Select a user to chat</span>
       </div>
     );
   }
@@ -86,7 +86,7 @@ const MessageContainer = ({ isMessageLoading, messages }: Props) => {
               <span>
                 <UsersRound size={35} />
               </span>
-              <span>Select a user</span>
+              <span>Select a user to chat</span>
             </div>
           )}
         </div>

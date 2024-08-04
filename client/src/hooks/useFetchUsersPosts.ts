@@ -34,7 +34,7 @@ const useFetchUserPosts = (authorId: string | undefined, page: number) => {
     };
 
     fetchPosts();
-  }, [page]);
+  }, [page, authorId]);
 
   const refetchSinglePost = async (id: number): Promise<Post> => {
     const client = await getClient();
