@@ -3,14 +3,15 @@ import { Label } from "./label";
 interface Props {
   onChange: React.Dispatch<React.SetStateAction<File | null>>;
   image: string;
+  label?: string;
 }
 
-const FileInput = ({ onChange, image }: Props) => {
+const FileInput = ({ onChange, image, label = "Image" }: Props) => {
   return (
     <div className="flex-1 items-center max-w-screen-sm mx-auto mb-3 space-y-4 sm:flex sm:space-y-0">
       <div className="relative w-full">
         <div className="items-center justify-center max-w-xl mx-auto">
-          <Label>Image</Label>
+          <Label>{label}</Label>
           <label
             className="flex mt-2 justify-center w-full max-h-[200px] min-h-[100px] px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
             id="drop"

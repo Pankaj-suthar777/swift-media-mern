@@ -8,13 +8,14 @@ import { useDebounce } from "use-debounce";
 
 const SearchBox = () => {
   const [searchValue, setSerachValue] = useState("");
-  const [value] = useDebounce(searchValue, 1000);
+  const [value] = useDebounce(searchValue, 700);
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSerachValue(e.target.value);
   };
 
-  const [searchUser, { data, isLoading }] = useLazySearchUserQuery();
+  const [searchUser, { data, isLoading, isFetching }] =
+    useLazySearchUserQuery();
 
   useEffect(() => {
     const search = async () => {
@@ -56,7 +57,7 @@ const SearchBox = () => {
       </button>
       <div className="absolute left-0 w-full mt-2 bg-white dark:bg-gray-700 shadow-lg rounded-lg overflow-hidden transition-all transform origin-top scale-y-0 group-focus-within:scale-y-100 h-0 group-focus-within:h-fit max-h-[300px] min-h-[100px] overflow-y-auto">
         <p className="p-4 text-gray-700 dark:text-gray-200">
-          {isLoading ? (
+          {isLoading || isFetching ? (
             <Loader className="animate-spin" />
           ) : (
             data?.map((user: User, i: number) => (
