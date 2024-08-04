@@ -40,8 +40,6 @@ const ReplayToReplayComment = ({ comment }: Props) => {
     (vote) => vote.author_id === userInfo.id
   );
 
-  console.log(comment);
-
   return (
     <div className="">
       <div className="text-gray-300 font-bold pl-14 ">|</div>

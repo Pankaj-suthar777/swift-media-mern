@@ -29,7 +29,7 @@ const LandingPage = () => {
               fill="white"
             />
           </div>
-          <div className=" p-4 max-w-7xl  mx-auto relative z-10  w-full pt-20 md:pt-0">
+          <div className="p-4 max-w-7xl  mx-auto relative z-10  w-full pt-20 md:pt-0 sm:my-0 my-auto">
             <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
               Swift Media
               <br /> chat with friends .
@@ -39,9 +39,9 @@ const LandingPage = () => {
             </p>
           </div>
           <div className="w-full flex justify-center">
-            <div className="button-borders mt-10 w-[250px] bg-transparent">
+            <div className="button-borders sm:mt-10 w-[250px] bg-transparent">
               <button
-                className="primary-button w-[250px] bg-transparent"
+                className="primary-button w-[250px] bg-transparent sm:mb-0 mb-10"
                 onClick={redirect}
               >
                 Go To Dashboard

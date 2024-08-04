@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import SearchBox from "../SearchBox";
 import { useAppSelector } from "@/store/hooks";
+import MobileBottomTab from "./MobileBottomTab";
 
 interface Props {
   showSidebar: boolean;
@@ -13,7 +14,7 @@ const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
       <div className="flex flex-col flex-1 overflow-y-auto w-full">
         <div className="flex items-center justify-between h-16 bg-white border-b border-gray-200 w-full px-2">
           <div className="flex items-center px-4">
@@ -59,6 +60,9 @@ const MainContent = ({ showSidebar, setShowSidebar }: Props) => {
         <div className="pt-4">
           <div className="max-w-full">
             <Outlet />
+            <div className="absolute bottom-0 left-0 right-0 sm:hidden block">
+              <MobileBottomTab />
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Cross, Group, Home, Pin, User, UsersRound } from "lucide-react";
+import { Cross, Home, Pin, User, UsersRound } from "lucide-react";
 
 export const allNav = [
   {
@@ -35,12 +35,5 @@ export const allNav = [
     icon: <User size={20} />,
     role: "user",
     path: "/user/profile",
-  },
-  {
-    id: 6,
-    title: "Create Group",
-    icon: <Group size={20} />,
-    role: "user",
-    path: "/user/create-group",
   },
 ];

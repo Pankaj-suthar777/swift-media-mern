@@ -46,7 +46,7 @@ const CommentDiscussion = ({ commentReplay, setCommentReplay }: Props) => {
   return (
     <div>
       <div className="w-full bg-white rounded-lg">
-        <div className="flex flex-col gap-5 m-3">
+        <div className="flex flex-col gap-5">
           {/* Comment Container */}
           <div>
             {data?.comments?.map((comment: Comment, i: number) => (
@@ -61,6 +61,7 @@ const CommentDiscussion = ({ commentReplay, setCommentReplay }: Props) => {
                 text={text}
               />
             ))}
+            <div className="h-20"></div>
           </div>
         </div>
       </div>

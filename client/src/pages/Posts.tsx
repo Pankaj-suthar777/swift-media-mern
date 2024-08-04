@@ -4,6 +4,7 @@ import FriendOfFriend from "@/components/post/FriendOfFriend";
 import { Loader } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import useFetchPosts from "@/hooks/useFetchPosts";
+import { Button } from "@/components/custom/button";
 
 const Posts = () => {
   const [page, setPage] = useState(0);
@@ -56,6 +57,7 @@ const Posts = () => {
                       post={post}
                       refetchSinglePost={refetchSinglePost}
                     />
+                    <div className="h-16"></div>
                   </div>
                 ) : (
                   <div key={i}>
@@ -67,7 +69,6 @@ const Posts = () => {
                   </div>
                 );
               })}
-            <div className="h-2"></div>
             {isLoading && (
               <div className="w-full overflow-hidden flex justify-center items-center py-12">
                 <Loader className="animate-spin" size={30} />
@@ -79,7 +80,9 @@ const Posts = () => {
 
         <div className="w-[30%] sm:flex h-fit justify-center hidden mx-auto">
           <div className="flex flex-col gap-2 w-full">
-            <CreatePost />
+            <CreatePost>
+              <Button className="mt-5 rounded-md w-full">Create Post</Button>
+            </CreatePost>
             <h2 className="py-4 text-lg text-center">People You May Know</h2>
             <div className="bg-slate-50">
               <FriendOfFriend />

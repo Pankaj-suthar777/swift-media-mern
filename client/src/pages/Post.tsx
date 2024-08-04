@@ -58,15 +58,15 @@ const Posts = () => {
           <div className="w-full flex justify-start py-2 px-2">
             <BackButton to="/user/posts" />
           </div>
-          <div className=" w-full gap-4 overflow-y-auto border-t border-slate-300 h-full px-4 items-center">
+          <div className="w-full gap-4 overflow-y-auto border-t border-slate-300 h-full items-center">
             <div className="w-full">
               {/*  ==============================  */}
 
-              <div className="overflow-auto pl-4 pr-4 w-full">
+              <div className="overflow-auto w-full">
                 <SinglePost post={data.post} refetchPost={refetch} />
 
                 {/*Comments*/}
-                <div className="mt-10 border w-full border-slate-500 p-4">
+                <div className="mt-10 w-full px-4">
                   <form
                     onSubmit={submitCommitHandler}
                     className="flex flex-col"

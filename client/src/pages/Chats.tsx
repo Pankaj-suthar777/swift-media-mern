@@ -268,7 +268,7 @@ const Chats = () => {
 
           {id ? (
             <form
-              className="flex justify-center items-center absolute bottom-0 w-full gap-4 bg-white p-2"
+              className="flex justify-center items-center absolute bottom-5 sm:bottom-0 w-full gap-4 bg-white p-2"
               onSubmit={sendMessageHandler}
             >
               {/* Chat input */}

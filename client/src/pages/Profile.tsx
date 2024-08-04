@@ -17,9 +17,10 @@ import AddLinks from "@/components/profile/AddLinks";
 const Profile = () => {
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
 
-  const [updateUserProfile, { isLoading }] = useUpdateUserProfileMutation();
+  const [updateUserProfile, { isLoading: updateProfileLoading }] =
+    useUpdateUserProfileMutation();
 
-  const { data } = useGetMyPostsQuery({});
+  const { data, isLoading } = useGetMyPostsQuery({});
 
   const dispatch = useAppDispatch();
 
@@ -109,7 +110,7 @@ const Profile = () => {
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="flex w-full justify-center items-center mt-5">
             <div className="relative flex justify-center items-center">
-              {fileUploadLoading || isLoading ? (
+              {fileUploadLoading || updateProfileLoading ? (
                 <div className="h-24 w-24 rounded-full border flex justify-center items-center">
                   <Loader className="animate-spin w-8 h-8" />
                 </div>
@@ -150,7 +151,11 @@ const Profile = () => {
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
-                  {data?.posts?.length}
+                  {isLoading ? (
+                    <Loader className="animate-spin" />
+                  ) : (
+                    data?.posts?.length
+                  )}
                 </span>
                 <span className="text-sm">Posts</span>
               </div>
