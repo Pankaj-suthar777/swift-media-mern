@@ -1,5 +1,5 @@
-import GroupChat from "@/components/group-chat/GroupChat";
 import Chats from "@/pages/Chats";
+import GroupChat from "@/pages/GroupChat";
 import Post from "@/pages/Post";
 import Posts from "@/pages/Posts";
 import Profile from "@/pages/Profile";
@@ -43,14 +43,15 @@ export const userRoutes = [
     element: <Post />,
     role: "user",
   },
-  {
-    path: "create-group",
-    element: <GroupChat />,
-    role: "user",
-  },
+
   {
     path: "saved-posts",
     element: <SavedPosts />,
+    role: "user",
+  },
+  {
+    path: "group-chat",
+    element: <GroupChat />,
     role: "user",
   },
 ];

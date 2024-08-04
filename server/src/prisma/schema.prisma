@@ -40,6 +40,9 @@ model User {
     replayToReplyCommentVote ReplayToReplyCommentVote[]
     github             String? @default("")
     twitter            String? @default("")
+    groupChats         GroupChat[] @relation("GroupChatFriends")
+    groupMessages      GroupMessage[] @relation("MessageSender")
+
 }
 
 model Chat {
@@ -53,10 +56,43 @@ model Chat {
     updated_at         DateTime @updatedAt
 }
 
+
+
+
+
+model GroupChat {
+    id                 Int @id @default(autoincrement())
+    friends            User[] @relation("GroupChatFriends")
+    title              String
+    avatar             String?
+    messages           GroupMessage[]
+    createdBy          Int
+    lastMessage        String
+    created_at         DateTime @default(now())
+    updated_at         DateTime @updatedAt
+}
+
+enum MessageType {
+  SYSTEM
+  NORMAL_MESSAGE
+}
+
+model GroupMessage {
+    id                 Int @id @default(autoincrement())
+    group_chat_id      Int
+    group_chat         GroupChat  @relation(fields: [group_chat_id],references: [id]) 
+    text               String
+    created_at         DateTime @default(now())
+    updated_at         DateTime @updatedAt
+    senderId           Int
+    sender             User @relation("MessageSender",fields: [senderId], references: [id])
+    type               MessageType? @default(NORMAL_MESSAGE)
+}
+
 model Message {
     id                 Int @id @default(autoincrement())
     chat_id            Int
-    chat               Chat  @relation(fields: [chat_id],references: [id]) 
+    chat               Chat  @relation(fields: [chat_id],references: [id] , onDelete: Cascade) 
     text               String
     created_at         DateTime @default(now())
     updated_at         DateTime @updatedAt
@@ -82,8 +118,8 @@ model Follow {
     id                 Int      @id @default(autoincrement())
     followerId         Int
     followingId        Int
-    follower           User     @relation("Followers", fields: [followerId], references: [id])
-    following          User     @relation("Following", fields: [followingId], references: [id])
+    follower           User     @relation("Followers", fields: [followerId], references: [id] , onDelete: Cascade)
+    following          User     @relation("Following", fields: [followingId], references: [id] , onDelete: Cascade)
     created_at         DateTime @default(now())
 
     @@unique([followerId, followingId])
@@ -96,8 +132,8 @@ model Vote {
    vote            String
    post_id         Int
    author_id       Int
-   author          User  @relation(fields: [author_id], references: [id])
-   post            Post  @relation(fields: [post_id], references: [id])
+   author          User  @relation(fields: [author_id], references: [id] , onDelete: Cascade)
+   post            Post  @relation(fields: [post_id], references: [id] , onDelete: Cascade)
 }
 
 
@@ -106,8 +142,8 @@ model SavedPost {
    created_at      DateTime @default(now())
    post_id         Int
    author_id       Int
-   author          User  @relation(fields: [author_id], references: [id])
-   post            Post  @relation(fields: [post_id], references: [id])
+   author          User  @relation(fields: [author_id], references: [id], onDelete: Cascade)
+   post            Post  @relation(fields: [post_id], references: [id] , onDelete: Cascade)
 }
 
 model Comment {
@@ -116,8 +152,8 @@ model Comment {
    text            String
    post_id         Int
    author_id       Int
-   author          User  @relation(fields: [author_id], references: [id])
-   post            Post  @relation(fields: [post_id], references: [id])
+   author          User  @relation(fields: [author_id], references: [id], onDelete: Cascade)
+   post            Post  @relation(fields: [post_id], references: [id] , onDelete: Cascade)
    replayedComment ReplayToComment[]
    vote            CommentVote[]
 }
@@ -128,8 +164,8 @@ model ReplayToComment {
    text            String
    comment_id      Int
    author_id       Int
-   author          User  @relation(fields: [author_id], references: [id])
-   comment         Comment  @relation(fields: [comment_id], references: [id])
+   author          User  @relation(fields: [author_id], references: [id] , onDelete: Cascade)
+   comment         Comment  @relation(fields: [comment_id], references: [id] , onDelete: Cascade)
    replies         ReplayToReplayComment[] @relation("ReplayToReplayCommentReplies")
    upvotes         Int @default(0)
    disvotes        Int @default(0)
@@ -144,9 +180,9 @@ model ReplayToReplayComment {
    replay_to_author_id    Int
    replay_to_author       User     @relation("ReplayedToAuthor", fields: [replay_to_author_id], references: [id])
    author_id              Int
-   author                 User     @relation("ReplyAuthor", fields: [author_id], references: [id])
+   author                 User     @relation("ReplyAuthor", fields: [author_id], references: [id] , onDelete: Cascade)
    replay_to_comment_id   Int
-   replay_to_comment      ReplayToComment @relation("ReplayToReplayCommentReplies", fields: [replay_to_comment_id], references: [id])
+   replay_to_comment      ReplayToComment @relation("ReplayToReplayCommentReplies", fields: [replay_to_comment_id], references: [id] , onDelete: Cascade)
 
    replayToReplyCommentVote ReplayToReplyCommentVote[]  
 }
@@ -158,8 +194,8 @@ model CommentVote {
    vote            String
    comment_id      Int
    author_id       Int
-   author          User  @relation(fields: [author_id], references: [id])
-   comment         Comment  @relation(fields: [comment_id], references: [id])
+   author          User  @relation(fields: [author_id], references: [id] , onDelete: Cascade)
+   comment         Comment  @relation(fields: [comment_id], references: [id] , onDelete: Cascade)
 }
 
 
@@ -170,8 +206,8 @@ model ReplayToCommentVote {
    vote                     String
    reply_to_comment_id      Int
    author_id                Int
-   author                   User  @relation(fields: [author_id], references: [id])
-   reply_to_comment         ReplayToComment  @relation(fields: [reply_to_comment_id], references: [id])
+   author                   User  @relation(fields: [author_id], references: [id] , onDelete: Cascade)
+   reply_to_comment         ReplayToComment  @relation(fields: [reply_to_comment_id], references: [id] , onDelete: Cascade)
 }
 
 model ReplayToReplyCommentVote {
@@ -180,6 +216,6 @@ model ReplayToReplyCommentVote {
    vote                           String
    reply_to_reply_comment_id      Int
    author_id                      Int
-   author                         User  @relation(fields: [author_id], references: [id])
-   reply_to_reply_comment         ReplayToReplayComment  @relation(fields: [reply_to_reply_comment_id], references: [id])
+   author                         User  @relation(fields: [author_id], references: [id] , onDelete: Cascade)
+   reply_to_reply_comment         ReplayToReplayComment  @relation(fields: [reply_to_reply_comment_id], references: [id], onDelete: Cascade)
 }

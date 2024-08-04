@@ -36,7 +36,7 @@ const ChatUserList = ({
   return (
     <div>
       <div className="bg-white rounded-md overflow-hidden w-[300px]">
-        <div className="flex justify-between mx-4">
+        <div className="flex justify-between mx-4 pb-2">
           <Dialog>
             <DialogTrigger>
               <Button variant={"outline"}>Create Group</Button>

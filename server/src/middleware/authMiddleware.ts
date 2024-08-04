@@ -14,6 +14,8 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
 
       req.user.role = decodeToken.role;
       req.user.id = decodeToken.id;
+      req.user.name = decodeToken.name;
+
       next();
     } catch (error) {
       console.log(error);

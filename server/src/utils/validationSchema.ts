@@ -81,3 +81,8 @@ export const AddReplayToReplayCommentSchema = yup.object().shape({
   replayToAuthorId: yup.number().min(1, "replay to author id is required!"),
   replayToCommentId: yup.number().min(1, "replay to author id is required!"),
 });
+
+export const CreateGroupSchema = yup.object().shape({
+  title: yup.string().trim().min(1, "text is required!"),
+  users: yup.array(),
+});
