@@ -42,7 +42,7 @@ const AddSearchUserInput = ({ setUsers, users }: Props) => {
   };
 
   return (
-    <div className="relative md:w-[600px] group z-30">
+    <div className="relative group z-30">
       <div className="relative">
         <Input
           autoComplete="off"

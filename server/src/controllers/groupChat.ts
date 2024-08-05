@@ -1,4 +1,5 @@
 import prisma from "#/prisma/prisma";
+import { getReceiverSocketIds, io } from "#/socket/socket";
 import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
 
@@ -12,6 +13,8 @@ export const createGroupChat: RequestHandler = async (req, res) => {
       error: "Users must be an array of user IDs",
     });
   }
+
+  users.push({ id: myId });
 
   await prisma.groupChat.create({
     data: {
@@ -54,8 +57,71 @@ export const getUserGroupChats: RequestHandler = async (req, res) => {
       id: true,
       createdBy: true,
       title: true,
+      avatar: true,
     },
   });
 
   responseReturn(res, 201, chats);
+};
+
+export const sendGroupMessage: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  const { chatId } = req.params;
+  const message = req.body.message;
+
+  const existingChat = await prisma.groupChat.findUnique({
+    where: {
+      id: parseInt(chatId),
+    },
+    include: {
+      friends: true,
+    },
+  });
+
+  let newMessage;
+
+  if (!existingChat) {
+    return responseReturn(res, 401, { error: "chat not found!" });
+  }
+
+  newMessage = await prisma.groupMessage.create({
+    data: {
+      text: message,
+      group_chat_id: existingChat.id,
+      senderId: myId,
+    },
+  });
+
+  await prisma.groupChat.update({
+    where: {
+      id: existingChat.id,
+    },
+    data: {
+      lastMessage: message,
+    },
+  });
+  const friends = existingChat.friends.map((friend) => friend.id);
+  // SOCKET IO FUNCTIONALITY WILL GO HERE
+  const receiverSocketId = getReceiverSocketIds(friends);
+  if (receiverSocketId) {
+    // io.to(<socket_id>).emit() used to send events to specific client
+    io.to(receiverSocketId).emit("newMessage", newMessage);
+  }
+
+  responseReturn(res, 201, { message: "Message send successfully" });
+};
+
+export const getGroupChatMessage: RequestHandler = async (req, res) => {
+  const { chatId } = req.params;
+
+  const messages = await prisma.groupMessage.findMany({
+    where: {
+      group_chat_id: parseInt(chatId),
+    },
+    include: {
+      sender: true,
+    },
+  });
+
+  responseReturn(res, 201, messages);
 };

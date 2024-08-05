@@ -6,8 +6,8 @@ export interface Message {
   chatId: number;
   chat: Chat;
   text: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  created_at?: Date;
+  updated_at?: Date;
   senderId: number;
   sender: User;
 }

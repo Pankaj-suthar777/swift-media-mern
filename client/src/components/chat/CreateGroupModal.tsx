@@ -49,7 +49,7 @@ const CreateGroupModal = () => {
 
       if (file) {
         const image = await uploadFilesToFirebaseAndGetUrl(file, "posts");
-        body.image = image;
+        body.avatar = image;
       }
 
       body.users = users;

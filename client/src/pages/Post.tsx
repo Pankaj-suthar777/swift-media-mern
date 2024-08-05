@@ -80,9 +80,11 @@ const Posts = () => {
                         placeholder="add comment..."
                       />
                     </div>
-                    <Button loading={isCommentAdding} className="self-end ">
-                      Submit
-                    </Button>
+                    {text === "" ? null : (
+                      <Button loading={isCommentAdding} className="self-end ">
+                        Submit
+                      </Button>
+                    )}
                   </form>
                   <CommentDiscussion
                     commentReplay={commentReplay}

@@ -1,7 +1,7 @@
 import {
-  //   getGroupChatMessage,
+  getGroupChatMessage,
   getUserGroupChats,
-  //   sendGroupMessage,
+  sendGroupMessage,
   createGroupChat,
 } from "#/controllers/groupChat";
 import { authMiddleware } from "#/middleware/authMiddleware";
@@ -11,7 +11,7 @@ import { Router } from "express";
 
 const router = Router();
 
-// router.post("/send-group-message", authMiddleware, sendMessage);
+router.post("/send-group-message/:chatId", authMiddleware, sendGroupMessage);
 router.get("/get-my-group-chats", authMiddleware, getUserGroupChats);
 router.post(
   "/create-group",
@@ -19,6 +19,10 @@ router.post(
   authMiddleware,
   createGroupChat
 );
-// router.get("/get-group-chat-messages/:chatId", authMiddleware, getChatMessage);
+router.get(
+  "/get-group-chat-messages/:chatId",
+  authMiddleware,
+  getGroupChatMessage
+);
 
 export default router;

@@ -3,13 +3,20 @@ import { Loader, UsersRound } from "lucide-react";
 import { useEffect, useRef } from "react";
 import moment from "moment";
 import { useParams } from "react-router-dom";
+import { Message } from "@/@types/message";
+import { GroupMessage } from "@/@types/groupChat";
 
 interface Props {
   isMessageLoading: boolean;
-  messages: any[];
+  messages: Message[] | GroupMessage[];
+  isGroupMessages: boolean;
 }
 
-const MessageContainer = ({ isMessageLoading, messages }: Props) => {
+const MessageContainer = ({
+  isMessageLoading,
+  messages,
+  isGroupMessages,
+}: Props) => {
   const lastMessageRef = useRef<any>();
 
   useEffect(() => {
@@ -45,23 +52,36 @@ const MessageContainer = ({ isMessageLoading, messages }: Props) => {
               <Loader className="ml-2 h-12 w-12 animate-spin" />
             </div>
           ) : messages ? (
-            messages.map((message: any, i: number) => {
+            messages.map((message, i: number) => {
               const senderId = message.senderId;
-
+              const previousMessage = messages[i - 1];
+              const nextMessage = messages[i + 1];
+              const isSentInSameTime =
+                moment(message?.created_at).format("LT") !==
+                moment(nextMessage?.created_at).format("LT");
               const isMyMessage = senderId === myId;
               return (
                 <div key={i} ref={lastMessageRef}>
                   <div className="flex flex-col mb-1 py-1">
                     {!isMyMessage && (
                       <div className="flex flex-col gap-1 items-start">
+                        {isGroupMessages &&
+                        previousMessage &&
+                        previousMessage.senderId !== senderId ? (
+                          <span className="text-xs py-1 bg-slate-50 px-2 rounded-xl">
+                            send by : {message.sender?.name}
+                          </span>
+                        ) : null}
                         <div className="bg-white rounded-[10px] px-8 py-2 max-w-[80%] relative word-wrap">
                           <p className="text-gray-900 text-sm break-words">
                             {message.text}
                           </p>
                         </div>
-                        <span className="text-xs">
-                          {moment(message?.created_at).format("LT")}
-                        </span>
+                        {isSentInSameTime && (
+                          <span className="text-xs mt-4">
+                            {moment(message?.created_at).format("LT")}{" "}
+                          </span>
+                        )}
                       </div>
                     )}
 
@@ -73,7 +93,8 @@ const MessageContainer = ({ isMessageLoading, messages }: Props) => {
                           </p>
                         </div>
                         <span className="text-xs">
-                          {moment(message?.created_at).format("LT")}
+                          {isSentInSameTime &&
+                            moment(message?.created_at).format("LT")}
                         </span>
                       </div>
                     )}

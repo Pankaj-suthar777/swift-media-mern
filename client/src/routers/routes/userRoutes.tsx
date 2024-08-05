@@ -54,4 +54,9 @@ export const userRoutes = [
     element: <GroupChat />,
     role: "user",
   },
+  {
+    path: "group-chat/:id",
+    element: <GroupChat />,
+    role: "user",
+  },
 ];

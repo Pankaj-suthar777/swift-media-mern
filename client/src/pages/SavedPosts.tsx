@@ -51,14 +51,14 @@ const SavedPosts = () => {
   }
 
   return (
-    <div className="pl-2 pr-2 lg:pl-4 lg:pr-4 overflow-y-auto h-viewport-minus-80px">
-      <div className="grid lg:grid-cols-2 grid-cols-1 lg:p-4 lg:gap-8 gap-4">
+    <div className="pl-2 pr-2 lg:pl-4 lg:pr-4 overflow-y-auto h-viewport-minus-80px ">
+      <div className="grid lg:grid-cols-2 grid-cols-1 lg:p-4 lg:gap-8 gap-4 ">
         {posts &&
           posts?.map((post, i: number) => {
             const isLastElement = posts.length === i + 1;
             return isLastElement ? (
               <>
-                <div key={i} ref={lastElementRef} className="bg-white">
+                <div key={i} ref={lastElementRef} className="">
                   <PostItem
                     post={post}
                     key={i}

@@ -58,8 +58,6 @@ model Chat {
 
 
 
-
-
 model GroupChat {
     id                 Int @id @default(autoincrement())
     friends            User[] @relation("GroupChatFriends")

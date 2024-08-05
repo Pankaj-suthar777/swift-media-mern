@@ -1,3 +1,4 @@
+import { GroupChat, GroupMessage } from "@/@types/groupChat";
 import { baseURL } from "@/api/client";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -17,17 +18,17 @@ export const groupChatApi = createApi({
   tagTypes: ["Chat", "Message"],
   endpoints: (builder) => ({
     sendGroupMessage: builder.mutation({
-      query(body) {
+      query({ body, id }) {
         return {
-          url: `/group-chat/send-group-message`,
+          url: `/group-chat/send-group-message/${id}`,
           method: "POST",
           body,
         };
       },
-      invalidatesTags: ["Message", "Chat"],
+      //invalidatesTags: ["Message", "Chat"],
     }),
 
-    getMyGroupChats: builder.query({
+    getMyGroupChats: builder.query<GroupChat[], null>({
       query() {
         return {
           url: `/group-chat/get-my-group-chats`,
@@ -37,14 +38,17 @@ export const groupChatApi = createApi({
       keepUnusedDataFor: 5,
     }),
 
-    getGroupChatMessages: builder.query({
+    getGroupChatMessages: builder.query<
+      GroupMessage[],
+      { chatId: string | undefined }
+    >({
       query({ chatId }) {
         return {
           url: `/group-chat/get-group-chat-messages/${chatId}`,
         };
       },
-      providesTags: ["Message"],
-      keepUnusedDataFor: 5,
+      //providesTags: ["Message"],
+      // keepUnusedDataFor: 5,
     }),
     createGroup: builder.mutation({
       query(body) {

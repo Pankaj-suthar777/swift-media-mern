@@ -190,6 +190,7 @@ const Profile = () => {
               {data?.posts?.map((post: Post, i: number) => {
                 return <PostItem post={post} key={i} />;
               })}
+              <div className="h-8"></div>
             </div>
           </div>
         </div>

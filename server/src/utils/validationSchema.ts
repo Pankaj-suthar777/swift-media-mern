@@ -85,4 +85,5 @@ export const AddReplayToReplayCommentSchema = yup.object().shape({
 export const CreateGroupSchema = yup.object().shape({
   title: yup.string().trim().min(1, "text is required!"),
   users: yup.array(),
+  avatar: yup.string().optional(),
 });

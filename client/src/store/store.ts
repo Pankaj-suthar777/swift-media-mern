@@ -20,7 +20,7 @@ export const store: Store = configureStore({
       authApi.middleware,
       chatApi.middleware,
       userApi.middleware,
-      groupChatApi.middleware,
+      postApi.middleware,
       groupChatApi.middleware,
     ]),
 });

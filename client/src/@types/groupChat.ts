@@ -13,15 +13,15 @@ export interface GroupChat {
 }
 
 export interface GroupMessage {
-  id: number;
+  id?: number;
   group_chat_id: number;
-  group_chat: GroupChat;
+  group_chat?: GroupChat;
   text: string;
   created_at: Date;
-  updated_at: Date;
+  updated_at?: Date;
   senderId: number;
-  sender: User;
-  type: MessageType;
+  sender?: User;
+  type?: MessageType;
 }
 
 export enum MessageType {

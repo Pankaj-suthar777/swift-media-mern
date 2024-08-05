@@ -144,14 +144,14 @@ const Post = ({
   };
 
   return (
-    <div className="lg:card rounded-xl lg:max-w-lg flex lg:gap-8">
+    <div className="lg:card rounded-xl lg:max-w-lg lg:mx-auto flex lg:gap-8 w-full">
       <div className="lg:flex items-center min-w-[45px] hidden">
         <Vote type="vertical" />
       </div>
 
-      <div className="h-auto lg:min-w-[460px] border border-slate-400 transition ease-in-out cursor-pointer rounded-xl w-full">
-        <div className="body">
-          <div className="">
+      <div className="h-auto lg:min-w-[420px] bg-slate-50 border border-slate-400 transition ease-in-out cursor-pointer rounded-xl w-full">
+        <div className="body lg:w-full">
+          <div className="lg:w-full">
             <div
               className="flex items-center py-2 px-2"
               onClick={() => navigate(`/user/profile/${postData?.author.id}`)}

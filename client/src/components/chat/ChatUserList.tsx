@@ -3,9 +3,6 @@ import { useAppSelector } from "@/store/hooks";
 import { truncateText } from "@/utils/helper";
 import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "../custom/button";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import CreateGroupModal from "./CreateGroupModal";
 interface Props {
   selectedChat: any;
   setSelectedChat: React.Dispatch<React.SetStateAction<any>>;
@@ -36,18 +33,6 @@ const ChatUserList = ({
   return (
     <div>
       <div className="bg-white rounded-md overflow-hidden w-[300px]">
-        <div className="flex justify-between mx-4 pb-2">
-          <Dialog>
-            <DialogTrigger>
-              <Button variant={"outline"}>Create Group</Button>
-            </DialogTrigger>
-            <DialogContent className="p-0">
-              <CreateGroupModal />
-            </DialogContent>
-          </Dialog>
-
-          <Button variant={"outline"}>Close</Button>
-        </div>
         <ul className="divide-y divide-gray-200 w-full">
           {searchValue ? (
             <div className="w-full">
