@@ -25,7 +25,7 @@ const SearchBox = () => {
   }, [value, searchUser]);
 
   return (
-    <div className="relative md:w-[600px] mx-2 group z-30">
+    <div className="relative md:w-[600px] mx-2 sm:mx-0 group z-30">
       <input
         autoComplete="off"
         value={searchValue}
@@ -64,11 +64,11 @@ const SearchBox = () => {
               <Link
                 key={i}
                 to={`/user/profile/${user.id}`}
-                className={`flex items-center py-4 px-6 bg-white`}
+                className={`flex items-center sm:py-4 py-2 sm:px-6 px-2 bg-white`}
               >
                 <div className="">
                   <img
-                    className="w-10 h-10 rounded-full object-cover mr-4"
+                    className="w-10 h-10 rounded-full object-cover sm:mr-4 mr-2"
                     src={user?.avatar ? user.avatar : "/user-profile2.jpg"}
                     alt="User avatar"
                   />
@@ -76,12 +76,12 @@ const SearchBox = () => {
                 <div className="flex-1">
                   <h3 className="text-sm font-medium text-gray-800">
                     <span className="md:block hidden">{user.name}</span>
-                    <span className="md:hidden block">
+                    <span className="md:hidden block text-xs">
                       {truncateText(user.name, 7)}
                     </span>
                   </h3>
                   <span className="md:block hidden">{user.email}</span>
-                  <span className="md:hidden block">
+                  <span className="md:hidden block text-xs">
                     {truncateText(user.email, 10)}
                   </span>
                 </div>

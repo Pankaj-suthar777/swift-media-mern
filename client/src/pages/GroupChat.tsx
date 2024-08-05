@@ -1,4 +1,4 @@
-import { GroupMessage } from "@/@types/groupChat";
+import { GroupChat as IGroupChat, GroupMessage } from "@/@types/groupChat";
 
 import MessageContainer from "@/components/chat/MessageContainer";
 import { Button } from "@/components/custom/button";
@@ -7,24 +7,25 @@ import { Input } from "@/components/ui/input";
 import { useSocketContext } from "@/context/SocketContext";
 
 import {
+  useGetGroupChatByIdQuery,
   useGetGroupChatMessagesQuery,
   useSendGroupMessageMutation,
 } from "@/store/api/groupChatApi";
-// import { useAppSelector } from "@/store/hooks";
 import { Menu } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const GroupChat = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<GroupMessage[]>([]);
 
-  // const { userInfo } = useAppSelector((state) => state.auth);
-
   const [sendMessage, { isLoading }] = useSendGroupMessageMutation();
+
+  const { data: chatData } = useGetGroupChatByIdQuery(id);
 
   const {
     data: messageData,
@@ -63,18 +64,9 @@ const GroupChat = () => {
 
     sendMessage({ body: { message }, id });
 
-    // setMessages([
-    //   ...messages,
-    //   {
-    //     text: message,
-    //     created_at: new Date(Date.now()),
-    //     group_chat_id: parseInt(id),
-    //     senderId: userInfo.id,
-    //   },
-    // ]);
-
     setMessage("");
   };
+  const chatInfo: IGroupChat = chatData?.chatInfo;
 
   return (
     <div className="flex w-full gap-4 pl-4 pr-4">
@@ -96,6 +88,26 @@ const GroupChat = () => {
       <div className="w-full relative">
         <div className="flex flex-col h-viewport-minus-100px w-full overflow-y-hidden">
           <div className="h-12 bg-white flex justify-between items-center px-4 py-8 border border-[#111111]">
+            {chatInfo && (
+              <div
+                className="flex justify-between items-center w-full cursor-pointer"
+                onClick={() => navigate(`/user/group-chat-info/${chatInfo.id}`)}
+              >
+                <div className="flex gap-4 items-center">
+                  <img
+                    className="w-10 h-10 rounded-full object-cover mr-4"
+                    src={
+                      chatInfo?.avatar ? chatInfo?.avatar : "/user-profile2.jpg"
+                    }
+                    alt="avatar"
+                  />
+                </div>
+                <h3 className="text-sm font-medium text-gray-800">
+                  {chatInfo?.title}
+                </h3>
+              </div>
+            )}
+
             <div
               className="lg:hidden cursor-pointer ml-4"
               onClick={() => {

@@ -87,3 +87,9 @@ export const CreateGroupSchema = yup.object().shape({
   users: yup.array(),
   avatar: yup.string().optional(),
 });
+
+export const UpdateGroupSchema = yup.object().shape({
+  title: yup.string().optional(),
+  users: yup.array().optional(),
+  avatar: yup.string().optional(),
+});

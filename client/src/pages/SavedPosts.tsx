@@ -68,7 +68,7 @@ const SavedPosts = () => {
                 <div className="h-6"></div>
               </>
             ) : (
-              <div key={i} className="bg-white">
+              <div key={i} className="">
                 <PostItem
                   post={post}
                   key={i}

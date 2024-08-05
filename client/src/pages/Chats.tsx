@@ -15,11 +15,6 @@ import { Menu, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-interface Message {
-  text: string;
-  senderId: any;
-}
-
 const Chats = () => {
   const { id } = useParams();
   const { pathname, state } = useLocation();
@@ -31,7 +26,7 @@ const Chats = () => {
   const [selectedSearchedUser, setSelectedSearchedUser] = useState<User | null>(
     null
   );
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [onlineUsersId, setOnlineUsersId] = useState<any[]>([]);
   const [currentChatUser, setCurrentChatUserId] = useState("");
   const [getSearch, { data: searchUserChat }] =

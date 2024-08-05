@@ -59,6 +59,9 @@ export const getUserGroupChats: RequestHandler = async (req, res) => {
       title: true,
       avatar: true,
     },
+    orderBy: {
+      updated_at: "desc",
+    },
   });
 
   responseReturn(res, 201, chats);
@@ -124,4 +127,49 @@ export const getGroupChatMessage: RequestHandler = async (req, res) => {
   });
 
   responseReturn(res, 201, messages);
+};
+
+export const getGroupChatInfo: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+
+  const chatInfo = await prisma.groupChat.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      friends: true,
+    },
+  });
+
+  responseReturn(res, 201, { chatInfo });
+};
+
+export const updateGroupChat: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  const { id } = req.params;
+
+  const { users, title, avatar } = req.body;
+
+  if (users.length < 2) {
+    return responseReturn(res, 400, {
+      error: "To create group total people must be at least 3",
+    });
+  }
+
+  users.push({ id: myId });
+
+  await prisma.groupChat.update({
+    where: {
+      id: parseInt(id),
+    },
+    data: {
+      title: title,
+      avatar: avatar,
+      friends: {
+        set: users.map((user) => ({ id: user.id })),
+      },
+    },
+  });
+
+  responseReturn(res, 201, { message: "Group is updated successfully" });
 };

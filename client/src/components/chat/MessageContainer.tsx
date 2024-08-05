@@ -8,14 +8,14 @@ import { GroupMessage } from "@/@types/groupChat";
 
 interface Props {
   isMessageLoading: boolean;
-  messages: Message[] | GroupMessage[];
-  isGroupMessages: boolean;
+  messages: Message[] | GroupMessage[] | any[];
+  isGroupMessages?: boolean;
 }
 
 const MessageContainer = ({
   isMessageLoading,
   messages,
-  isGroupMessages,
+  isGroupMessages = false,
 }: Props) => {
   const lastMessageRef = useRef<any>();
 
@@ -62,7 +62,7 @@ const MessageContainer = ({
               const isMyMessage = senderId === myId;
               return (
                 <div key={i} ref={lastMessageRef}>
-                  <div className="flex flex-col mb-1 py-1">
+                  <div className="flex flex-col py-1">
                     {!isMyMessage && (
                       <div className="flex flex-col gap-1 items-start">
                         {isGroupMessages &&
@@ -78,8 +78,8 @@ const MessageContainer = ({
                           </p>
                         </div>
                         {isSentInSameTime && (
-                          <span className="text-xs mt-4">
-                            {moment(message?.created_at).format("LT")}{" "}
+                          <span className="text-xs mb-2">
+                            {moment(message?.created_at).format("LT")}
                           </span>
                         )}
                       </div>

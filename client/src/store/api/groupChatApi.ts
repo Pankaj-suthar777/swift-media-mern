@@ -15,7 +15,7 @@ export const groupChatApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Chat", "Message"],
+  tagTypes: ["Chat", "Message", "ChatInfo"],
   endpoints: (builder) => ({
     sendGroupMessage: builder.mutation({
       query({ body, id }) {
@@ -25,7 +25,7 @@ export const groupChatApi = createApi({
           body,
         };
       },
-      //invalidatesTags: ["Message", "Chat"],
+      invalidatesTags: ["Chat"],
     }),
 
     getMyGroupChats: builder.query<GroupChat[], null>({
@@ -35,6 +35,16 @@ export const groupChatApi = createApi({
         };
       },
       providesTags: ["Chat"],
+      keepUnusedDataFor: 5,
+    }),
+
+    getGroupChatById: builder.query({
+      query(id) {
+        return {
+          url: `/group-chat/get-group-chat/${id}`,
+        };
+      },
+      providesTags: ["ChatInfo"],
       keepUnusedDataFor: 5,
     }),
 
@@ -60,6 +70,16 @@ export const groupChatApi = createApi({
       },
       invalidatesTags: ["Chat"],
     }),
+    updateGroup: builder.mutation({
+      query({ body, id }) {
+        return {
+          url: `/group-chat/update-group/${id}`,
+          method: "PUT",
+          body,
+        };
+      },
+      invalidatesTags: ["ChatInfo"],
+    }),
   }),
 });
 
@@ -68,4 +88,6 @@ export const {
   useGetMyGroupChatsQuery,
   useGetGroupChatMessagesQuery,
   useCreateGroupMutation,
+  useGetGroupChatByIdQuery,
+  useUpdateGroupMutation,
 } = groupChatApi;

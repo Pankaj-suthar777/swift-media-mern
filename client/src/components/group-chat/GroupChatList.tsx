@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "../custom/button";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { GroupChat } from "@/@types/groupChat";
-import CreateGroupModal from "../chat/CreateGroupModal";
+import CreateGroupModal from "./CreateGroupModal";
 import { useGetMyGroupChatsQuery } from "@/store/api/groupChatApi";
 import { useEffect, useState } from "react";
 

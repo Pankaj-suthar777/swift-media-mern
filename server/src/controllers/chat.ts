@@ -157,6 +157,9 @@ export const getUserChats: RequestHandler = async (req, res) => {
       senderId: true,
       id: true,
     },
+    orderBy: {
+      updated_at: "desc",
+    },
   });
 
   responseReturn(res, 201, chats);

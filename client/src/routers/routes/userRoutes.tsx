@@ -1,5 +1,6 @@
 import Chats from "@/pages/Chats";
 import GroupChat from "@/pages/GroupChat";
+import GroupChatInfoPage from "@/pages/GroupChatInfoPage";
 import Post from "@/pages/Post";
 import Posts from "@/pages/Posts";
 import Profile from "@/pages/Profile";
@@ -57,6 +58,11 @@ export const userRoutes = [
   {
     path: "group-chat/:id",
     element: <GroupChat />,
+    role: "user",
+  },
+  {
+    path: "group-chat-info/:id",
+    element: <GroupChatInfoPage />,
     role: "user",
   },
 ];
