@@ -180,7 +180,7 @@ const Post = ({
                   onClick={() => navigate(`/user/posts/${postData?.id}`)}
                 >
                   <img
-                    className={`w-full object-cover rounded-xl h-full ${
+                    className={`w-full object-scale-down bg-white rounded-xl h-full max-h-[270px]  ${
                       isImageLoaded ? "block" : "hidden"
                     }`}
                     src={postData?.image}
@@ -197,7 +197,7 @@ const Post = ({
 
               <div className=" px-3 pb-3 pt-1 rounded-xl">
                 <div
-                  className="text-black whitespace-pre-line break-words text-start"
+                  className="text-black whitespace-pre-line break-words line-clamp-4 text-start"
                   dangerouslySetInnerHTML={{ __html: postData?.text || "" }}
                   onClick={() => navigate(`/user/posts/${postData?.id}`)}
                 ></div>

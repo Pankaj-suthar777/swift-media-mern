@@ -90,7 +90,7 @@ const SinglePost = ({
               <div className="p-2">
                 {post?.image ? (
                   <img
-                    className="w-full object-cover rounded-xl h-full"
+                    className="w-full object-scale-down rounded-xl h-full max-h-[300px]"
                     src={post?.image}
                   />
                 ) : null}
