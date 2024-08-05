@@ -10,7 +10,6 @@
     "server": "tsnd --respawn -r tsconfig-paths/register --pretty --transpile-only ./src/index.ts",
     "build": "npm i && tsc && tsc-alias && npm run prisma:generate",
     "start": "node ./dist",
-    "afterbuild": "cp package.json dist/ && cd dist && npm install --production",
     "prisma:generate": "prisma generate"
   },
   "keywords": [],
