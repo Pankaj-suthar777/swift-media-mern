@@ -137,7 +137,7 @@ const Profile = () => {
                   </Button>
                   <Button
                     onClick={() =>
-                      navigate(`/user/chats/new`, {
+                      navigate(`/user/chats/${data?.user?.id}`, {
                         state: {
                           user: data?.user,
                         },
