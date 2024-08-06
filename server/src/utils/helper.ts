@@ -10,3 +10,12 @@ export const formatProfile = (user: UserDocument) => {
     followings: user.followings.length,
   };
 };
+
+export function convertDaysToDate(daysString: string) {
+  const days = parseInt(daysString);
+  const currentDate = new Date();
+  const targetDate = new Date(
+    currentDate.getTime() - days * 24 * 60 * 60 * 1000
+  );
+  return targetDate;
+}

@@ -37,7 +37,7 @@ const ReplayToReplayComment = ({ comment }: Props) => {
   };
 
   const vote = comment.replayToReplyCommentVote?.find(
-    (vote) => vote.author_id === userInfo.id
+    (vote) => vote.author_id === userInfo?.id
   );
 
   return (

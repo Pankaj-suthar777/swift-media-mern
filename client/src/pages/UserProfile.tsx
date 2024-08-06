@@ -17,6 +17,8 @@ import { Button } from "@/components/custom/button";
 import { useAppSelector } from "@/store/hooks";
 import { useCallback, useRef, useState } from "react";
 import useFetchUserPosts from "@/hooks/useFetchUsersPosts";
+import { User } from "@/@types/user";
+import { RootState } from "@/store/store";
 
 const Profile = () => {
   const { id } = useParams();
@@ -33,7 +35,7 @@ const Profile = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { userInfo } = useAppSelector((state) => state.auth);
+  const { userInfo } = useAppSelector((state: RootState) => state.auth);
 
   const { data, isLoading: isLoadingProfile } = useGetProfileQuery(
     id as string,
@@ -79,6 +81,14 @@ const Profile = () => {
   }
 
   const path = pathname === "/user/profile/" + userInfo?.id;
+
+  if (!id) {
+    return null;
+  }
+
+  const isFriend = userInfo?.friends.find(
+    (fri: User) => fri.id === parseInt(id)
+  );
 
   return (
     <>
@@ -136,13 +146,17 @@ const Profile = () => {
                     {isFollow ? "UnFollow" : "Follow"}
                   </Button>
                   <Button
-                    onClick={() =>
-                      navigate(`/user/chats/${data?.user?.id}`, {
-                        state: {
-                          user: data?.user,
-                        },
-                      })
-                    }
+                    onClick={() => {
+                      if (isFriend) {
+                        navigate(`/user/chats`);
+                      } else {
+                        navigate(`/user/chats/new`, {
+                          state: {
+                            user: data?.user,
+                          },
+                        });
+                      }
+                    }}
                   >
                     Chat
                   </Button>

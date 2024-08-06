@@ -60,18 +60,18 @@ const Post = ({
 
   useEffect(() => {
     if (postData) {
-      setVote(postData.vote.find((vote) => vote.author_id === userInfo.id));
+      setVote(postData.vote.find((vote) => vote.author_id === userInfo?.id));
     }
-  }, [postData, userInfo.id]);
+  }, [postData, userInfo?.id]);
 
   useEffect(() => {
     if (postData?.savedPost) {
       const isSaved = postData?.savedPost?.find(
-        (p) => p.author_id === userInfo.id
+        (p) => p.author_id === userInfo?.id
       );
       setIsSaved(isSaved ? true : false);
     }
-  }, [postData, userInfo.id]);
+  }, [postData, userInfo?.id]);
 
   const onImageLoad = () => {
     setIsImageLoaded(true);

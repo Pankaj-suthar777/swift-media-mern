@@ -64,7 +64,7 @@ const SinglePost = ({
     }
   };
 
-  const vote = post.vote.find((vote) => vote.author_id === userInfo.id);
+  const vote = post.vote.find((vote) => vote.author_id === userInfo?.id);
 
   return (
     <div className="flex gap-8">

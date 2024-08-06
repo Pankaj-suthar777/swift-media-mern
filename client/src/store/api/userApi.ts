@@ -96,12 +96,11 @@ export const userApi = createApi({
           disvote: number;
         }[];
       },
-      null
+      string
     >({
-      query() {
+      query(duration) {
         return {
-          url: `/user/dashboard/post-vote-data
-`,
+          url: `/user/dashboard/post-vote-data?duration=${duration}`,
         };
       },
     }),
@@ -117,4 +116,5 @@ export const {
   useUserDashboardQuery,
   useUserDashboardMessageDataQuery,
   useUserDashboardPostVoteDataQuery,
+  useLazyUserDashboardPostVoteDataQuery,
 } = userApi;

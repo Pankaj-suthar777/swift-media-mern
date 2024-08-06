@@ -179,7 +179,9 @@ const Profile = () => {
               </h4>
               <div
                 className="mt-4.5 about text-start"
-                dangerouslySetInnerHTML={{ __html: userInfo.about }}
+                dangerouslySetInnerHTML={{
+                  __html: userInfo?.about || "",
+                }}
               ></div>
             </div>
 

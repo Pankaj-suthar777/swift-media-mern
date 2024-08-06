@@ -18,6 +18,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const GroupChat = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  //const { userInfo } = useAppSelector((state) => state.auth);
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [message, setMessage] = useState("");
@@ -63,6 +64,17 @@ const GroupChat = () => {
     }
 
     sendMessage({ body: { message }, id });
+
+    // setMessages([
+    //   ...messages,
+    //   {
+    //     text: message,
+    //     created_at: new Date(Date.now()),
+    //     group_chat_id: parseInt(id),
+    //     // @ts-expect-error not going to be null fix type in userInfo
+    //     senderId: userInfo.id,
+    //   },
+    // ]);
 
     setMessage("");
   };

@@ -61,7 +61,7 @@ const PostComment = ({
     }
   };
 
-  const vote = comment.vote.find((vote) => vote.author_id === userInfo.id);
+  const vote = comment.vote.find((vote) => vote.author_id === userInfo?.id);
 
   return (
     <div>

@@ -27,7 +27,7 @@ const MessageContainer = ({
 
   const { userInfo } = useAppSelector((state) => state.auth);
 
-  const myId = userInfo.id;
+  const myId = userInfo?.id;
 
   const { id } = useParams();
 

@@ -28,7 +28,7 @@ const ChatUserList = ({
 }: Props) => {
   const { userInfo } = useAppSelector((state) => state.auth);
 
-  const myId = userInfo.id;
+  const myId = userInfo?.id;
 
   return (
     <div>

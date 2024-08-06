@@ -50,7 +50,7 @@ const Chats = () => {
 
   const { userInfo } = useAppSelector((state) => state.auth);
 
-  const myId = userInfo.id;
+  const myId = userInfo?.id;
 
   const otherFriend = selectedChat?.friends?.find(
     (fri: any) => fri.id !== myId
@@ -106,11 +106,11 @@ const Chats = () => {
   useEffect(() => {
     if (selectedChat) {
       const fri = selectedChat.friends.find(
-        (fri: any) => fri.id !== userInfo.id
+        (fri: any) => fri.id !== userInfo?.id
       );
       setCurrentChatUserId(fri.id);
     }
-  }, [selectedChat, userInfo.id]);
+  }, [selectedChat, userInfo?.id]);
 
   useEffect(() => {
     if (pathname === "/user/chats/new") {
@@ -137,7 +137,7 @@ const Chats = () => {
 
     sendMessage({ message, receiverId }).unwrap();
 
-    setMessages([...messages, { text: message, senderId: userInfo.id }]);
+    setMessages([...messages, { text: message, senderId: userInfo?.id }]);
 
     if (searchValue) {
       refetchChat();

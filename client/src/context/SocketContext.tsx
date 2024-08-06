@@ -28,7 +28,7 @@ export const SocketContextProvider = ({
 
   useEffect(() => {
     if (authUser) {
-      const newSocket = io("https://swift-media-mern.onrender.com", {
+      const newSocket = io("http://localhost:5000", {
         query: {
           userId: authUser.id,
         },

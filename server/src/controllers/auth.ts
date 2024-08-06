@@ -62,6 +62,9 @@ export const user_login: RequestHandler = async (req, res) => {
     where: {
       email: email,
     },
+    include: {
+      friends: true,
+    },
   });
 
   if (user) {
@@ -100,6 +103,7 @@ export const user_login: RequestHandler = async (req, res) => {
           followersCount,
           followingCount,
           about: user.about,
+          friends: user?.friends,
         },
       });
     } else {
@@ -119,6 +123,9 @@ export const get_user: RequestHandler = async (req, res) => {
   const user = await prisma.user.findUnique({
     where: {
       id: id,
+    },
+    include: {
+      friends: true,
     },
   });
 
@@ -152,6 +159,7 @@ export const get_user: RequestHandler = async (req, res) => {
       avatar: user.avatar,
       github: user?.github || null,
       twitter: user?.twitter || null,
+      friends: user?.friends,
     },
   });
 };

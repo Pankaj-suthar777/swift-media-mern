@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUserDashboardPostVoteDataQuery } from "@/store/api/userApi";
+import { useLazyUserDashboardPostVoteDataQuery } from "@/store/api/userApi";
 
 const chartConfig = {
   visitors: {
@@ -40,18 +40,18 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function PostActivity() {
-  const { data, isLoading } = useUserDashboardPostVoteDataQuery(null);
+  const [timeRange, setTimeRange] = React.useState("7d");
+
+  const [query, { data, isLoading }] = useLazyUserDashboardPostVoteDataQuery();
 
   const chartData = React.useMemo(() => {
     if (isLoading || !data) return [];
-    return data.data.map((item) => ({
+    return data?.data.map((item) => ({
       date: item.date,
       upvote: item.upvote,
       disvote: item.disvote,
     }));
   }, [data, isLoading]);
-
-  const [timeRange, setTimeRange] = React.useState("90d");
 
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date);
@@ -66,6 +66,16 @@ export function PostActivity() {
     return date >= now;
   });
 
+  const onValueChangeHandler = (e: string) => {
+    setTimeRange(e);
+  };
+
+  React.useEffect(() => {
+    if (timeRange) {
+      query(timeRange);
+    }
+  }, [timeRange, query]);
+
   return (
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
@@ -75,7 +85,7 @@ export function PostActivity() {
             Showing post activity for the last 3 months
           </CardDescription>
         </div>
-        <Select value={timeRange} onValueChange={setTimeRange}>
+        <Select value={timeRange} onValueChange={onValueChangeHandler}>
           <SelectTrigger
             className="w-[160px] rounded-lg sm:ml-auto"
             aria-label="Select a value"

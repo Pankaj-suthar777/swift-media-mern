@@ -89,7 +89,7 @@ const ReplayComment = ({
     }
   };
 
-  const vote = replay.vote?.find((vote) => vote.author_id === userInfo.id);
+  const vote = replay.vote?.find((vote) => vote.author_id === userInfo?.id);
 
   return (
     <div>

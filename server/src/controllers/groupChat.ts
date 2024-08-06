@@ -103,6 +103,9 @@ export const sendGroupMessage: RequestHandler = async (req, res) => {
       lastMessage: message,
     },
   });
+
+  newMessage.senderId = myId;
+  newMessage.sender = req.user;
   const friends = existingChat.friends.map((friend) => friend.id);
   // SOCKET IO FUNCTIONALITY WILL GO HERE
   const receiverSocketId = getReceiverSocketIds(friends);

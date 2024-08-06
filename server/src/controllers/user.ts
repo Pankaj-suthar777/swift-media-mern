@@ -2,6 +2,7 @@ import prisma from "#/prisma/prisma";
 import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
 import { startOfMonth, endOfMonth, eachDayOfInterval, format } from "date-fns";
+import { convertDaysToDate } from "#/utils/helper";
 
 export const getUser: RequestHandler = async (req, res) => {
   const { id } = req.params;
@@ -309,7 +310,7 @@ export const getDashboardMessageSentData: RequestHandler = async (req, res) => {
   const { id } = req.user;
   const now = new Date();
   const start = startOfMonth(now);
-  const end = now; // Use today's date as the end date
+  const end = now; // today date
 
   const data = await prisma.message.findMany({
     where: {
@@ -355,16 +356,22 @@ export const getDashboardPostActivityData: RequestHandler = async (
 ) => {
   const { id } = req.user;
   const now = new Date();
-  const start = startOfMonth(now);
-  const end = now; // Use today's date as the end date
+  let start = startOfMonth(now);
+  const end = now;
+
+  const { duration } = req.query;
+
+  if (duration) {
+    start = convertDaysToDate(duration as string);
+  }
 
   const data = await prisma.vote.findMany({
     where: {
       author_id: parseInt(id),
-      // created_at: {
-      //   gte: start,
-      //   lte: end,
-      // },
+      created_at: {
+        gte: start,
+        lte: end,
+      },
     },
     select: {
       created_at: true,

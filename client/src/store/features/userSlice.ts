@@ -1,3 +1,4 @@
+import { User } from "@/@types/user";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 
@@ -12,9 +13,10 @@ interface UserInfo {
   followingCount?: number;
   github: string;
   twitter: string;
+  friends: User[];
 }
 
-interface IUserState {
+export interface IUserState {
   userInfo: UserInfo | null;
   role: string;
   token: string | null;
