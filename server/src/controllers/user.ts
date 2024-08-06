@@ -1,6 +1,7 @@
 import prisma from "#/prisma/prisma";
 import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
+import { startOfMonth, endOfMonth, eachDayOfInterval, format } from "date-fns";
 
 export const getUser: RequestHandler = async (req, res) => {
   const { id } = req.params;
@@ -184,4 +185,217 @@ export const getUserPosts: RequestHandler = async (req, res) => {
   });
 
   responseReturn(res, 201, { posts });
+};
+
+export const getDashboardData: RequestHandler = async (req, res) => {
+  const { id } = req.user;
+
+  const followCount = await prisma.follow.count({
+    where: {
+      followingId: parseInt(id),
+    },
+  });
+
+  const followingCount = await prisma.follow.count({
+    where: {
+      followerId: parseInt(id),
+    },
+  });
+
+  const postsCount = await prisma.post.count({
+    where: {
+      authorId: parseInt(id),
+    },
+  });
+
+  const commentsCount = await prisma.comment.count({
+    where: {
+      author_id: parseInt(id),
+    },
+  });
+
+  const commentReplayCount = await prisma.replayToComment.count({
+    where: {
+      author_id: parseInt(id),
+    },
+  });
+
+  const replayedCommentReplayCount = await prisma.replayToReplayComment.count({
+    where: {
+      author_id: parseInt(id),
+    },
+  });
+
+  const totalCommentsCount =
+    commentsCount + commentReplayCount + replayedCommentReplayCount;
+
+  const chatMessagesCount = await prisma.message.count({
+    where: {
+      senderId: parseInt(id),
+    },
+  });
+
+  const groupChatMessagesCount = await prisma.message.count({
+    where: {
+      senderId: parseInt(id),
+    },
+  });
+
+  const messageCount = chatMessagesCount + groupChatMessagesCount;
+
+  const postUpvotesCount = await prisma.vote.count({
+    where: {
+      author_id: parseInt(id),
+      vote: "up-vote",
+    },
+  });
+
+  const postDisvotesConnt = await prisma.vote.count({
+    where: {
+      author_id: parseInt(id),
+      vote: "down-vote",
+    },
+  });
+
+  const chatsYouPartOf = await prisma.chat.count({
+    where: {
+      friends: {
+        some: {
+          id: parseInt(id),
+        },
+      },
+    },
+  });
+
+  const GroupChatsYouPartOf = await prisma.groupChat.count({
+    where: {
+      friends: {
+        some: {
+          id: parseInt(id),
+        },
+      },
+    },
+  });
+
+  const recentFollowersArray = await prisma.follow.findMany({
+    where: {
+      followingId: parseInt(id),
+    },
+    orderBy: {
+      created_at: "desc",
+    },
+    include: {
+      follower: true,
+    },
+    take: 4,
+  });
+
+  const recentFollowers = recentFollowersArray.map((recent) => recent.follower);
+  responseReturn(res, 201, {
+    followCount,
+    followingCount,
+    postsCount,
+    totalCommentsCount,
+    messageCount,
+    postUpvotesCount,
+    postDisvotesConnt,
+    GroupChatsYouPartOf,
+    chatsYouPartOf,
+    recentFollowers,
+  });
+};
+
+export const getDashboardMessageSentData: RequestHandler = async (req, res) => {
+  const { id } = req.user;
+  const now = new Date();
+  const start = startOfMonth(now);
+  const end = now; // Use today's date as the end date
+
+  const data = await prisma.message.findMany({
+    where: {
+      senderId: parseInt(id),
+      created_at: {
+        gte: start,
+        lte: end,
+      },
+    },
+    select: {
+      created_at: true,
+    },
+  });
+
+  // Process the posts to count messages per day
+  const messageCountByDate = data.reduce((acc, post) => {
+    const date = post.created_at.toISOString().split("T")[0];
+    if (!acc[date]) {
+      acc[date] = 1;
+    } else {
+      acc[date]++;
+    }
+    return acc;
+  }, {});
+
+  // Generate all dates from the start of the month to today
+  const allDates = eachDayOfInterval({ start, end }).map((date) =>
+    format(date, "yyyy-MM-dd")
+  );
+
+  // Merge the dates with message counts
+  const result = allDates.map((date) => ({
+    date,
+    count: messageCountByDate[date] || 0,
+  }));
+
+  responseReturn(res, 201, { data: result });
+};
+
+export const getDashboardPostActivityData: RequestHandler = async (
+  req,
+  res
+) => {
+  const { id } = req.user;
+  const now = new Date();
+  const start = startOfMonth(now);
+  const end = now; // Use today's date as the end date
+
+  const data = await prisma.vote.findMany({
+    where: {
+      author_id: parseInt(id),
+      // created_at: {
+      //   gte: start,
+      //   lte: end,
+      // },
+    },
+    select: {
+      created_at: true,
+      vote: true,
+    },
+  });
+
+  // Process the votes to count disvotes and upvotes per day
+  const voteCountByDate = data.reduce((acc, vote) => {
+    const date = vote.created_at.toISOString().split("T")[0];
+    if (!acc[date]) {
+      acc[date] = { upvote: 0, disvote: 0 };
+    }
+    if (vote.vote === "up-vote") {
+      acc[date].upvote++;
+    } else if (vote.vote === "down-vote") {
+      acc[date].disvote++;
+    }
+    return acc;
+  }, {});
+
+  // Generate all dates from the start of the month to today
+  const allDates = eachDayOfInterval({ start, end }).map((date) =>
+    format(date, "yyyy-MM-dd")
+  );
+
+  const result = allDates.map((date) => ({
+    date,
+    upvote: voteCountByDate[date]?.upvote || 0,
+    disvote: voteCountByDate[date]?.disvote || 0,
+  }));
+
+  responseReturn(res, 201, { data: result });
 };

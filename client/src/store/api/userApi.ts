@@ -1,3 +1,4 @@
+import { User } from "@/@types/user";
 import { baseURL } from "@/api/client";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -51,6 +52,59 @@ export const userApi = createApi({
         };
       },
     }),
+    userDashboard: builder.query<
+      {
+        followCount: number;
+        followingCount: number;
+        postsCount: number;
+        totalCommentsCount: number;
+        messageCount: number;
+        postUpvotesCount: number;
+        postDisvotesConnt: number;
+        GroupChatsYouPartOf: number;
+        chatsYouPartOf: number;
+        recentFollowers: User[];
+      },
+      null
+    >({
+      query() {
+        return {
+          url: `/user/dashboard`,
+        };
+      },
+    }),
+    userDashboardMessageData: builder.query<
+      {
+        data: {
+          date: string;
+          count: number;
+        }[];
+      },
+      null
+    >({
+      query() {
+        return {
+          url: `/user/dashboard/messages-send-data`,
+        };
+      },
+    }),
+    userDashboardPostVoteData: builder.query<
+      {
+        data: {
+          date: string;
+          upvote: number;
+          disvote: number;
+        }[];
+      },
+      null
+    >({
+      query() {
+        return {
+          url: `/user/dashboard/post-vote-data
+`,
+        };
+      },
+    }),
   }),
 });
 
@@ -60,4 +114,7 @@ export const {
   useFollowUserMutation,
   useIsFollowQuery,
   useLazySearchUserQuery,
+  useUserDashboardQuery,
+  useUserDashboardMessageDataQuery,
+  useUserDashboardPostVoteDataQuery,
 } = userApi;
