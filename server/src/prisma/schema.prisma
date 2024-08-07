@@ -116,7 +116,7 @@ model Post {
     vote               Vote[]
     savedPost          SavedPost[] 
     comments           Comment[]
-    visibility         VisibilityType @default(ONLY_FOLLOWING)
+    visibility         VisibilityType? @default(ONLY_FOLLOWING)
 }
 
 
