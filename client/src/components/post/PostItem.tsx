@@ -1,28 +1,59 @@
-import { ArrowDown, ArrowUp, Loader, Pin, Share2 } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Loader,
+  MoreHorizontal,
+  Pencil,
+  Pin,
+  Share2,
+  Trash2,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Post as IPost } from "../../@types/post";
 import {
+  useDeletePostMutation,
   useSavePostMutation,
   useUpOrDownVoteMutation,
 } from "@/store/api/postApi";
 import { toast } from "../ui/use-toast";
-import { useAppSelector } from "@/store/hooks";
 import { useEffect, useState } from "react";
 import { PostSkelton } from "../Skelton/PostSkelton";
 import moment from "moment";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import UpdatePostModal from "./UpdatePostModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "../custom/button";
+
+interface SidePostProps {
+  type: "horizontal" | "vertical";
+  useCase: "edit" | "vote";
+}
 
 const Post = ({
+  removeDeletedPost,
   post,
   refetchSinglePost,
+  isEditable = false,
 }: {
   post: IPost;
+  isEditable?: boolean;
+  removeDeletedPost?: (id: number) => void;
   refetchSinglePost?: (id: number) => Promise<IPost>;
 }) => {
   const navigate = useNavigate();
-  const { userInfo } = useAppSelector((state) => state.auth);
+  const { userInfo } = useSelector((state: RootState) => state.auth);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [vote, setVote] = useState<any>();
-  const [postData, setPostData] = useState<IPost>(post);
+  const [postData, setPostData] = useState<IPost | null>(post);
   const [isSaved, setIsSaved] = useState(false);
 
   const [upOrDownVote, { isLoading }] = useUpOrDownVoteMutation();
@@ -98,7 +129,27 @@ const Post = ({
     }
   };
 
-  const Vote = ({ type }: { type: "horizontal" | "vertical" }) => {
+  const [deletePost, { isLoading: isDeleting }] = useDeletePostMutation();
+
+  const deleteHandler = async (id: number) => {
+    try {
+      const data = await deletePost(id).unwrap();
+      toast({
+        title: data?.message,
+        variant: "default",
+      });
+      if (removeDeletedPost) {
+        removeDeletedPost(id);
+      }
+      setPostData(null);
+    } catch (error: any) {
+      toast({
+        title: error?.data?.error,
+        variant: "destructive",
+      });
+    }
+  };
+  const SidePostActions = ({ type, useCase }: SidePostProps) => {
     return (
       <div
         className={`flex ${
@@ -106,56 +157,91 @@ const Post = ({
         } gap-4`}
       >
         <div className="flex items-center gap-2">
-          <div
-            className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
-              vote?.vote === "up-vote" ? "bg-green-200" : ""
-            }`}
-            onClick={() => upOrDownVoteHandler("up-vote", post?.id)}
-          >
-            <ArrowUp size={20} />
-          </div>
-          <span>
-            {isLoading ? (
-              <Loader className="animate-spin" size={16} />
-            ) : (
-              postData?.vote.filter((vote) => vote.vote === "up-vote").length
-            )}
-          </span>
+          {useCase === "vote" ? (
+            <>
+              <div
+                className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+                  vote?.vote === "up-vote" ? "bg-green-200" : ""
+                }`}
+                onClick={() => upOrDownVoteHandler("up-vote", post?.id)}
+              >
+                <ArrowUp size={20} />
+              </div>
+              <span>
+                {isLoading ? (
+                  <Loader className="animate-spin" size={16} />
+                ) : (
+                  postData?.vote.filter((vote) => vote.vote === "up-vote")
+                    .length
+                )}
+              </span>
+            </>
+          ) : (
+            <Dialog>
+              <DialogTrigger>
+                <div
+                  className={`border rounded-full border-slate-300 p-2 cursor-pointer`}
+                >
+                  <Pencil size={20} />
+                </div>
+              </DialogTrigger>
+              <DialogContent className="p-0">
+                <UpdatePostModal setPostData={setPostData} post={post} />
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
         <div className="flex items-center gap-2">
-          <div
-            className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
-              vote?.vote === "down-vote" ? "bg-red-200" : ""
-            }`}
-            onClick={() => upOrDownVoteHandler("down-vote", post.id)}
-          >
-            <ArrowDown size={20} />
-          </div>
-          <span>
-            {isLoading ? (
-              <Loader className="animate-spin" size={16} />
-            ) : (
-              postData?.vote.filter((vote) => vote.vote === "down-vote").length
-            )}
-          </span>
+          {useCase === "vote" ? (
+            <>
+              <div
+                className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+                  vote?.vote === "down-vote" ? "bg-red-200" : ""
+                }`}
+                onClick={() => upOrDownVoteHandler("down-vote", post.id)}
+              >
+                <ArrowDown size={20} />
+              </div>
+              <span>
+                {isLoading ? (
+                  <Loader className="animate-spin" size={16} />
+                ) : (
+                  postData?.vote.filter((vote) => vote.vote === "down-vote")
+                    .length
+                )}
+              </span>
+            </>
+          ) : (
+            <div
+              className={`border rounded-full border-slate-300 p-2 cursor-pointer`}
+              onClick={() => deleteHandler(post?.id)}
+            >
+              {isDeleting ? (
+                <Loader className="animate-spin" size={16} />
+              ) : (
+                <Trash2 size={20} />
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
   };
 
+  if (!postData) {
+    return null;
+  }
+
   return (
     <div className="lg:card rounded-xl lg:max-w-lg lg:mx-auto flex lg:gap-8 w-full">
       <div className="lg:flex items-center min-w-[45px] hidden">
-        <Vote type="vertical" />
+        <SidePostActions useCase="vote" type="vertical" />
       </div>
 
       <div className="h-auto lg:min-w-[420px] bg-slate-50 border border-slate-400 transition ease-in-out cursor-pointer rounded-xl w-full">
         <div className="body lg:w-full">
           <div className="lg:w-full">
-            <div
-              className="flex items-center py-2 px-2"
-              onClick={() => navigate(`/user/profile/${postData?.author.id}`)}
-            >
+            <div className="flex items-center py-2 px-2">
               <img
                 className="w-10 h-10 rounded-full object-cover mr-2"
                 src={
@@ -164,13 +250,57 @@ const Post = ({
                     : "/user-profile2.jpg"
                 }
                 alt="User avatar"
+                onClick={() => navigate(`/user/profile/${postData?.author.id}`)}
               />
-              <div className="flex flex-col gap-1">
-                <p className="text-xs">posted by : {postData?.author?.name}</p>
-                <p className="text-[10px]">
-                  Created At :{" "}
-                  {moment(postData?.created_at).startOf("hour").fromNow()}
-                </p>
+              <div className="flex justify-between w-full">
+                <div
+                  className="flex flex-col gap-1"
+                  onClick={() =>
+                    navigate(`/user/profile/${postData?.author.id}`)
+                  }
+                >
+                  <p className="text-xs">
+                    posted by : {postData?.author?.name}
+                  </p>
+                  <p className="text-[10px]">
+                    Created At :{" "}
+                    {moment(postData?.created_at).startOf("hour").fromNow()}
+                  </p>
+                </div>
+                {isEditable ? (
+                  <div>
+                    <Dialog>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+                          <DialogTrigger>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                          </DialogTrigger>
+
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => deleteHandler(post.id)}
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      <DialogContent className="p-0">
+                        <UpdatePostModal
+                          setPostData={setPostData}
+                          post={post}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                ) : null}
               </div>
             </div>
             <div>
@@ -221,7 +351,7 @@ const Post = ({
                     </div>
 
                     <div className="flex items-center min-w-[45px] lg:hidden">
-                      <Vote type="horizontal" />
+                      <SidePostActions useCase="vote" type="horizontal" />
                     </div>
                   </div>
                 </div>
@@ -230,6 +360,11 @@ const Post = ({
           </div>
         </div>
       </div>
+      {isEditable ? (
+        <div className="lg:flex items-center min-w-[45px] hidden">
+          <SidePostActions useCase="edit" type="vertical" />
+        </div>
+      ) : null}
     </div>
   );
 };

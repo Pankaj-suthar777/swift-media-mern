@@ -10,6 +10,7 @@ export interface Post {
   author: User;
   vote: Vote[];
   savedPost: SavedPost[];
+  visibility: "ONLY_FOLLOWING" | "PUBLIC";
 }
 
 export interface Vote {

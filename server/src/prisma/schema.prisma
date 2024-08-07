@@ -98,6 +98,13 @@ model Message {
     sender             User @relation("MessageSender",fields: [senderId], references: [id])
 }
 
+
+enum VisibilityType {
+  ONLY_FOLLOWING
+  PUBLIC
+}
+
+
 model Post {
     id                 Int @id @default(autoincrement())
     text               String
@@ -109,6 +116,7 @@ model Post {
     vote               Vote[]
     savedPost          SavedPost[] 
     comments           Comment[]
+    visibility         VisibilityType @default(ONLY_FOLLOWING)
 }
 
 

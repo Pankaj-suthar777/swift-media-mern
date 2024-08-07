@@ -72,7 +72,7 @@ const MessageContainer = ({
                             send by : {message.sender?.name}
                           </span>
                         ) : null}
-                        <div className="bg-white rounded-[10px] px-8 py-2 max-w-[80%] relative word-wrap">
+                        <div className="bg-white rounded-[10px] px-8 py-2 max-w-[80%] sm:max-w-[40vw] relative word-wrap">
                           <p className="text-gray-900 text-sm break-words">
                             {message.text}
                           </p>
@@ -87,7 +87,7 @@ const MessageContainer = ({
 
                     {isMyMessage && (
                       <div className="flex items-end flex-col gap-1">
-                        <div className="bg-blue-500 rounded-[10px] px-4 py-2 max-w-[80vw] sm:max-w-[50vw] word-wrap">
+                        <div className="bg-blue-500 rounded-[10px] px-4 py-2 max-w-[80vw] sm:max-w-[40vw] word-wrap">
                           <p className="text-white text-sm break-words">
                             {message.text}
                           </p>

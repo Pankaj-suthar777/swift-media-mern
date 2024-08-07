@@ -4,23 +4,48 @@ import { Edit, Edit3, Github, Loader, Plus, Twitter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import ChangeDetails from "@/components/profile/ChangeDetails";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { uploadFilesToFirebaseAndGetUrl } from "@/utils/file-upload";
 import { useUpdateUserProfileMutation } from "@/store/api/authApi";
 import { toast } from "@/components/ui/use-toast";
 import { setUser } from "@/store/features/userSlice";
-import { useGetMyPostsQuery } from "@/store/api/postApi";
 import PostItem from "@/components/post/PostItem";
-import { Post } from "@/@types/post";
 import AddLinks from "@/components/profile/AddLinks";
+import useFetchUserPosts from "@/hooks/useFetchUsersPosts";
 
 const Profile = () => {
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
-
   const [updateUserProfile, { isLoading: updateProfileLoading }] =
     useUpdateUserProfileMutation();
+  const [page, setPage] = useState(0);
 
-  const { data, isLoading } = useGetMyPostsQuery({});
+  const { userInfo } = useAppSelector((state) => state.auth);
+
+  const {
+    loading: isLoading,
+    posts,
+    hasMore,
+    removeDeletedPost,
+    refetchSinglePost,
+  } = useFetchUserPosts(String(userInfo?.id) || undefined, page);
+
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const lastElementRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (isLoading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prev) => prev + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [isLoading, hasMore]
+  );
 
   const dispatch = useAppDispatch();
 
@@ -56,7 +81,6 @@ const Profile = () => {
     }
   };
 
-  const { userInfo } = useAppSelector((state) => state.auth);
   return (
     <div className="pl-4 pr-4 overflow-y-auto h-viewport-minus-80px">
       <div className="overflow-hidden rounded-lsm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark relative">
@@ -154,7 +178,7 @@ const Profile = () => {
                   {isLoading ? (
                     <Loader className="animate-spin" />
                   ) : (
-                    data?.posts?.length
+                    posts?.length
                   )}
                 </span>
                 <span className="text-sm">Posts</span>
@@ -189,9 +213,38 @@ const Profile = () => {
               <h1 className="text-lg font-semibold self-center mb-5">
                 Recent Posts
               </h1>
-              {data?.posts?.map((post: Post, i: number) => {
-                return <PostItem post={post} key={i} />;
-              })}
+
+              {posts &&
+                posts?.map((post, i: number) => {
+                  const isLastElement = posts.length === i + 1;
+                  return isLastElement ? (
+                    <div key={i} ref={lastElementRef} className="w-full">
+                      <PostItem
+                        removeDeletedPost={removeDeletedPost}
+                        isEditable={true}
+                        key={i}
+                        post={post}
+                        refetchSinglePost={refetchSinglePost}
+                      />
+                      <div className="h-16"></div>
+                    </div>
+                  ) : (
+                    <div key={i} className="w-full">
+                      <PostItem
+                        removeDeletedPost={removeDeletedPost}
+                        isEditable={true}
+                        key={i}
+                        post={post}
+                        refetchSinglePost={refetchSinglePost}
+                      />
+                    </div>
+                  );
+                })}
+              {isLoading && (
+                <div className="w-full overflow-hidden flex justify-center items-center py-12">
+                  <Loader className="animate-spin" size={30} />
+                </div>
+              )}
               <div className="h-8"></div>
             </div>
           </div>

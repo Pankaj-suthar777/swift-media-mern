@@ -4,7 +4,7 @@ import { RequestHandler } from "express";
 
 export const createPost: RequestHandler = async (req, res) => {
   const myId = req.user.id;
-  const { text, image } = req.body;
+  const { text, image, visibility } = req.body;
   let post;
 
   if (image) {
@@ -13,6 +13,7 @@ export const createPost: RequestHandler = async (req, res) => {
         text: text,
         image: image,
         authorId: myId,
+        visibility,
       },
     });
   } else {
@@ -20,6 +21,7 @@ export const createPost: RequestHandler = async (req, res) => {
       data: {
         text: text,
         authorId: myId,
+        visibility,
       },
     });
   }
@@ -465,4 +467,62 @@ export const toogleReplayedCommentReplyVote: RequestHandler = async (
   const message = vote === "up-vote" ? "Upvoted" : "Devoted";
 
   responseReturn(res, 201, { message });
+};
+
+export const deletePost: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  const { id } = req.params;
+
+  const isExist = await prisma.post.findUnique({
+    where: {
+      id: parseInt(id),
+      authorId: myId,
+    },
+  });
+
+  if (!isExist || isExist.authorId !== myId) {
+    return responseReturn(res, 401, { error: "Post not found." });
+  }
+
+  await prisma.post.delete({
+    where: {
+      id: parseInt(id),
+      authorId: myId,
+    },
+  });
+
+  const message = "Post deleted successfully";
+
+  responseReturn(res, 201, { message });
+};
+
+export const updatePost: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  const { text, image, visibility } = req.body;
+  const { id } = req.params;
+
+  const isExist = await prisma.post.findUnique({
+    where: {
+      id: parseInt(id),
+      authorId: myId,
+    },
+  });
+
+  if (!isExist || isExist.authorId !== myId) {
+    return responseReturn(res, 401, { error: "Post not found." });
+  }
+
+  await prisma.post.update({
+    where: {
+      id: parseInt(id),
+      authorId: myId,
+    },
+    data: {
+      text,
+      image,
+      visibility,
+    },
+  });
+
+  responseReturn(res, 201, { message: "Post is updated successfully" });
 };

@@ -13,13 +13,13 @@ const FileInput = ({ onChange, image, label = "Image" }: Props) => {
         <div className="items-center justify-center max-w-xl mx-auto">
           <Label>{label}</Label>
           <label
-            className="flex mt-2 justify-center w-full max-h-[200px] min-h-[100px] px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
+            className="flex mt-2 justify-center w-full sm:max-h-[200px] max-h-[100px] min-h-[100px] px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
             id="drop"
           >
             {image ? (
               <img
                 src={image}
-                className="h-full w-full object-cover max-h-[200px]"
+                className="h-full w-full object-scale-down sm:max-h-[200px] max-h-[100px]"
               />
             ) : (
               <span className="flex items-center space-x-2">

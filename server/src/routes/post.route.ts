@@ -14,6 +14,8 @@ import {
   toogleCommentVote,
   toogleCommentReplayVote,
   toogleReplayedCommentReplyVote,
+  deletePost,
+  updatePost,
 } from "#/controllers/post";
 import { authMiddleware } from "#/middleware/authMiddleware";
 import { validate } from "#/middleware/validator";
@@ -78,5 +80,7 @@ router.post(
 router.get("/comment/:id", authMiddleware, getPostComment);
 
 router.get("/:id", authMiddleware, getSinglePost);
+router.delete("/:id", authMiddleware, deletePost);
+router.put("/:id", authMiddleware, updatePost);
 
 export default router;

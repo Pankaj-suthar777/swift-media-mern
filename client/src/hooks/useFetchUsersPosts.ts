@@ -20,6 +20,7 @@ const useFetchUserPosts = (authorId: string | undefined, page: number) => {
         const response = await client.get<{ posts: Post[] }>(
           `/user/post/${authorId}?page=${page}`
         );
+
         setPosts((prevPosts) => {
           const newPosts = response.data?.posts.filter(
             (post) => !prevPosts.some((prevPost) => prevPost.id === post.id)
@@ -42,7 +43,19 @@ const useFetchUserPosts = (authorId: string | undefined, page: number) => {
     return response.data.post;
   };
 
-  return { loading, error, posts, hasMore, refetchSinglePost };
+  const removeDeletedPost = (id: number) => {
+    const filteredPost = posts.filter((post) => post.id !== id);
+    setPosts(filteredPost);
+  };
+
+  return {
+    loading,
+    error,
+    posts,
+    hasMore,
+    refetchSinglePost,
+    removeDeletedPost,
+  };
 };
 
 export default useFetchUserPosts;

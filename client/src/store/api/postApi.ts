@@ -164,6 +164,25 @@ export const postApi = createApi({
       },
       invalidatesTags: ["Comment"],
     }),
+    deletePost: builder.mutation({
+      query(id) {
+        return {
+          url: `/post/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Post"],
+    }),
+    updatePost: builder.mutation({
+      query({ id, body }) {
+        return {
+          url: `/post/${id}`,
+          method: "PUT",
+          body,
+        };
+      },
+      invalidatesTags: ["Post"],
+    }),
   }),
 });
 
@@ -183,4 +202,6 @@ export const {
   useToogleCommentVoteMutation,
   useToogleReplayCommentVoteMutation,
   useToogleReplayedToReplyCommentVoteMutation,
+  useDeletePostMutation,
+  useUpdatePostMutation,
 } = postApi;

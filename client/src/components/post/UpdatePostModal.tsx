@@ -10,57 +10,59 @@ import { DialogClose } from "../ui/dialog";
 import { toast } from "../ui/use-toast";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import FileInput from "../ui/file-input";
-import { useCreatePostMutation } from "@/store/api/postApi";
+import { useUpdatePostMutation } from "@/store/api/postApi";
 import { Label } from "../ui/label";
+import { Post } from "@/@types/post";
 import { uploadFilesToFirebaseAndGetUrl } from "@/utils/file-upload";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-const CreatePostModal = ({
-  setModelOpen,
+const UpdatePostModal = ({
+  post,
+  setPostData,
 }: {
-  setModelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  post: Post;
+  setPostData: React.Dispatch<React.SetStateAction<Post | null>>;
 }) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(post.text);
   const [file, setFile] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [visibility, setVisibility] = useState("ONLY_FOLLOWING");
+  const [visibility, setVisibility] = useState(post?.visibility);
 
-  const [createPost] = useCreatePostMutation();
+  const [prviewImage, setPrviewImage] = useState<string>(post?.image || "");
+
+  const [updatePost, { isLoading }] = useUpdatePostMutation();
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (text.length < 10) {
-      return toast({
-        title: "Title is very short",
-        variant: "destructive",
-      });
-    }
     try {
-      setIsLoading(true);
-
-      const body: any = { text, visibility };
-
+      let image = "";
       if (file) {
-        const image = await uploadFilesToFirebaseAndGetUrl(file, "posts");
-        body.image = image;
+        image = await uploadFilesToFirebaseAndGetUrl(file, "/posts");
       }
-
-      const data = await createPost(body).unwrap();
-
+      const data = await updatePost({
+        body: {
+          image,
+          visibility,
+          text,
+        },
+        id: post.id,
+      }).unwrap();
       toast({
         title: data?.message,
         variant: "default",
       });
-      setModelOpen(false);
+      setPostData({
+        ...post,
+        text: text ? text : post.text,
+        visibility: visibility ? visibility : post.visibility,
+        image: image ? image : post.image,
+      });
     } catch (error: any) {
       toast({
         title: error?.data?.error,
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -68,16 +70,22 @@ const CreatePostModal = ({
     console.log(URL.createObjectURL(file));
   }
 
+  useEffect(() => {
+    if (file) {
+      setPrviewImage(URL.createObjectURL(file));
+    }
+  }, [file]);
+
   return (
-    <Card className="w-full overflow-hidden">
+    <Card className="w-full overflow-hidden max-h-[90vh]">
       <CardHeader>
-        <CardTitle>Create Post</CardTitle>
+        <CardTitle>Update Post</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-2">
           <div className="w-full pb-4">
             <Label>Title</Label>
-            <div className="h-[150px] mb-6 max-w-full">
+            <div className="sm:h-[150px] h-[100px] sm:mb-8 mb-14 max-w-full">
               <ReactQuill
                 defaultValue={""}
                 theme="snow"
@@ -88,25 +96,28 @@ const CreatePostModal = ({
             </div>
           </div>
           <div>
-            <FileInput
-              image={file ? URL.createObjectURL(file) : ""}
-              onChange={setFile}
-            />
+            <FileInput image={prviewImage} onChange={setFile} />
           </div>
           <Label>Visiblity</Label>
           <div>
             <RadioGroup
               defaultValue="comfortable"
-              onValueChange={(e) => setVisibility(e)}
+              onValueChange={(e) => {
+                if (e === "ONLY_FOLLOWING" || e === "PUBLIC") {
+                  setVisibility(e);
+                }
+              }}
               value={visibility}
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value={"ONLY_FOLLOWING"} id="r1" />
-                <Label htmlFor="r1">Only visible to followers</Label>
+                <RadioGroupItem value="ONLY_FOLLOWING" id="ONLY_FOLLOWING" />
+                <Label htmlFor="ONLY_FOLLOWING">
+                  Only visible to followers
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value={"PUBLIC"} id="r2" />
-                <Label htmlFor="r2">Public</Label>
+                <RadioGroupItem value="PUBLIC" id="PUBLIC" />
+                <Label htmlFor="PUBLIC">Public</Label>
               </div>
             </RadioGroup>
           </div>
@@ -126,4 +137,4 @@ const CreatePostModal = ({
   );
 };
 
-export default CreatePostModal;
+export default UpdatePostModal;

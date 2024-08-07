@@ -62,6 +62,13 @@ export const CreatePostSchema = yup.object().shape({
     .min(3, "title is too short!")
     .max(70, "title is to long!"),
   image: yup.string().trim().optional(),
+  visibility: yup.string().trim(),
+});
+
+export const UpdatePostSchema = yup.object().shape({
+  title: yup.string().trim().optional(),
+  image: yup.string().trim().optional(),
+  visibility: yup.string().trim().optional(),
 });
 
 export const UpVoteDownVoteSchema = yup.object().shape({
