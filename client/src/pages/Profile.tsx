@@ -1,7 +1,7 @@
 import { Button } from "@/components/custom/button";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Edit, Edit3, Github, Loader, Plus, Twitter } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import ChangeDetails from "@/components/profile/ChangeDetails";
 import { useCallback, useRef, useState } from "react";
@@ -12,6 +12,7 @@ import { setUser } from "@/store/features/userSlice";
 import PostItem from "@/components/post/PostItem";
 import AddLinks from "@/components/profile/AddLinks";
 import useFetchUserPosts from "@/hooks/useFetchUsersPosts";
+import { TooltipComponent } from "@/components/TooltipComponent";
 
 const Profile = () => {
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
@@ -20,6 +21,7 @@ const Profile = () => {
   const [page, setPage] = useState(0);
 
   const { userInfo } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const {
     loading: isLoading,
@@ -183,18 +185,32 @@ const Profile = () => {
                 </span>
                 <span className="text-sm">Posts</span>
               </div>
-              <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
-                <span className="font-semibold text-black dark:text-white">
-                  {userInfo?.followersCount}
-                </span>
-                <span className="text-sm">Followers</span>
-              </div>
-              <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
-                <span className="font-semibold text-black dark:text-white">
-                  {userInfo?.followingCount}
-                </span>
-                <span className="text-sm">Following</span>
-              </div>
+              <TooltipComponent Content={<h1>Tap to see followers list</h1>}>
+                <div
+                  className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row cursor-pointer"
+                  onClick={() =>
+                    navigate(`/user/profile/${userInfo?.id}/followers`)
+                  }
+                >
+                  <span className="font-semibold text-black dark:text-white">
+                    {userInfo?.followersCount}
+                  </span>
+                  <span className="text-sm">Followers</span>
+                </div>
+              </TooltipComponent>
+              <TooltipComponent Content={<h1>Tap to see following list</h1>}>
+                <div
+                  className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row cursor-pointer"
+                  onClick={() =>
+                    navigate(`/user/profile/${userInfo?.id}/following`)
+                  }
+                >
+                  <span className="font-semibold text-black dark:text-white">
+                    {userInfo?.followingCount}
+                  </span>
+                  <span className="text-sm">Following</span>
+                </div>
+              </TooltipComponent>
             </div>
 
             <div className="mx-auto max-w-2xl clear-start">
@@ -208,9 +224,9 @@ const Profile = () => {
                 }}
               ></div>
             </div>
-
-            <div className="w-full mt-10 flex justify-start flex-col gap-2 items-start">
-              <h1 className="text-lg font-semibold self-center mb-5">
+            <div className="w-full mt-10 grid md:grid-cols-2 grid-cols-1 space-y-12">
+              {/* <div className="w-full mt-10 flex justify-start flex-col gap-2 items-start"> */}
+              <h1 className="text-lg font-semibold self-center mb-5 md:col-span-2">
                 Recent Posts
               </h1>
 
@@ -241,7 +257,7 @@ const Profile = () => {
                   );
                 })}
               {isLoading && (
-                <div className="w-full overflow-hidden flex justify-center items-center py-12">
+                <div className="w-full overflow-hidden flex justify-center items-center py-12 md:col-span-2">
                   <Loader className="animate-spin" size={30} />
                 </div>
               )}

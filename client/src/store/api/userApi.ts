@@ -104,6 +104,20 @@ export const userApi = createApi({
         };
       },
     }),
+    getUserFollowingList: builder.query({
+      query(id) {
+        return {
+          url: `/user/get-following-list/${id}`,
+        };
+      },
+    }),
+    getUserFollowersList: builder.query({
+      query(id) {
+        return {
+          url: `/user/get-followers-list/${id}`,
+        };
+      },
+    }),
   }),
 });
 
@@ -117,4 +131,6 @@ export const {
   useUserDashboardMessageDataQuery,
   useUserDashboardPostVoteDataQuery,
   useLazyUserDashboardPostVoteDataQuery,
+  useGetUserFollowersListQuery,
+  useGetUserFollowingListQuery,
 } = userApi;

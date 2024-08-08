@@ -19,6 +19,7 @@ import { useCallback, useRef, useState } from "react";
 import useFetchUserPosts from "@/hooks/useFetchUsersPosts";
 import { User } from "@/@types/user";
 import { RootState } from "@/store/store";
+import { TooltipComponent } from "@/components/TooltipComponent";
 
 const Profile = () => {
   const { id } = useParams();
@@ -169,18 +170,32 @@ const Profile = () => {
                     </span>
                     <span className="text-sm">Posts</span>
                   </div>
-                  <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
-                    <span className="font-semibold text-black dark:text-white">
-                      {data?.user?.followersCount || 0}
-                    </span>
-                    <span className="text-sm">Followers</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
-                    <span className="font-semibold text-black dark:text-white">
-                      {data?.user?.followingCount || 0}
-                    </span>
-                    <span className="text-sm">Following</span>
-                  </div>
+                  <TooltipComponent
+                    Content={<h1>Tap to see followers list</h1>}
+                  >
+                    <div
+                      className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row cursor-pointer"
+                      onClick={() => navigate(`/user/profile/${id}/followers`)}
+                    >
+                      <span className="font-semibold text-black dark:text-white">
+                        {data?.user?.followersCount || 0}
+                      </span>
+                      <span className="text-sm">Followers</span>
+                    </div>
+                  </TooltipComponent>
+                  <TooltipComponent
+                    Content={<h1>Tap to see following list</h1>}
+                  >
+                    <div
+                      className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row cursor-pointer"
+                      onClick={() => navigate(`/user/profile/${id}/following`)}
+                    >
+                      <span className="font-semibold text-black dark:text-white">
+                        {data?.user?.followingCount || 0}
+                      </span>
+                      <span className="text-sm">Following</span>
+                    </div>
+                  </TooltipComponent>
                 </div>
 
                 <div className="mx-auto max-w-2xl clear-start px-4">
@@ -194,9 +209,9 @@ const Profile = () => {
                     ></div>
                   ) : null}
                 </div>
-
-                <div className="w-full mt-10 flex justify-start flex-col gap-2 items-start px-2">
-                  <h1 className="text-lg font-semibold self-center mb-5">
+                <div className="w-full mt-10 grid md:grid-cols-2 grid-cols-1 space-y-12">
+                  {/* <div className="w-full mt-10 flex justify-start flex-col gap-2 items-start px-2"> */}
+                  <h1 className="text-lg font-semibold self-center mb-5 md:col-span-2">
                     Recent Posts
                   </h1>
                   {posts &&
@@ -224,7 +239,7 @@ const Profile = () => {
                       );
                     })}
                   {isLoading ? (
-                    <div className="w-full flex justify-center items-center py-12">
+                    <div className="w-full flex justify-center items-center py-12 md:col-span-2">
                       <Loader className="animate-spin h-8 w-8" />
                     </div>
                   ) : null}

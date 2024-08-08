@@ -406,3 +406,87 @@ export const getDashboardPostActivityData: RequestHandler = async (
 
   responseReturn(res, 201, { data: result });
 };
+
+export const getUserFollowersList: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+  const myId = req.user.id;
+
+  if (myId === parseInt(id)) {
+    const followers = await prisma.user.findUnique({
+      where: {
+        id: myId,
+      },
+      include: {
+        followers: {
+          include: {
+            following: true,
+          },
+        },
+      },
+    });
+
+    const sortedData = followers?.followers?.map((f) => f.following);
+
+    return responseReturn(res, 201, {
+      followers: sortedData || [],
+    });
+  }
+
+  const followers = await prisma.user.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      followers: {
+        include: {
+          following: true,
+        },
+      },
+    },
+  });
+
+  const sortedData = followers?.followers?.map((f) => f.following);
+
+  responseReturn(res, 201, { followers: sortedData || [] });
+};
+
+export const getUserFollowingList: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+  const myId = req.user.id;
+
+  if (myId === parseInt(id)) {
+    const following = await prisma.user.findUnique({
+      where: {
+        id: myId,
+      },
+      include: {
+        following: {
+          include: {
+            follower: true,
+          },
+        },
+      },
+    });
+
+    const sortedData = following?.following?.map((f) => f.follower);
+
+    return responseReturn(res, 201, { following: sortedData || [] });
+  }
+
+  const following = await prisma.user.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      following: {
+        include: {
+          follower: true,
+        },
+      },
+    },
+  });
+
+  const sortedData = following?.following?.map((f) => f.follower);
+
+  return responseReturn(res, 201, { following: sortedData || [] });
+};

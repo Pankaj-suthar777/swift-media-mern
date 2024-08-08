@@ -3,10 +3,8 @@ import {
   ArrowUp,
   Loader,
   MoreHorizontal,
-  Pencil,
   Pin,
   Share2,
-  Trash2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Post as IPost } from "../../@types/post";
@@ -35,7 +33,6 @@ import { Button } from "../custom/button";
 
 interface SidePostProps {
   type: "horizontal" | "vertical";
-  useCase: "edit" | "vote";
 }
 
 const Post = ({
@@ -129,7 +126,7 @@ const Post = ({
     }
   };
 
-  const [deletePost, { isLoading: isDeleting }] = useDeletePostMutation();
+  const [deletePost] = useDeletePostMutation();
 
   const deleteHandler = async (id: number) => {
     try {
@@ -149,7 +146,7 @@ const Post = ({
       });
     }
   };
-  const SidePostActions = ({ type, useCase }: SidePostProps) => {
+  const SidePostActions = ({ type }: SidePostProps) => {
     return (
       <div
         className={`flex ${
@@ -157,72 +154,38 @@ const Post = ({
         } gap-4`}
       >
         <div className="flex items-center gap-2">
-          {useCase === "vote" ? (
-            <>
-              <div
-                className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
-                  vote?.vote === "up-vote" ? "bg-green-200" : ""
-                }`}
-                onClick={() => upOrDownVoteHandler("up-vote", post?.id)}
-              >
-                <ArrowUp size={20} />
-              </div>
-              <span>
-                {isLoading ? (
-                  <Loader className="animate-spin" size={16} />
-                ) : (
-                  postData?.vote.filter((vote) => vote.vote === "up-vote")
-                    .length
-                )}
-              </span>
-            </>
-          ) : (
-            <Dialog>
-              <DialogTrigger>
-                <div
-                  className={`border rounded-full border-slate-300 p-2 cursor-pointer`}
-                >
-                  <Pencil size={20} />
-                </div>
-              </DialogTrigger>
-              <DialogContent className="p-0">
-                <UpdatePostModal setPostData={setPostData} post={post} />
-              </DialogContent>
-            </Dialog>
-          )}
+          <div
+            className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+              vote?.vote === "up-vote" ? "bg-green-200" : ""
+            }`}
+            onClick={() => upOrDownVoteHandler("up-vote", post?.id)}
+          >
+            <ArrowUp size={20} />
+          </div>
+          <span>
+            {isLoading ? (
+              <Loader className="animate-spin" size={16} />
+            ) : (
+              postData?.vote.filter((vote) => vote.vote === "up-vote").length
+            )}
+          </span>
         </div>
         <div className="flex items-center gap-2">
-          {useCase === "vote" ? (
-            <>
-              <div
-                className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
-                  vote?.vote === "down-vote" ? "bg-red-200" : ""
-                }`}
-                onClick={() => upOrDownVoteHandler("down-vote", post.id)}
-              >
-                <ArrowDown size={20} />
-              </div>
-              <span>
-                {isLoading ? (
-                  <Loader className="animate-spin" size={16} />
-                ) : (
-                  postData?.vote.filter((vote) => vote.vote === "down-vote")
-                    .length
-                )}
-              </span>
-            </>
-          ) : (
-            <div
-              className={`border rounded-full border-slate-300 p-2 cursor-pointer`}
-              onClick={() => deleteHandler(post?.id)}
-            >
-              {isDeleting ? (
-                <Loader className="animate-spin" size={16} />
-              ) : (
-                <Trash2 size={20} />
-              )}
-            </div>
-          )}
+          <div
+            className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+              vote?.vote === "down-vote" ? "bg-red-200" : ""
+            }`}
+            onClick={() => upOrDownVoteHandler("down-vote", post.id)}
+          >
+            <ArrowDown size={20} />
+          </div>
+          <span>
+            {isLoading ? (
+              <Loader className="animate-spin" size={16} />
+            ) : (
+              postData?.vote.filter((vote) => vote.vote === "down-vote").length
+            )}
+          </span>
         </div>
       </div>
     );
@@ -235,7 +198,7 @@ const Post = ({
   return (
     <div className="lg:card rounded-xl lg:max-w-lg lg:mx-auto flex lg:gap-8 w-full">
       <div className="lg:flex items-center min-w-[45px] hidden">
-        <SidePostActions useCase="vote" type="vertical" />
+        <SidePostActions type="vertical" />
       </div>
 
       <div className="h-auto lg:min-w-[420px] bg-slate-50 border border-slate-400 transition ease-in-out cursor-pointer rounded-xl w-full">
@@ -277,11 +240,13 @@ const Post = ({
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent>
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                          <DialogTrigger>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DialogTrigger className="w-full">
+                            <DropdownMenuItem className="w-full">
+                              Edit
+                            </DropdownMenuItem>
                           </DialogTrigger>
 
                           <DropdownMenuSeparator />
@@ -351,7 +316,7 @@ const Post = ({
                     </div>
 
                     <div className="flex items-center min-w-[45px] lg:hidden">
-                      <SidePostActions useCase="vote" type="horizontal" />
+                      <SidePostActions type="horizontal" />
                     </div>
                   </div>
                 </div>
@@ -360,11 +325,6 @@ const Post = ({
           </div>
         </div>
       </div>
-      {isEditable ? (
-        <div className="lg:flex items-center min-w-[45px] hidden">
-          <SidePostActions useCase="edit" type="vertical" />
-        </div>
-      ) : null}
     </div>
   );
 };

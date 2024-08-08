@@ -1,4 +1,6 @@
 import Chats from "@/pages/Chats";
+import FollowersListPage from "@/pages/FollowersListPage";
+import FollowingListPage from "@/pages/FollowingListPage";
 import GroupChat from "@/pages/GroupChat";
 import GroupChatInfoPage from "@/pages/GroupChatInfoPage";
 import Post from "@/pages/Post";
@@ -22,6 +24,16 @@ export const userRoutes = [
   {
     path: "profile/:id",
     element: <UserProfile />,
+    role: "user",
+  },
+  {
+    path: "profile/:id/following",
+    element: <FollowingListPage />,
+    role: "user",
+  },
+  {
+    path: "profile/:id/followers",
+    element: <FollowersListPage />,
     role: "user",
   },
   {
