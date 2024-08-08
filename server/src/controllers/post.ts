@@ -59,8 +59,8 @@ export const getFeed: RequestHandler = async (req, res) => {
         vote: true,
         savedPost: true,
       },
-      skip: Number(page) * 5,
-      take: Number(page) * 5 + 5,
+      skip: Number(page) * 3,
+      take: Number(page) * 3 + 3,
       orderBy: {
         created_at: "desc",
       },
