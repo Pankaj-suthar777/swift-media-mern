@@ -1,5 +1,6 @@
 import { User } from "@/@types/user";
 import { UserSeklton } from "@/components/Skelton/UserSeklton";
+import BackButton from "@/components/ui/back-button";
 import { useGetUserFollowersListQuery } from "@/store/api/userApi";
 import { Link, useParams } from "react-router-dom";
 const dummyData = new Array(6).fill("");
@@ -9,6 +10,10 @@ const FollowersListPage = () => {
   const { data, isLoading } = useGetUserFollowersListQuery(id);
   return (
     <div className="w-full">
+      <div className="sm:ml-4 sm:mr-4 mr-2 ml-2 mb-2">
+        <BackButton variant="link" />
+      </div>
+
       <div className="bg-white sm:ml-4 sm:mr-4 mr-2 ml-2">
         {isLoading
           ? dummyData.map((item, i) => <UserSeklton key={i + item} />)

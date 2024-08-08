@@ -57,7 +57,6 @@ const Posts = () => {
                       post={post}
                       refetchSinglePost={refetchSinglePost}
                     />
-                    <div className="h-16"></div>
                   </div>
                 ) : (
                   <div key={i} className="w-full">
@@ -70,7 +69,7 @@ const Posts = () => {
                 );
               })}
             {isLoading && (
-              <div className="w-full overflow-hidden flex justify-center items-center py-12">
+              <div className="w-full overflow-hidden flex justify-center items-center py-4">
                 <Loader className="animate-spin" size={30} />
               </div>
             )}

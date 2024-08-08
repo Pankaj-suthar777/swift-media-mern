@@ -54,9 +54,9 @@ const Posts = () => {
   return (
     <div className="h-viewport-minus-80px w-full flex flex-col items-center pl-2 pr-2 overflow-x-hidden">
       <div className="flex gap-4 w-full h-full">
-        <div className="sm:w-[60%] bg-slate-50 w-full flex flex-col justify-center items-center border overflow-y-auto h-full">
+        <div className="sm:w-[60%]  w-full flex flex-col justify-center items-center border overflow-y-auto h-full">
           <div className="w-full flex justify-start py-2 px-2">
-            <BackButton to="/user/posts" />
+            <BackButton to="/user/posts" variant="link" />
           </div>
           <div className="w-full gap-4 overflow-y-auto border-t border-slate-300 h-full items-center">
             <div className="w-full">

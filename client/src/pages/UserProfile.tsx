@@ -226,7 +226,7 @@ const Profile = () => {
                               refetchSinglePost={refetchSinglePost}
                             />
                           </div>
-                          <div className="h-6"></div>
+                          <div className="h-2"></div>
                         </>
                       ) : (
                         <div key={i}>
@@ -239,7 +239,7 @@ const Profile = () => {
                       );
                     })}
                   {isLoading ? (
-                    <div className="w-full flex justify-center items-center py-12 md:col-span-2">
+                    <div className="w-full flex justify-center items-center py-4 md:col-span-2">
                       <Loader className="animate-spin h-8 w-8" />
                     </div>
                   ) : null}
