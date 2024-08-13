@@ -50,9 +50,19 @@ export const getFeed: RequestHandler = async (req, res) => {
 
     const posts = await prisma.post.findMany({
       where: {
-        authorId: {
-          in: followingIds,
-        },
+        OR: [
+          {
+            authorId: {
+              in: followingIds,
+            },
+            visibility: {
+              in: ["ONLY_FOLLOWING", "PUBLIC"],
+            },
+          },
+          {
+            visibility: "PUBLIC",
+          },
+        ],
       },
       include: {
         author: true,
@@ -60,7 +70,7 @@ export const getFeed: RequestHandler = async (req, res) => {
         savedPost: true,
       },
       skip: Number(page) * 3,
-      take: Number(page) * 3 + 3,
+      take: 3,
       orderBy: {
         created_at: "desc",
       },

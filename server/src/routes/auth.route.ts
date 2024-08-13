@@ -1,3 +1,4 @@
+import { authLimiter } from "#/config/rateLimit";
 import {
   admin_login,
   get_user,
@@ -17,16 +18,27 @@ import { Router } from "express";
 const router = Router();
 
 // user
-router.post("/register", validate(CreateUserSchema), user_register);
-router.post("/login", validate(SignInValidationSchema), user_login);
-router.get("/get-user", authMiddleware, get_user);
+router.post(
+  "/register",
+  authLimiter,
+  validate(CreateUserSchema),
+  user_register
+);
+router.post(
+  "/login",
+  authLimiter,
+  validate(SignInValidationSchema),
+  user_login
+);
+router.get("/get-user", authLimiter, authMiddleware, get_user);
 
 // admin
-router.post("/admin/login", admin_login);
-router.get("/get-user", authMiddleware, get_user);
+router.post("/admin/login", authLimiter, admin_login);
+router.get("/get-user", authLimiter, authMiddleware, get_user);
 
 router.put(
   "/update-user-info",
+  authLimiter,
   validate(UpdateUserSchema),
   authMiddleware,
   update_user
