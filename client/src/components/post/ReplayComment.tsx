@@ -102,7 +102,7 @@ const ReplayComment = ({
         </div>
         <div className="text-gray-300 font-bold pl-14">|</div>
 
-        <div className="flex justify-between border ml-5  rounded-md">
+        <div className="flex justify-between border ml-5 rounded-md bg-white">
           <div className="p-3 flex">
             <div className="flex items-center mr-4">
               <div className="flex gap-3 flex-col">

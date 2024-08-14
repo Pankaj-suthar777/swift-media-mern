@@ -168,8 +168,6 @@ export const getUserChats: RequestHandler = async (req, res) => {
 export const getChatMessage: RequestHandler = async (req, res) => {
   const { chatId } = req.params;
 
-  console.log(chatId);
-
   const messages = await prisma.message.findMany({
     where: {
       chat_id: parseInt(chatId),
@@ -177,4 +175,32 @@ export const getChatMessage: RequestHandler = async (req, res) => {
   });
 
   responseReturn(res, 201, messages);
+};
+
+export const getOtherUserChatWithMe: RequestHandler = async (req, res) => {
+  const { userId } = req.params;
+  const myId = req.user.id;
+
+  const chat = await prisma.chat.findFirst({
+    where: {
+      AND: [
+        {
+          friends: {
+            some: {
+              id: parseInt(myId),
+            },
+          },
+        },
+        {
+          friends: {
+            some: {
+              id: parseInt(userId),
+            },
+          },
+        },
+      ],
+    },
+  });
+
+  responseReturn(res, 201, chat);
 };

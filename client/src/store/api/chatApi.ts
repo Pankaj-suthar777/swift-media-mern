@@ -54,6 +54,15 @@ export const chatApi = createApi({
       providesTags: ["Message"],
       keepUnusedDataFor: 5,
     }),
+    getOtherUserAndMyChat: builder.query({
+      query({ other_user_id }) {
+        return {
+          url: `/chat/other-user-chat-with-me/${other_user_id}`,
+        };
+      },
+      providesTags: ["Message"],
+      keepUnusedDataFor: 5,
+    }),
   }),
 });
 
@@ -62,4 +71,5 @@ export const {
   useSendMessageMutation,
   useGetMyChatsQuery,
   useGetChatMessagesQuery,
+  useGetOtherUserAndMyChatQuery,
 } = chatApi;

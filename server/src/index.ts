@@ -13,6 +13,26 @@ import { errorHandler } from "./middleware/error";
 
 import { app, server } from "./socket/socket";
 import { CLIENT_URL, PORT } from "./utils/variables";
+// import { createClient } from "redis";
+
+// const client = createClient({
+//   socket: {
+//     host: "127.0.0.1",
+//     port: 6379,
+//   },
+// });
+
+// client.connect().catch((err) => {
+//   console.error("Error connecting to Redis:", err);
+// });
+
+// client.on("connect", () => {
+//   console.log("Connected to Redis");
+// });
+
+// client.on("error", (err) => {
+//   console.error("Redis error:", err);
+// });
 
 app.use(
   cors({

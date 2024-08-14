@@ -190,6 +190,21 @@ export const getUserPosts: RequestHandler = async (req, res) => {
 
 export const getDashboardData: RequestHandler = async (req, res) => {
   const { id } = req.user;
+  //const cacheKey = `user_profile_${id}`;
+
+  // client.get(cacheKey, (err: Error | null, cachedProfile: string | null) => {
+  //   if (cachedProfile) {
+  //     // Serve cached profile
+  //     res.send(cachedProfile);
+  //   } else {
+  //     // Fetch user profile from the database
+
+  //     // Cache the user profile
+  //     client.setex(cacheKey, 3600, "userProfile"); // Cache for 1 hour
+
+  //     res.send("userProfile");
+  //   }
+  // });
 
   const followCount = await prisma.follow.count({
     where: {

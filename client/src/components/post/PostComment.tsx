@@ -66,7 +66,7 @@ const PostComment = ({
   return (
     <div>
       <div className="mt-4">
-        <div className="flex w-full justify-between border rounded-md relative">
+        <div className="flex w-full justify-between border rounded-md relative bg-white">
           <div className="p-3 flex ">
             <div className="flex items-center mr-4">
               <div className="flex gap-3 flex-col ">

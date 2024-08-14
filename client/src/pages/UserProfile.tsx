@@ -17,9 +17,10 @@ import { Button } from "@/components/custom/button";
 import { useAppSelector } from "@/store/hooks";
 import { useCallback, useRef, useState } from "react";
 import useFetchUserPosts from "@/hooks/useFetchUsersPosts";
-import { User } from "@/@types/user";
+// import { User } from "@/@types/user";
 import { RootState } from "@/store/store";
 import { TooltipComponent } from "@/components/TooltipComponent";
+import { useGetOtherUserAndMyChatQuery } from "@/store/api/chatApi";
 
 const Profile = () => {
   const { id } = useParams();
@@ -44,6 +45,12 @@ const Profile = () => {
       skip: !id,
     }
   );
+
+  const { data: chat_data } = useGetOtherUserAndMyChatQuery({
+    other_user_id: id,
+  });
+
+  console.log("data", chat_data);
 
   const { data: isFollow, refetch } = useIsFollowQuery(id);
 
@@ -87,9 +94,9 @@ const Profile = () => {
     return null;
   }
 
-  const isFriend = userInfo?.friends.find(
-    (fri: User) => fri.id === parseInt(id)
-  );
+  // const isFriend = userInfo?.friends.find(
+  //   (fri: User) => fri.id === parseInt(id)
+  // );
 
   return (
     <>
@@ -148,8 +155,12 @@ const Profile = () => {
                   </Button>
                   <Button
                     onClick={() => {
-                      if (isFriend) {
-                        navigate(`/user/chats`);
+                      if (chat_data?.id) {
+                        navigate(`/user/chats/${chat_data.id}`, {
+                          state: {
+                            user: data?.user,
+                          },
+                        });
                       } else {
                         navigate(`/user/chats/new`, {
                           state: {
@@ -158,6 +169,17 @@ const Profile = () => {
                         });
                       }
                     }}
+                    // onClick={() => {
+                    //   if (isFriend) {
+                    //     navigate(`/user/chats`);
+                    //   } else {
+                    //     navigate(`/user/chats/new`, {
+                    //       state: {
+                    //         user: data?.user,
+                    //       },
+                    //     });
+                    //   }
+                    // }}
                   >
                     Chat
                   </Button>
