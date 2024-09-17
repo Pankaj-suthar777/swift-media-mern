@@ -9,6 +9,7 @@ import {
 import { toast } from "../ui/use-toast";
 import { useAppSelector } from "@/store/hooks";
 import { useEffect, useState } from "react";
+import ShareLink from "../layout/ShareLink";
 
 const SinglePost = ({
   post,
@@ -155,13 +156,11 @@ const SinglePost = ({
                       <span className="ml-2">{post.savedPost.length}</span>
                     </div>
                     <div className="flex items-center">
-                      <Share2 size={18} />
-                      <span className="ml-2">
-                        {
-                          post.vote.filter((vote) => vote.vote === "down-vote")
-                            .length
-                        }
-                      </span>
+                      <ShareLink link={window.location.href + "/" + post.id}>
+                        <div className="flex items-center">
+                          <Share2 size={18} />
+                        </div>
+                      </ShareLink>
                     </div>
                   </div>
                   <div className="flex gap-4">

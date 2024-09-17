@@ -30,6 +30,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../custom/button";
+import ShareLink from "../layout/ShareLink";
 
 interface SidePostProps {
   type: "horizontal" | "vertical";
@@ -331,9 +332,11 @@ const Post = ({
                           {postData?.savedPost?.length}
                         </span>
                       </div>
-                      <div className="flex items-center">
-                        <Share2 size={18} />
-                      </div>
+                      <ShareLink link={window.location.href + "/" + post.id}>
+                        <div className="flex items-center">
+                          <Share2 size={18} />
+                        </div>
+                      </ShareLink>
                     </div>
 
                     <div className="flex items-center min-w-[45px] lg:hidden">
