@@ -66,10 +66,6 @@ const UpdatePostModal = ({
     }
   };
 
-  if (file) {
-    console.log(URL.createObjectURL(file));
-  }
-
   useEffect(() => {
     if (file) {
       setPrviewImage(URL.createObjectURL(file));

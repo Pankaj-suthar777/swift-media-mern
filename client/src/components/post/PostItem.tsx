@@ -53,9 +53,9 @@ const Post = ({
   const [postData, setPostData] = useState<IPost | null>(post);
   const [isSaved, setIsSaved] = useState(false);
 
-  const [upOrDownVote, { isLoading }] = useUpOrDownVoteMutation();
+  const [upOrDownVote] = useUpOrDownVoteMutation();
 
-  const [savePost] = useSavePostMutation();
+  const [savePost, { isLoading }] = useSavePostMutation();
 
   const upOrDownVoteHandler = async (
     vote: "up-vote" | "down-vote",
@@ -64,6 +64,36 @@ const Post = ({
     if (!id) return;
 
     try {
+      const existingVoteIndex = post.vote.findIndex(
+        (v) => v.author_id === userInfo?.id
+      );
+
+      let updatedVotes;
+
+      if (existingVoteIndex !== -1) {
+        // If the user already voted update vote
+        updatedVotes = post.vote.map((v, index) =>
+          index === existingVoteIndex ? { ...v, vote } : v
+        );
+      } else {
+        // If the user hasn't voted
+        updatedVotes = [
+          ...post.vote,
+          {
+            vote,
+            author_id: userInfo?.id as number,
+            created_at: new Date(),
+            post_id: postData?.id as number,
+            id: Math.floor(Math.random() * 1000),
+          },
+        ];
+      }
+
+      setPostData({
+        ...post,
+        vote: updatedVotes,
+      });
+
       const data = await upOrDownVote({
         vote,
         id: String(id),
@@ -78,11 +108,6 @@ const Post = ({
         title: error?.data?.error,
         variant: "destructive",
       });
-    } finally {
-      if (refetchSinglePost) {
-        const p = await refetchSinglePost(post.id);
-        setPostData(p);
-      }
     }
   };
 
@@ -163,11 +188,7 @@ const Post = ({
             <ArrowUp size={20} />
           </div>
           <span>
-            {isLoading ? (
-              <Loader className="animate-spin" size={16} />
-            ) : (
-              postData?.vote.filter((vote) => vote.vote === "up-vote").length
-            )}
+            {postData?.vote.filter((vote) => vote.vote === "up-vote").length}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -180,11 +201,7 @@ const Post = ({
             <ArrowDown size={20} />
           </div>
           <span>
-            {isLoading ? (
-              <Loader className="animate-spin" size={16} />
-            ) : (
-              postData?.vote.filter((vote) => vote.vote === "down-vote").length
-            )}
+            {postData?.vote.filter((vote) => vote.vote === "down-vote").length}
           </span>
         </div>
       </div>
@@ -305,7 +322,11 @@ const Post = ({
                         }`}
                         onClick={() => savePostHandler()}
                       >
-                        <Pin size={18} />
+                        {isLoading ? (
+                          <Loader className="animate-spin" />
+                        ) : (
+                          <Pin size={18} />
+                        )}
                         <span className="ml-2">
                           {postData?.savedPost?.length}
                         </span>

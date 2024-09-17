@@ -34,7 +34,6 @@ export const postApi = createApi({
           body: { vote },
         };
       },
-      invalidatesTags: ["Post"],
     }),
     getFeedPost: builder.query({
       query() {

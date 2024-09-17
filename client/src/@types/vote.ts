@@ -11,7 +11,7 @@ export interface CommentVote {
   vote: VoteType;
   comment_id: number;
   author_id: number;
-  author: User;
+  author?: User;
   comment: Comment;
 }
 
@@ -21,7 +21,7 @@ export interface ReplayToCommentVote {
   vote: VoteType;
   reply_to_comment_id: number;
   author_id: number;
-  author: User;
+  author?: User;
   reply_to_comment: ReplyToComment;
 }
 
@@ -31,6 +31,6 @@ export interface ReplayToReplyCommentVote {
   vote: VoteType;
   reply_to_reply_comment_id: number;
   author_id: number;
-  author: User;
+  author?: User;
   reply_to_reply_comment: ReplayToReplayComment;
 }

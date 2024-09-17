@@ -146,8 +146,6 @@ const Chats = () => {
     setMessage("");
   };
 
-  console.log("object", pathname);
-
   return (
     <div className="flex w-full gap-4 pl-4 pr-4">
       {showSidebar && (

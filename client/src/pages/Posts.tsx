@@ -36,7 +36,7 @@ const Posts = () => {
   return (
     <div className="h-viewport-minus-80px w-full flex flex-col items-center pl-2 pr-2 lg:pl-4 lg:pr-4">
       <div className="flex gap-4 w-full h-full">
-        <div className="sm:w-[60%] bg-slate-5 w-full flex flex-col gap-4 justify-center items-center border pt-4 pb-1 overflow-y-auto h-full">
+        <div className="sm:w-[60%] bg-slate-5 w-full flex flex-col gap-4 justify-center items-center border pt-4 pb-1 h-full">
           <h1>Your Feed</h1>
           <div className="flex flex-col gap-4 overflow-y-auto border-t h-full w-full items-center">
             {posts.length === 0 && isLoading === false ? (

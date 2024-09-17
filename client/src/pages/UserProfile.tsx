@@ -50,8 +50,6 @@ const Profile = () => {
     other_user_id: id,
   });
 
-  console.log("data", chat_data);
-
   const { data: isFollow, refetch } = useIsFollowQuery(id);
 
   const [followUser, { isLoading: isFollowingLoading }] =

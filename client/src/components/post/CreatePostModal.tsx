@@ -64,10 +64,6 @@ const CreatePostModal = ({
     }
   };
 
-  if (file) {
-    console.log(URL.createObjectURL(file));
-  }
-
   return (
     <Card className="w-full overflow-hidden">
       <CardHeader>

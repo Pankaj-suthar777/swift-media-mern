@@ -8,8 +8,6 @@ const LoginPage = () => {
   const { token, userInfo, role } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  console.log(token, userInfo, role);
-
   useEffect(() => {
     if (token && userInfo) {
       if (role === "admin") {

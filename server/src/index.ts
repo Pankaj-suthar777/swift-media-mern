@@ -53,5 +53,5 @@ app.use(errorHandler);
 const PORT_IN_USE = PORT || 5000;
 
 server.listen(PORT_IN_USE, () => {
-  console.log("Port is listing on port " + PORT_IN_USE);
+  console.log("Server is listing on port " + PORT_IN_USE);
 });

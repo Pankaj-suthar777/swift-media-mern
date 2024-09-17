@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import ReplayComment from "./ReplayComment";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../custom/button";
-import { FormEvent } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { ReplyToComment } from "@/@types/replayToComment";
 import { VoteType } from "@/@types/vote";
 import { useToogleCommentVoteMutation } from "@/store/api/postApi";
@@ -33,16 +33,49 @@ const PostComment = ({
   isReplayCommentAdding,
 }: Props) => {
   const [toogleComment] = useToogleCommentVoteMutation();
-
+  const [commentData, setCommentData] = useState<Comment | null>(null);
   const { userInfo } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (comment) {
+      setCommentData(comment);
+    }
+  }, [comment]);
 
   const clickReplayHandler = (comment: Comment | ReplyToComment) => {
     setCommentReplay(comment);
   };
 
   const ToogleVoteHandler = async (vote: VoteType) => {
-    if (!comment?.id) return;
+    if (!comment?.id || !userInfo) return;
 
+    const existingVoteIndex = comment.vote.findIndex(
+      (v) => v.author_id === userInfo?.id
+    );
+
+    let updatedVotes;
+
+    if (existingVoteIndex !== -1) {
+      // If the user already voted update vote
+      updatedVotes = comment.vote.map((c, index) =>
+        index === existingVoteIndex ? { ...c, vote } : c
+      );
+    } else {
+      // If the user hasn't voted
+      updatedVotes = [
+        ...comment.vote,
+        {
+          vote,
+          author_id: userInfo?.id as number,
+          created_at: new Date(),
+          comment_id: comment?.id as number,
+          id: Math.floor(Math.random() * 1000),
+          comment: comment as Comment,
+        },
+      ];
+    }
+
+    setCommentData({ ...comment, vote: updatedVotes });
     try {
       const data = await toogleComment({
         vote,
@@ -61,7 +94,9 @@ const PostComment = ({
     }
   };
 
-  const vote = comment.vote.find((vote) => vote.author_id === userInfo?.id);
+  const vote = commentData?.vote.find(
+    (vote) => vote.author_id === userInfo?.id
+  );
 
   return (
     <div>
@@ -71,10 +106,10 @@ const PostComment = ({
             <div className="flex items-center mr-4">
               <div className="flex gap-3 flex-col ">
                 <div className="flex gap-2 items-center ">
-                  {comment?.vote && (
+                  {commentData?.vote && (
                     <div className="min-w-[10px]">
                       {
-                        comment?.vote?.filter((v) => v.vote === "up-vote")
+                        commentData?.vote?.filter((v) => v.vote === "up-vote")
                           .length
                       }
                     </div>
@@ -89,10 +124,10 @@ const PostComment = ({
                   </div>
                 </div>
                 <div className="flex gap-2 items-center">
-                  {comment?.vote && (
+                  {commentData?.vote && (
                     <div className="min-w-[10px]">
                       {
-                        comment?.vote?.filter((v) => v.vote === "down-vote")
+                        commentData?.vote?.filter((v) => v.vote === "down-vote")
                           .length
                       }
                     </div>
@@ -122,16 +157,16 @@ const PostComment = ({
                   <AvatarImage
                     src={comment.author?.avatar || "/images/user-profile2.jpg"}
                   />
-                  <AvatarFallback>{comment?.author?.name}</AvatarFallback>
+                  <AvatarFallback>{commentData?.author?.name}</AvatarFallback>
                 </Avatar>
 
                 <h3 className="font-medium overflow-hidden break-all w-full">
-                  {comment?.author?.name}
+                  {commentData?.author?.name}
                   <br />
                 </h3>
               </div>
               <p className="text-gray-600 mt-2 mb-2 break-all w-full">
-                {comment?.text}
+                {commentData?.text}
               </p>
             </div>
           </div>

@@ -5,6 +5,8 @@ import { useToogleReplayedToReplyCommentVoteMutation } from "@/store/api/postApi
 import { useAppSelector } from "@/store/hooks";
 import { VoteType } from "@/@types/vote";
 import { toast } from "../ui/use-toast";
+import { useEffect, useState } from "react";
+import { RootState } from "@/store/store";
 
 interface Props {
   comment: IReplayToReplayComment;
@@ -12,11 +14,47 @@ interface Props {
 
 const ReplayToReplayComment = ({ comment }: Props) => {
   const [toogleComment] = useToogleReplayedToReplyCommentVoteMutation();
+  const [commentData, setCommentData] = useState<IReplayToReplayComment | null>(
+    null
+  );
 
-  const { userInfo } = useAppSelector((state) => state.auth);
+  useEffect(() => {
+    if (comment) {
+      setCommentData(comment);
+    }
+  }, [comment]);
+  const { userInfo } = useAppSelector((state: RootState) => state.auth);
 
   const ToogleVoteHandler = async (vote: VoteType) => {
     if (!comment?.id) return;
+
+    const existingVoteIndex = comment?.replayToReplyCommentVote.findIndex(
+      (v) => v.author_id === userInfo?.id
+    );
+
+    let updatedVotes;
+
+    if (existingVoteIndex !== -1) {
+      // If the user already voted update vote
+      updatedVotes = comment?.replayToReplyCommentVote.map((c, index) =>
+        index === existingVoteIndex ? { ...c, vote } : c
+      );
+    } else {
+      // If the user hasn't voted
+      updatedVotes = [
+        ...comment.replayToReplyCommentVote,
+        {
+          vote,
+          author_id: userInfo?.id as number,
+          created_at: new Date(),
+          reply_to_reply_comment: comment,
+          reply_to_reply_comment_id: comment?.id as number,
+          id: Math.floor(Math.random() * 1000),
+        },
+      ];
+    }
+
+    setCommentData({ ...comment, replayToReplyCommentVote: updatedVotes });
 
     try {
       const data = await toogleComment({
@@ -36,7 +74,7 @@ const ReplayToReplayComment = ({ comment }: Props) => {
     }
   };
 
-  const vote = comment.replayToReplyCommentVote?.find(
+  const vote = commentData?.replayToReplyCommentVote?.find(
     (vote) => vote.author_id === userInfo?.id
   );
 
@@ -49,10 +87,10 @@ const ReplayToReplayComment = ({ comment }: Props) => {
           <div className="flex items-center mr-4">
             <div className="flex gap-3 flex-col">
               <div className="flex gap-2 items-center">
-                {comment?.replayToReplyCommentVote && (
+                {commentData?.replayToReplyCommentVote && (
                   <div className="min-w-[10px]">
                     {
-                      comment?.replayToReplyCommentVote?.filter(
+                      commentData?.replayToReplyCommentVote?.filter(
                         (v) => v.vote === "up-vote"
                       ).length
                     }
@@ -68,10 +106,10 @@ const ReplayToReplayComment = ({ comment }: Props) => {
                 </div>
               </div>
               <div className="flex gap-2 items-center">
-                {comment?.replayToReplyCommentVote && (
+                {commentData?.replayToReplyCommentVote && (
                   <div className="min-w-[10px]">
                     {
-                      comment?.replayToReplyCommentVote?.filter(
+                      commentData?.replayToReplyCommentVote?.filter(
                         (v) => v.vote === "down-vote"
                       ).length
                     }

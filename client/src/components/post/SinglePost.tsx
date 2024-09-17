@@ -8,6 +8,7 @@ import {
 } from "@/store/api/postApi";
 import { toast } from "../ui/use-toast";
 import { useAppSelector } from "@/store/hooks";
+import { useEffect, useState } from "react";
 
 const SinglePost = ({
   post,
@@ -18,14 +19,50 @@ const SinglePost = ({
 }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [upOrDownVote, { isLoading }] = useUpOrDownVoteMutation();
+  const [upOrDownVote] = useUpOrDownVoteMutation();
   const { userInfo } = useAppSelector((state) => state.auth);
-
-  const [savePost] = useSavePostMutation();
+  const [savePost, { isLoading }] = useSavePostMutation();
   const { data, refetch } = useIsPostSavedQuery(id);
+  const [postData, setPostData] = useState<IPost | null>(null);
+
+  useEffect(() => {
+    if (post) {
+      setPostData(post);
+    }
+  }, [post]);
 
   const upOrDownVoteHandler = async (vote: "up-vote" | "down-vote") => {
     if (!id) return;
+
+    const existingVoteIndex = post.vote.findIndex(
+      (v) => v.author_id === userInfo?.id
+    );
+
+    let updatedVotes;
+
+    if (existingVoteIndex !== -1) {
+      // If the user already voted update vote
+      updatedVotes = post.vote.map((v, index) =>
+        index === existingVoteIndex ? { ...v, vote } : v
+      );
+    } else {
+      // If the user hasn't voted
+      updatedVotes = [
+        ...post.vote,
+        {
+          vote,
+          author_id: userInfo?.id as number,
+          created_at: new Date(),
+          post_id: post?.id as number,
+          id: Math.floor(Math.random() * 1000),
+        },
+      ];
+    }
+
+    setPostData({
+      ...post,
+      vote: updatedVotes,
+    });
 
     try {
       const data = await upOrDownVote({
@@ -64,7 +101,7 @@ const SinglePost = ({
     }
   };
 
-  const vote = post.vote.find((vote) => vote.author_id === userInfo?.id);
+  const vote = postData?.vote.find((vote) => vote.author_id === userInfo?.id);
 
   return (
     <div className="flex gap-8">
@@ -108,9 +145,13 @@ const SinglePost = ({
                       className={`flex items-center border border-slate-300 rounded-full py-1 px-3 hover:bg-slate-200 ${
                         data?.isSaved ? "bg-slate-300" : ""
                       }`}
-                      onClick={() => savePostHandler()}
+                      onClick={isLoading ? () => {} : () => savePostHandler()}
                     >
-                      <Pin size={18} />
+                      {isLoading ? (
+                        <Loader className="animate-spin" />
+                      ) : (
+                        <Pin size={18} />
+                      )}
                       <span className="ml-2">{post.savedPost.length}</span>
                     </div>
                     <div className="flex items-center">
@@ -131,16 +172,13 @@ const SinglePost = ({
                         }`}
                         onClick={() => upOrDownVoteHandler("up-vote")}
                       >
-                        {isLoading ? (
-                          <Loader className="animate-spin" size={20} />
-                        ) : (
-                          <ArrowUp size={20} />
-                        )}
+                        <ArrowUp size={20} />
                       </div>
                       <span>
                         {
-                          post.vote.filter((vote) => vote.vote === "up-vote")
-                            .length
+                          postData?.vote.filter(
+                            (vote) => vote.vote === "up-vote"
+                          ).length
                         }
                       </span>
                     </div>
@@ -151,16 +189,13 @@ const SinglePost = ({
                         }`}
                         onClick={() => upOrDownVoteHandler("down-vote")}
                       >
-                        {isLoading ? (
-                          <Loader className="animate-spin" size={20} />
-                        ) : (
-                          <ArrowDown size={20} />
-                        )}
+                        <ArrowDown size={20} />
                       </div>
                       <span>
                         {
-                          post.vote.filter((vote) => vote.vote === "down-vote")
-                            .length
+                          postData?.vote.filter(
+                            (vote) => vote.vote === "down-vote"
+                          ).length
                         }
                       </span>
                     </div>

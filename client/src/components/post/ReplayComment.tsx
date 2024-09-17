@@ -8,7 +8,7 @@ import {
   useAddReplayToReplyMutation,
   useToogleReplayCommentVoteMutation,
 } from "@/store/api/postApi";
-import { FormEvent } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
 import ReplayToReplayComment from "./ReplayToReplyComment";
 import { VoteType } from "@/@types/vote";
@@ -33,8 +33,14 @@ const ReplayComment = ({
   text,
   setText,
 }: Props) => {
-  console.log(replay);
   const [addReplayToReply, { isLoading }] = useAddReplayToReplyMutation();
+  const [replayData, setReplayData] = useState<ReplyToComment | null>(null);
+
+  useEffect(() => {
+    if (replay) {
+      setReplayData(replay);
+    }
+  }, [replay]);
 
   const [toogleComment] = useToogleReplayCommentVoteMutation();
 
@@ -42,6 +48,34 @@ const ReplayComment = ({
 
   const ToogleVoteHandler = async (vote: VoteType) => {
     if (!replay?.id) return;
+
+    const existingVoteIndex = replay.vote.findIndex(
+      (v) => v.author_id === userInfo?.id
+    );
+
+    let updatedVotes;
+
+    if (existingVoteIndex !== -1) {
+      // If the user already voted update vote
+      updatedVotes = replay.vote.map((c, index) =>
+        index === existingVoteIndex ? { ...c, vote } : c
+      );
+    } else {
+      // If the user hasn't voted
+      updatedVotes = [
+        ...replay.vote,
+        {
+          vote,
+          author_id: userInfo?.id as number,
+          created_at: new Date(),
+          reply_to_comment: replay,
+          reply_to_comment_id: replay?.id as number,
+          id: Math.floor(Math.random() * 1000),
+        },
+      ];
+    }
+
+    setReplayData({ ...replay, vote: updatedVotes });
 
     try {
       const data = await toogleComment({
@@ -89,7 +123,9 @@ const ReplayComment = ({
     }
   };
 
-  const vote = replay.vote?.find((vote) => vote.author_id === userInfo?.id);
+  const vote = replayData?.vote?.find(
+    (vote) => vote.author_id === userInfo?.id
+  );
 
   return (
     <div>
@@ -107,9 +143,12 @@ const ReplayComment = ({
             <div className="flex items-center mr-4">
               <div className="flex gap-3 flex-col">
                 <div className="flex gap-2 items-center">
-                  {replay?.vote && (
+                  {replayData?.vote && (
                     <div className="min-w-[10px]">
-                      {replay?.vote?.filter((v) => v.vote === "up-vote").length}
+                      {
+                        replayData?.vote?.filter((v) => v.vote === "up-vote")
+                          .length
+                      }
                     </div>
                   )}
                   <div
@@ -122,10 +161,10 @@ const ReplayComment = ({
                   </div>
                 </div>
                 <div className="flex gap-2 items-center">
-                  {replay?.vote && (
+                  {replayData?.vote && (
                     <div className="min-w-[10px]">
                       {
-                        replay?.vote?.filter((v) => v.vote === "down-vote")
+                        replayData?.vote?.filter((v) => v.vote === "down-vote")
                           .length
                       }
                     </div>

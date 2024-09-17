@@ -17,6 +17,7 @@ import { Comment } from "@/@types/comment";
 const Posts = () => {
   const { id } = useParams();
   const { data, isLoading, refetch } = useGetSinglePostQuery(id);
+
   const [text, setText] = useState("");
   const [commentReplay, setCommentReplay] = useState<Comment | null>(null);
 

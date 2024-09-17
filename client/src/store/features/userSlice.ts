@@ -2,7 +2,7 @@ import { User } from "@/@types/user";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 
-interface UserInfo {
+export interface UserInfo {
   name: string;
   email: string;
   role: string;

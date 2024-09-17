@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 export default function Header() {
   const { userInfo } = useAppSelector((state) => state.auth);
 
-  console.log(userInfo);
   return (
     <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6 z-50">
       <Sheet>
