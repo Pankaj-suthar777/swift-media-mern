@@ -25,7 +25,7 @@ const SearchBox = () => {
   }, [value, searchUser]);
 
   return (
-    <div className="relative md:w-[600px] mx-2 sm:mx-0 group z-30">
+    <div className="relative mx-2 sm:mx-0 group z-30">
       <input
         autoComplete="off"
         value={searchValue}
@@ -38,7 +38,7 @@ const SearchBox = () => {
         onChange={onChangeHandler}
         type="text"
         name="q"
-        className="w-full border h-12 shadow p-4 rounded-full dark:text-gray-800 dark:border-gray-700 dark:bg-gray-200"
+        className="w-full border h-12 shadow p-4 rounded-3xl dark:text-gray-800 dark:border-gray-700 dark:bg-gray-200"
         placeholder="search"
       />
       <button type="submit">

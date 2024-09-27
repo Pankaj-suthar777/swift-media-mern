@@ -1,10 +1,10 @@
 import Post from "@/components/post/PostItem";
-import CreatePost from "@/components/post/CreatePost";
 import FriendOfFriend from "@/components/post/FriendOfFriend";
 import { Loader } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import useFetchPosts from "@/hooks/useFetchPosts";
-import { Button } from "@/components/custom/button";
+import SearchBox from "@/components/SearchBox";
+import { useLocation } from "react-router-dom";
 
 const Posts = () => {
   const [page, setPage] = useState(0);
@@ -15,6 +15,7 @@ const Posts = () => {
     hasMore,
     refetchSinglePost,
   } = useFetchPosts(page);
+  const { pathname } = useLocation();
   const observer = useRef<IntersectionObserver | null>(null);
 
   const lastElementRef = useCallback(
@@ -34,11 +35,13 @@ const Posts = () => {
   );
 
   return (
-    <div className="h-viewport-minus-80px w-full flex flex-col items-center pl-2 pr-2 lg:pl-4 lg:pr-4">
-      <div className="flex gap-4 w-full h-full">
-        <div className="sm:w-[60%] bg-slate-5 w-full flex flex-col gap-4 justify-center items-center border pt-4 pb-1 h-full">
-          <h1>Your Feed</h1>
-          <div className="flex flex-col gap-4 overflow-y-auto border-t h-full w-full items-center">
+    <div className="h-screen w-full flex flex-col items-center pl-2 pr-2 lg:pl-4 lg:pr-4">
+      <div className="flex gap-4 w-full h-full overflow-hidden">
+        <div className="sm:w-[80%] overflow-auto">
+          <div className="sticky top-0 w-full h-[50px] flex flex-col gap-4 justify-center items-center border ">
+            <h1>Your Feed</h1>
+          </div>
+          <div className="flex flex-col gap-4 overflow-y-auto border-t h-[calu(h-[100vh]-50px)] w-full items-center">
             {posts.length === 0 && isLoading === false ? (
               <div className="px-4">
                 <div className="flex w-full py-24 justify-center items-center">
@@ -68,20 +71,25 @@ const Posts = () => {
                   </div>
                 );
               })}
+
             {isLoading && (
               <div className="w-full overflow-hidden flex justify-center items-center py-4">
                 <Loader className="animate-spin" size={30} />
               </div>
             )}
             {error && <p>Error loading posts...</p>}
+            <div className="h-4"></div>
           </div>
         </div>
 
-        <div className="w-[30%] sm:flex h-fit justify-center hidden mx-auto">
+        <div className="w-[50%] sm:flex h-fit justify-center overflow-hidden hidden mx-auto">
           <div className="flex flex-col gap-2 w-full">
-            <CreatePost>
-              <Button className="mt-5 rounded-md w-full">Create Post</Button>
-            </CreatePost>
+            <div className="mb-4">
+              {pathname === "/user/posts" || pathname === "/user/search" ? (
+                <SearchBox />
+              ) : null}
+            </div>
+
             <h2 className="py-4 text-lg text-center">People You May Know</h2>
             <div className="bg-slate-50">
               <FriendOfFriend />

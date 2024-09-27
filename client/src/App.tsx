@@ -8,12 +8,17 @@ import {
 } from "./store/api/authApi";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { setUser } from "./store/features/userSlice";
+import { useLocation } from "react-router-dom";
 
 const App = () => {
   const dispatch = useAppDispatch();
+  const { pathname } = useLocation();
   const { token, role } = useAppSelector((state) => state.auth);
-  const { data: userData } = useGetUserInfoQuery({ token });
-  const { data: adminData } = useAdminGetUserInfoQuery({ token });
+  const { data: userData, isLoading: isUserDataLoading } = useGetUserInfoQuery({
+    token,
+  });
+  const { data: adminData, isLoading: isAdminUserDataLoading } =
+    useAdminGetUserInfoQuery({ token });
 
   const [allRoutes, setAllRoutes] = useState([...publicRoutes]);
 
@@ -35,6 +40,16 @@ const App = () => {
       handleUserInfo(adminData);
     }
   }, [token, role, userData, adminData, dispatch]);
+
+  if (isUserDataLoading || isAdminUserDataLoading) {
+    if (pathname !== "/") {
+      return (
+        <h1 className="flex justify-center h-screen w-screen items-center">
+          Loading...
+        </h1>
+      );
+    }
+  }
 
   return <Router allRoutes={allRoutes} />;
 };

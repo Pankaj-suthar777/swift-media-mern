@@ -1,5 +1,5 @@
-export const baseURL = "https://swift-media-mern.onrender.com/api";
-//export const baseURL = "/api";
+//export const baseURL = "https://swift-media-mern.onrender.com/api";
+export const baseURL = "/api";
 
 import axios, { CreateAxiosDefaults } from "axios";
 
@@ -12,7 +12,7 @@ export default client;
 type headers = CreateAxiosDefaults<any>["headers"];
 
 export const getClient = async (headers?: headers) => {
-  const token = await localStorage.getItem("accessToken");
+  const token = localStorage.getItem("accessToken");
 
   if (!token) return axios.create({ baseURL });
 

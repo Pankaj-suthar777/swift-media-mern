@@ -16,27 +16,19 @@ interface ItemProps {
   to: string;
 }
 
-export default function Sidebar({
-  children,
-  showSidebar,
-  setShowSidebar,
-}: Props) {
+export default function Sidebar({ children }: Props) {
   // const { role } = useAppSelector((state) => state.auth);
   // const role = "user";
   return (
-    <>
-      <div
+    <div>
+      {/* <div
         onClick={() => setShowSidebar(false)}
         className={`fixed duration-200 ${
           !showSidebar ? "invisible" : "visible"
         } w-screen h-screen bg-[#000000aa] top-0 left-0 z-10 `}
-      ></div>
-      <aside
-        className={`min-h-screen fixed flex-col  w-[260px] z-50 top-0 transition-all border-r bg-white ${
-          showSidebar ? "left-0" : "-left-[260px] lg:left-0"
-        }`}
-      >
-        <nav className="h-full flex flex-col bg-white  ">
+      ></div> */}
+      <aside className={`flex-col w-[260px] z-50 top-0 transition-all`}>
+        <nav className="h-full flex flex-col ">
           <Link
             to="/"
             className="no-underline text-black mr-6 flex justify-center items-center py-6"
@@ -50,7 +42,7 @@ export default function Sidebar({
           <ul className="flex-1 px-3">{children}</ul>
         </nav>
       </aside>
-    </>
+    </div>
   );
 }
 
@@ -58,14 +50,16 @@ export function SidebarItem({ icon, text, active, to }: ItemProps) {
   return (
     <Link
       to={to}
-      className={`relative no-underline flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
+      className={`relative no-underline rounded-full flex items-center py-3 px-6 my-1 font-medium cursor-pointer transition-colors group ${
         active
           ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
           : "hover:bg-indigo-50 text-gray-600"
       }`}
     >
       {icon}
-      <span className={`overflow-hidden transition-all w-52 ml-3`}>{text}</span>
+      <span className={`overflow-hidden transition-all w-52 ml-3 text-lg`}>
+        {text}
+      </span>
     </Link>
   );
 }
