@@ -32,7 +32,7 @@ const Logout = () => {
   }, [isSuccess, navigate]);
   return (
     <div
-      className={`relative flex justify-between items-center py-3 px-6 font-medium rounded-full cursor-pointer transition-colors group bg-indigo-50 hover:bg-indigo-100 text-gray-600`}
+      className={`relative flex justify-between items-center py-3 px-6 font-medium rounded-full cursor-pointer transition-colors group bg-indigo-100 hover:bg-indigo-200 text-gray-600`}
     >
       <div className="flex justify-center items-center gap-4">
         <Avatar>

@@ -56,39 +56,45 @@ const SearchBox = () => {
         </svg>
       </button>
       <div className="absolute left-0 w-full mt-2 bg-white dark:bg-gray-700 shadow-lg rounded-lg overflow-hidden transition-all transform origin-top scale-y-0 group-focus-within:scale-y-100 h-0 group-focus-within:h-fit max-h-[300px] min-h-[100px] overflow-y-auto">
-        <p className="p-4 text-gray-700 dark:text-gray-200">
-          {isLoading || isFetching ? (
-            <Loader className="animate-spin" />
-          ) : (
-            data?.map((user: User, i: number) => (
-              <Link
-                key={i}
-                to={`/user/profile/${user.id}`}
-                className={`flex items-center sm:py-4 py-2 sm:px-6 px-2 bg-white`}
-              >
-                <div className="">
-                  <img
-                    className="w-10 h-10 rounded-full object-cover sm:mr-4 mr-2"
-                    src={user?.avatar ? user.avatar : "/user-profile2.jpg"}
-                    alt="User avatar"
-                  />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-sm font-medium text-gray-800">
-                    <span className="md:block hidden">{user.name}</span>
-                    <span className="md:hidden block text-xs">
-                      {truncateText(user.name, 7)}
+        {searchValue.length === 0 ? (
+          <span className="text-md text-center w-full flex justify-center pt-4">
+            Try searching for people
+          </span>
+        ) : (
+          <p className="text-gray-700 dark:text-gray-200">
+            {isLoading || isFetching ? (
+              <div className="h-full w-full flex justify-center items-center pt-4">
+                <Loader className="animate-spin" />
+              </div>
+            ) : (
+              data?.map((user: User, i: number) => (
+                <Link
+                  key={i}
+                  to={`/user/profile/${user.id}`}
+                  className={`flex items-center sm:py-4 py-2 px-4 bg-white hover:bg-slate-100`}
+                >
+                  <div className="">
+                    <img
+                      className="w-10 h-10 rounded-full object-cover sm:mr-4 mr-2"
+                      src={user?.avatar ? user.avatar : "/user-profile2.jpg"}
+                      alt="User avatar"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-sm font-medium text-gray-800">
+                      <span className="text-xs">
+                        {truncateText(user.name, 30)}
+                      </span>
+                    </h3>
+                    <span className="text-xs">
+                      {truncateText(user.email, 30)}
                     </span>
-                  </h3>
-                  <span className="md:block hidden">{user.email}</span>
-                  <span className="md:hidden block text-xs">
-                    {truncateText(user.email, 10)}
-                  </span>
-                </div>
-              </Link>
-            ))
-          )}
-        </p>
+                  </div>
+                </Link>
+              ))
+            )}
+          </p>
+        )}
       </div>
     </div>
   );
