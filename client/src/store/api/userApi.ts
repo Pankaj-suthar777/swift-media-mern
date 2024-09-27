@@ -118,6 +118,13 @@ export const userApi = createApi({
         };
       },
     }),
+    getAllPeoples: builder.query<{ peoples: User[] }, null>({
+      query() {
+        return {
+          url: `/user/get-peoples`,
+        };
+      },
+    }),
   }),
 });
 
@@ -133,4 +140,5 @@ export const {
   useLazyUserDashboardPostVoteDataQuery,
   useGetUserFollowersListQuery,
   useGetUserFollowingListQuery,
+  useGetAllPeoplesQuery,
 } = userApi;

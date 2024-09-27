@@ -36,8 +36,8 @@ const Logout = () => {
     >
       <div className="flex justify-center items-center gap-4">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={userInfo?.avatar} alt="@shadcn" />
+          <AvatarFallback>{userInfo?.name}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
           <h3 className="text-sm font-bold">{userInfo?.name}</h3>

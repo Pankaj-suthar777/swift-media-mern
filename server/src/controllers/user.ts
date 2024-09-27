@@ -505,3 +505,24 @@ export const getUserFollowingList: RequestHandler = async (req, res) => {
 
   return responseReturn(res, 201, { following: sortedData || [] });
 };
+
+export const getAllPeoples: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+  console.log("cssssssssss");
+  console.log(myId);
+
+  try {
+    const peoples = await prisma.user.findMany({
+      where: {
+        id: {
+          not: Number(myId), // Ensure myId is a number
+        },
+      },
+    });
+
+    // Respond with 200 for a successful data retrieval
+    return responseReturn(res, 200, { peoples });
+  } catch (error) {
+    return responseReturn(res, 500, { error: "Internal server error" });
+  }
+};

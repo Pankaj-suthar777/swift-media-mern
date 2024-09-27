@@ -90,8 +90,7 @@ const Posts = () => {
               ) : null}
             </div>
 
-            <h2 className="py-4 text-lg text-center">People You May Know</h2>
-            <div className="bg-slate-50">
+            <div className="">
               <FriendOfFriend />
             </div>
           </div>

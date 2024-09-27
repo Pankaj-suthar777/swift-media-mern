@@ -1,5 +1,5 @@
 import { User } from "@/@types/user";
-import { UserSeklton } from "@/components/Skelton/UserSeklton";
+import UserSeklton from "@/components/Skelton/UserSeklton";
 import BackButton from "@/components/ui/back-button";
 import { useGetUserFollowingListQuery } from "@/store/api/userApi";
 import { Link, useParams } from "react-router-dom";

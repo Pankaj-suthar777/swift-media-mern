@@ -10,6 +10,7 @@ import {
   getDashboardPostActivityData,
   getUserFollowingList,
   getUserFollowersList,
+  getAllPeoples,
 } from "#/controllers/user";
 import { authMiddleware } from "#/middleware/authMiddleware";
 import { Router } from "express";
@@ -27,6 +28,7 @@ router.get(
   authMiddleware,
   getDashboardPostActivityData
 );
+router.get("/get-peoples", authMiddleware, getAllPeoples);
 router.get("/recommended-user", authMiddleware, getRecommendedUser);
 router.post("/follow-user/:id", authMiddleware, followUser);
 router.get("/is-follow/:id", authMiddleware, isFollow);
