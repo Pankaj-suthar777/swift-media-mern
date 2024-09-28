@@ -1,13 +1,25 @@
-import { User } from "@/@types/user";
 import FriendOfFriend from "@/components/post/FriendOfFriend";
 import SearchBox from "@/components/SearchBox";
 import UserSeklton from "@/components/Skelton/UserSeklton";
 import BackButton from "@/components/ui/back-button";
 import { Button } from "@/components/ui/button";
-import { useGetAllPeoplesQuery } from "@/store/api/userApi";
+import { cn } from "@/lib/utils";
+import {
+  useFollowUserMutation,
+  useGetAllPeoplesQuery,
+} from "@/store/api/userApi";
 import { truncateText } from "@/utils/helper";
 import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+
+export interface AllPeople {
+  id: number;
+  name: string;
+  email: string;
+  avatar: null | string;
+  about: null | string;
+  isFollowing: boolean;
+}
 
 const dummyData = new Array(9).fill("");
 
@@ -36,14 +48,21 @@ const Peoples = () => {
   );
 
   return (
-    <div className="h-screen w-full flex flex-col items-center">
+    <div className="h-screen w-full flex flex-col items-center border border-r-0">
       <div className="flex gap-4 w-full h-full overflow-hidden">
         <div className="sm:w-[90%] overflow-auto">
-          <div className="sticky top-0 w-full h-[50px] flex  gap-4 justify-start items-center bg-white bg-opacity-10 backdrop-blur-lg border border-opacity-30 rounded-lg border-slate-600 ">
-            <BackButton variant={"link"} />
+          <div className="sticky top-0 w-full h-[50px] flex justify-start items-center bg-white bg-opacity-10 backdrop-blur-lg border border-opacity-30 rounded-lg border-slate-600 border-l-0">
+            <BackButton showText={false} variant={"link"} />
             <h1>Connect</h1>
           </div>
-          <div className="flex flex-col overflow-y-auto h-[calu(h-[100vh]-50px)] w-full items-center">
+          <div
+            className={cn(
+              "flex flex-col overflow-y-auto h-[calu(h-[100vh]-50px)] w-full items-center px-4",
+              {
+                "px-0 border h-auto border-b-0": isLoading,
+              }
+            )}
+          >
             <div className="h-2"></div>
             {data?.peoples &&
               data.peoples?.map((user, i: number) => {
@@ -93,7 +112,16 @@ const Peoples = () => {
 
 export default Peoples;
 
-const UserBlock = ({ user }: { user: User }) => {
+const UserBlock = ({ user }: { user: AllPeople }) => {
+  const [isFollow, setIsFollow] = useState(user.isFollowing);
+
+  const [followUser, { isLoading }] = useFollowUserMutation();
+
+  const followUserHandle = async () => {
+    await followUser(user.id);
+    setIsFollow(!isFollow);
+  };
+
   return (
     <div className="flex justify-between items-center hover:from-indigo-200 hover:to-indigo-100 hover:text-indigo-800">
       <Link
@@ -119,7 +147,13 @@ const UserBlock = ({ user }: { user: User }) => {
           </p>
         </div>
       </Link>
-      <Button className="mx-4 rounded-full px-6 py-2 text-sm">Follow</Button>
+      <Button
+        disabled={isLoading}
+        className="rounded-full px-6 py-2 text-xs"
+        onClick={followUserHandle}
+      >
+        {isFollow ? "Follow" : "Following"}
+      </Button>
     </div>
   );
 };

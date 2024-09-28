@@ -10,6 +10,7 @@ import { toast } from "../ui/use-toast";
 import { useAppSelector } from "@/store/hooks";
 import { useEffect, useState } from "react";
 import ShareLink from "../layout/ShareLink";
+import moment from "moment";
 
 const SinglePost = ({
   post,
@@ -105,7 +106,7 @@ const SinglePost = ({
   const vote = postData?.vote.find((vote) => vote.author_id === userInfo?.id);
 
   return (
-    <div className="flex gap-8">
+    <div className="flex gap-8 px-4 pt-4">
       <div className="h-auto w-full transition ease-in-out cursor-pointer rounded-xl">
         <div className="body">
           <div className="">
@@ -122,7 +123,13 @@ const SinglePost = ({
                 }
                 alt="User avatar"
               />
-              <p className="text-xs">Posted by : {post?.author?.name}</p>
+              <div>
+                <p className="text-sm hover:underline">{post?.author?.name}</p>
+                <p className="text-xs">
+                  Created At :{" "}
+                  {moment(postData?.created_at).startOf("hour").fromNow()}
+                </p>
+              </div>
             </div>
             <div onClick={() => navigate(`/user/posts/${post.id}`)}>
               <div className="p-2">

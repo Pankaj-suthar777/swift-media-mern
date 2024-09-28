@@ -17,7 +17,6 @@ import { Button } from "@/components/custom/button";
 import { useAppSelector } from "@/store/hooks";
 import { useCallback, useRef, useState } from "react";
 import useFetchUserPosts from "@/hooks/useFetchUsersPosts";
-// import { User } from "@/@types/user";
 import { RootState } from "@/store/store";
 import { TooltipComponent } from "@/components/TooltipComponent";
 import { useGetOtherUserAndMyChatQuery } from "@/store/api/chatApi";

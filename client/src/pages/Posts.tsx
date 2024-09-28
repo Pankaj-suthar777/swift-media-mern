@@ -35,10 +35,10 @@ const Posts = () => {
   );
 
   return (
-    <div className="h-screen w-full flex flex-col items-center">
+    <div className="h-screen w-full flex flex-col items-center border border-r-0">
       <div className="flex gap-4 w-full h-full overflow-hidden">
         <div className="sm:w-[90%] overflow-auto">
-          <div className="sticky top-0 w-full h-[50px] flex flex-col gap-4 justify-center items-center bg-white bg-opacity-10 backdrop-blur-lg border border-opacity-30 rounded-lg border-slate-600 ">
+          <div className="sticky top-0 w-full h-[50px] flex flex-col gap-4 justify-center items-center bg-white bg-opacity-10 backdrop-blur-lg border-b border-opacity-30 rounded-lg ">
             <h1>Your Feed</h1>
           </div>
           <div className="flex flex-col gap-4 overflow-y-auto h-[calu(h-[100vh]-50px)] w-full items-center">

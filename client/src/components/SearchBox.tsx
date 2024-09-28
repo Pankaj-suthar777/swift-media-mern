@@ -75,16 +75,14 @@ const SearchBox = () => {
                 >
                   <div className="">
                     <img
-                      className="w-10 h-10 rounded-full object-cover sm:mr-4 mr-2"
+                      className="w-12 h-12 rounded-full object-cover sm:mr-4 mr-2"
                       src={user?.avatar ? user.avatar : "/user-profile2.jpg"}
                       alt="User avatar"
                     />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-sm font-medium text-gray-800">
-                      <span className="text-xs">
-                        {truncateText(user.name, 30)}
-                      </span>
+                    <h3 className="text-md font-medium text-gray-800">
+                      {truncateText(user.name, 30)}
                     </h3>
                     <span className="text-xs">
                       {truncateText(user.email, 30)}

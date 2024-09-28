@@ -9,6 +9,7 @@ import {
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { setUser } from "./store/features/userSlice";
 import { useLocation } from "react-router-dom";
+import { MountainIcon } from "lucide-react";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -45,7 +46,7 @@ const App = () => {
     if (pathname !== "/") {
       return (
         <h1 className="flex justify-center h-screen w-screen items-center">
-          Loading...
+          <MountainIcon className="h-20 w-20" />
         </h1>
       );
     }

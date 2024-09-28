@@ -13,6 +13,7 @@ import { Button } from "@/components/custom/button";
 import { FormEvent, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { Comment } from "@/@types/comment";
+import { PostSkelton } from "@/components/Skelton/PostSkelton";
 
 const Posts = () => {
   const { id } = useParams();
@@ -44,16 +45,8 @@ const Posts = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="w-full overflow-hidden flex justify-center items-center py-12">
-        <Loader className="animate-spin" size={30} />
-      </div>
-    );
-  }
-
   return (
-    <div className="h-viewport-minus-80px w-full flex flex-col items-center overflow-x-hidden">
+    <div className="h-screen w-full flex flex-col items-center overflow-x-hidden">
       <div className="flex gap-4 w-full h-full">
         <div className="sm:w-[65%] w-full flex flex-col justify-center items-center border overflow-y-auto h-full">
           <div className="w-full flex justify-start py-2 px-2">
@@ -61,11 +54,14 @@ const Posts = () => {
           </div>
           <div className="w-full gap-4 overflow-y-auto border-t border-slate-300 h-full items-center">
             <div className="w-full">
-              {/*  ==============================  */}
-
               <div className="overflow-auto w-full">
-                <SinglePost post={data.post} refetchPost={refetch} />
-
+                {isLoading ? (
+                  <div className="bg-white p-8">
+                    <PostSkelton posterHeight="h-[250px]" />
+                  </div>
+                ) : (
+                  <SinglePost post={data.post} refetchPost={refetch} />
+                )}
                 {/*Comments*/}
                 <div className="mt-10 w-full px-4">
                   <form
@@ -98,11 +94,11 @@ const Posts = () => {
           </div>
         </div>
 
-        <div className="w-[30%] sm:flex h-fit justify-center hidden mx-auto">
+        <div className="w-[40%] sm:flex h-fit justify-center hidden mx-auto">
           <div className="flex flex-col gap-2 w-full">
             <h2 className="py-4 text-lg text-center">People You May Know</h2>
 
-            <div className="bg-slate-50">
+            <div className="">
               <FriendOfFriend />
             </div>
           </div>
