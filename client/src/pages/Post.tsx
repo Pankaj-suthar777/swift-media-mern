@@ -14,6 +14,10 @@ import { FormEvent, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { Comment } from "@/@types/comment";
 import { PostSkelton } from "@/components/Skelton/PostSkelton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAppSelector } from "@/store/hooks";
+import { RootState } from "@/store/store";
+import SearchBox from "@/components/SearchBox";
 
 const Posts = () => {
   const { id } = useParams();
@@ -23,6 +27,7 @@ const Posts = () => {
   const [commentReplay, setCommentReplay] = useState<Comment | null>(null);
 
   const [addComment, { isLoading: isCommentAdding }] = useAddCommentMutation();
+  const { userInfo } = useAppSelector((state: RootState) => state.auth);
 
   const submitCommitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,8 +61,12 @@ const Posts = () => {
             <div className="w-full">
               <div className="overflow-auto w-full">
                 {isLoading ? (
-                  <div className="bg-white p-8">
-                    <PostSkelton posterHeight="h-[250px]" />
+                  <div className="p-8">
+                    <PostSkelton
+                      skeltonColorClass={"bg-white"}
+                      posterHeight="h-[250px]"
+                      skeltonLinkHeight="h-[30px]"
+                    />
                   </div>
                 ) : (
                   <SinglePost post={data.post} refetchPost={refetch} />
@@ -69,18 +78,27 @@ const Posts = () => {
                     className="flex flex-col"
                   >
                     <h1 className="mb-2">Disscussion</h1>
-                    <div className="relative">
+                    <div className="relative flex gap-4 items-center">
+                      <Avatar>
+                        <AvatarImage src={userInfo?.avatar} alt="@shadcn" />
+                        <AvatarFallback>{userInfo?.name}</AvatarFallback>
+                      </Avatar>
                       <Textarea
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        className="mb-4 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="focus-visible:ring-0 focus-visible:ring-offset-0 w-full mb-2"
                         placeholder="add comment..."
                       />
                     </div>
                     {text === "" ? null : (
-                      <Button loading={isCommentAdding} className="self-end ">
-                        Submit
-                      </Button>
+                      <div className="w-full justify-between flex">
+                        <span className="">
+                          Replay to @{data?.post?.author?.name}
+                        </span>
+                        <Button loading={isCommentAdding} className="self-end ">
+                          Submit
+                        </Button>
+                      </div>
                     )}
                   </form>
                   <CommentDiscussion
@@ -96,7 +114,9 @@ const Posts = () => {
 
         <div className="w-[40%] sm:flex h-fit justify-center hidden mx-auto">
           <div className="flex flex-col gap-2 w-full">
-            <h2 className="py-4 text-lg text-center">People You May Know</h2>
+            <div className="my-4">
+              <SearchBox />
+            </div>
 
             <div className="">
               <FriendOfFriend />

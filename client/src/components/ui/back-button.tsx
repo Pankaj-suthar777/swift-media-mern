@@ -7,15 +7,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 const BackButton = ({
   to,
   variant = "outline",
   showText = true,
+  className,
 }: {
   to?: string;
   variant?: ButtonProps["variant"];
   showText?: boolean;
+  className?: string;
 }) => {
   const navigate = useNavigate();
 
@@ -25,7 +28,7 @@ const BackButton = ({
         <TooltipTrigger asChild>
           <Button
             variant={variant}
-            className="flex gap-2 text-md bg-slate-100"
+            className={cn("flex gap-2 text-md bg-slate-100", className)}
             onClick={() => {
               if (to) {
                 navigate(to);
