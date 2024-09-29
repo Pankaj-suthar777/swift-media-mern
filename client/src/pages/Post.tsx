@@ -57,7 +57,7 @@ const Posts = () => {
             <BackButton to="/user/posts" variant="link" />
           </div>
           <div className="w-full gap-4 overflow-y-auto border-t border-slate-300 h-full items-center">
-            <div className="w-full">
+            <div className="md:w-full w-[calc(100vw-60px)]">
               <div className="overflow-auto w-full">
                 {isLoading ? (
                   <div className="p-8">
@@ -111,7 +111,7 @@ const Posts = () => {
           </div>
         </div>
 
-        <div className="w-[40%] sm:flex h-fit justify-center hidden mx-auto">
+        <div className="w-[40%] md:flex h-fit justify-center hidden mx-auto">
           <div className="flex flex-col gap-2 w-full">
             <div className="my-4">
               <SearchBox />

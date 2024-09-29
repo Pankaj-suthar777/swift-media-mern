@@ -37,11 +37,11 @@ const Posts = () => {
   return (
     <div className="h-screen w-full flex flex-col items-center border border-r-0">
       <div className="flex gap-4 w-full h-full overflow-hidden">
-        <div className="sm:w-[90%] overflow-auto">
+        <div className="sm:w-[90%] overflow-auto w-full">
           <div className="sticky top-0 w-full h-[50px] flex flex-col gap-4 justify-center items-center bg-white bg-opacity-10 backdrop-blur-lg border-b border-opacity-30 rounded-lg">
             <h1>Your Feed</h1>
           </div>
-          <div className="flex flex-col gap-4 overflow-y-auto h-[calu(h-[100vh]-50px)] w-full items-center">
+          <div className="flex flex-col gap-4 overflow-y-auto h-[calu(100vh-50px)] items-center md:px-0 px-2 md:w-full w-[calc(100vw-60px)]">
             {posts.length === 0 && isLoading === false ? (
               <div className="px-4">
                 <div className="flex w-full py-24 justify-center items-center">
@@ -82,7 +82,7 @@ const Posts = () => {
           </div>
         </div>
 
-        <div className="w-[50%] mt-4 sm:flex h-fit justify-center overflow-hidden hidden mx-auto">
+        <div className="w-[50%] md:block hidden mt-4 sm:flex h-fit justify-center overflow-hidden mx-auto">
           <div className="flex flex-col gap-2 w-full">
             <div className="mb-4">
               {pathname === "/user/posts" || pathname === "/user/search" ? (

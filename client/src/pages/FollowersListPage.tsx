@@ -21,7 +21,7 @@ const FollowersListPage = () => {
           </div>
           <div
             className={cn(
-              "flex flex-col overflow-y-auto h-[calu(h-[100vh]-50px)] w-full items-center",
+              "flex flex-col overflow-y-auto h-[calu(100vh-50px)] w-full items-center",
               {
                 "border h-auto border-b-0": isLoading,
               }

@@ -177,7 +177,7 @@ const Post = ({
       <div
         className={`flex ${
           type === "horizontal" ? "flex-row" : "flex-col"
-        } gap-4`}
+        } gap-4 h-full w-full`}
       >
         <div className="flex items-center gap-2">
           <div

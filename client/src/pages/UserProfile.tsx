@@ -97,7 +97,7 @@ const Profile = () => {
                 </div>
               )}
               {!isLoadingProfile && (
-                <div className="flex flex-col gap-4 overflow-y-auto h-[calu(h-[100vh]-50px)] w-full items-center">
+                <div className="flex flex-col gap-4 overflow-y-auto h-[calu(h-[100vh]-50px)] md:w-full items-center  w-[calc(100vw-60px)]">
                   <div className="overflow-hidden rounded-sm border border-stroke border-b-0 shadow-default dark:border-strokedark dark:bg-boxdark relative w-full">
                     <div className="mt-6.5 absolute top-5 left-5">
                       <div className="flex items-center justify-center gap-3.5">
@@ -125,7 +125,7 @@ const Profile = () => {
                     <div className="pb-6 lg:pb-8 xl:pb-11.5 relative">
                       <div className="bg-[url('https://www.lightstalking.com/wp-content/uploads/backlit-beach-color-258109-3-1024x576.jpg')] bg-cover bg-center h-48"></div>
                       <div className="flex justify-between">
-                        <div className="flex w-full justify-start items-center pt-5 absolute top-[110px] left-4">
+                        <div className="flex w-full justify-start items-center pt-5 absolute md:top-[110px] top-[120px] left-4">
                           <div
                             className="relative flex justify-center items-center cursor-pointer"
                             onClick={() => setIsModalOpen(true)}
@@ -136,13 +136,13 @@ const Profile = () => {
                                   ? data?.user?.avatar
                                   : "/user-profile2.jpg"
                               }
-                              className="h-32 w-32 rounded-full object-cover border"
+                              className="md:h-32 md:w-32 h-28 w-28 rounded-full object-cover border"
                               alt="profile"
                             />
                           </div>
                         </div>
                         <div className="mt-16 w-full">
-                          <p className="mt-4 text-2xl font-semibold text-black dark:text-white px-4">
+                          <p className="mt-4 md:text-2xl text-xl font-semibold text-black dark:text-white px-4">
                             {data?.user?.name}
                           </p>
                           <p className="font-normal text-sm text-black dark:text-white px-4">
@@ -169,8 +169,8 @@ const Profile = () => {
                           </div>
                         </div>
 
-                        <div className="flex gap-2 w-full justify-end  mt-2 px-2 z-10">
-                          <div className="flex items-center h-fit gap-2">
+                        <div className="flex gap-2 w-full justify-end mt-2 px-2 z-10">
+                          <div className="flex md:flex-row flex-col items-center h-fit gap-2">
                             <Button
                               className="flex gap-2 rounded-full"
                               onClick={() => {
@@ -262,7 +262,7 @@ const Profile = () => {
               )}
             </div>
 
-            <div className="w-[50%] mt-4 sm:flex h-fit justify-center overflow-hidden hidden mx-auto">
+            <div className="w-[50%] mt-4 md:flex h-fit justify-center overflow-hidden hidden mx-auto">
               <div className="flex flex-col gap-2 w-full">
                 <div className="mb-4">
                   <SearchBox />

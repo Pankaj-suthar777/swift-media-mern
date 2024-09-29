@@ -11,7 +11,7 @@ const NotificationBlock = ({ notification }: Props) => {
   return (
     <div>
       <Alert
-        className={cn("flex items-center gap-4", {
+        className={cn("flex items-center w-full gap-4", {
           "bg-green-200": !notification.isSeen,
         })}
       >

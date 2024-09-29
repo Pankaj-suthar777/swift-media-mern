@@ -11,8 +11,8 @@ const UserDashboard = () => {
     return null;
   }
   return (
-    <div className="pl-4 pr-4 overflow-y-auto h-screen">
-      <div className="grid gap-4 w-full overflow-y-auto mt-4">
+    <div className="overflow-y-auto h-screen md:px-0 px-2">
+      <div className="grid gap-4 w-full overflow-y-auto md:mt-1">
         <div>
           <PostActivity />
         </div>

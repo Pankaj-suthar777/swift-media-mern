@@ -43,7 +43,7 @@ const Logout = () => {
           <h3 className="text-sm font-bold">{userInfo?.name}</h3>
           <h4 className="text-xs">
             {userInfo?.email && userInfo?.email.length > 10
-              ? userInfo?.email.substring(0, 10) + " ..."
+              ? userInfo?.email.substring(0, 5) + " ..."
               : userInfo?.email}
           </h4>
         </div>

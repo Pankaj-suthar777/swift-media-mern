@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import MobileBottomTab from "./MobileBottomTab";
 
 const MainContent = () => {
   return (
@@ -8,9 +7,6 @@ const MainContent = () => {
         <div className="">
           <div className="max-w-full">
             <Outlet />
-            <div className="absolute bottom-0 left-0 right-0 sm:hidden block">
-              <MobileBottomTab />
-            </div>
           </div>
         </div>
       </div>
