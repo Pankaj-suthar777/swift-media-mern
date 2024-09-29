@@ -206,24 +206,6 @@ export const getDashboardData: RequestHandler = async (req, res) => {
   //   }
   // });
 
-  const followCount = await prisma.follow.count({
-    where: {
-      followingId: parseInt(id),
-    },
-  });
-
-  const followingCount = await prisma.follow.count({
-    where: {
-      followerId: parseInt(id),
-    },
-  });
-
-  const postsCount = await prisma.post.count({
-    where: {
-      authorId: parseInt(id),
-    },
-  });
-
   const commentsCount = await prisma.comment.count({
     where: {
       author_id: parseInt(id),
@@ -266,7 +248,7 @@ export const getDashboardData: RequestHandler = async (req, res) => {
     },
   });
 
-  const postDisvotesConnt = await prisma.vote.count({
+  const postDisvotesCount = await prisma.vote.count({
     where: {
       author_id: parseInt(id),
       vote: "down-vote",
@@ -308,13 +290,10 @@ export const getDashboardData: RequestHandler = async (req, res) => {
 
   const recentFollowers = recentFollowersArray.map((recent) => recent.follower);
   responseReturn(res, 201, {
-    followCount,
-    followingCount,
-    postsCount,
     totalCommentsCount,
     messageCount,
     postUpvotesCount,
-    postDisvotesConnt,
+    postDisvotesCount,
     GroupChatsYouPartOf,
     chatsYouPartOf,
     recentFollowers,

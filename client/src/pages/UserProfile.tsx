@@ -1,4 +1,4 @@
-import { Github, Loader, Mail, Twitter, X } from "lucide-react";
+import { Github, LinkIcon, Loader, Mail, Twitter, X } from "lucide-react";
 import {
   Link,
   Navigate,
@@ -141,14 +141,34 @@ const Profile = () => {
                             />
                           </div>
                         </div>
-                        <div className="mt-16">
+                        <div className="mt-16 w-full">
                           <p className="mt-4 text-2xl font-semibold text-black dark:text-white px-4">
                             {data?.user?.name}
                           </p>
                           <p className="font-normal text-sm text-black dark:text-white px-4">
                             {data?.user?.email}
                           </p>
+                          <div className="px-4 text-xs underline mt-4 w-full">
+                            {data?.user?.github && (
+                              <p className="flex gap-2 items-center">
+                                <LinkIcon size={14} />
+                                <a href={data?.user?.github} target="_blank">
+                                  Github Profile
+                                </a>
+                              </p>
+                            )}
+                            {data?.user?.twitter && (
+                              <p className="flex gap-2 items-center">
+                                <LinkIcon size={14} />
+
+                                <a href={data?.user?.twitter} target="_blank">
+                                  Twitter Profile
+                                </a>
+                              </p>
+                            )}
+                          </div>
                         </div>
+
                         <div className="flex gap-2 w-full justify-end  mt-2 px-2 z-10">
                           <div className="flex items-center h-fit gap-2">
                             <Button

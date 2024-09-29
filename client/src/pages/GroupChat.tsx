@@ -81,7 +81,7 @@ const GroupChat = () => {
   const chatInfo: IGroupChat = chatData?.chatInfo;
 
   return (
-    <div className="flex w-full gap-4 pl-4 pr-4">
+    <div className="flex w-full gap-4">
       {showSidebar && (
         <div
           onClick={() => setShowSidebar(false)}
@@ -91,15 +91,15 @@ const GroupChat = () => {
         ></div>
       )}
       <div
-        className={`fixed  z-[10] bg-white transition-all duration-200 ease-in-out h-viewport-minus-100px ${
+        className={`fixed  z-[10] bg-white transition-all duration-200 ease-in-out h-screen ${
           showSidebar ? "left-0" : "-left-[350px] lg:left-0 lg:relative"
         }`}
       >
         <GroupChatList />
       </div>
       <div className="w-full relative">
-        <div className="flex flex-col h-viewport-minus-100px w-full overflow-y-hidden">
-          <div className="h-12 bg-white flex justify-between items-center px-4 py-8 border border-[#111111]">
+        <div className="flex flex-col h-screen w-full overflow-y-hidden">
+          <div className="h-12 bg-white flex justify-between items-center px-4 py-8 border border-[#111111] border-t-0">
             {chatInfo && (
               <div
                 className="flex justify-between items-center w-full cursor-pointer"
@@ -129,26 +129,30 @@ const GroupChat = () => {
               <Menu />
             </div>
           </div>
-          <MessageContainer
-            isMessageLoading={isMessageLoading}
-            messages={messages}
-            isGroupMessages={true}
-          />
+          <div className="h-[calc(100vh-130px)]">
+            <MessageContainer
+              isMessageLoading={isMessageLoading}
+              messages={messages}
+              isGroupMessages={true}
+            />
+          </div>
 
           {id ? (
             <form
-              className="flex justify-center items-center absolute bottom-5 sm:bottom-0 w-full gap-4 bg-white p-2"
+              className="flex justify-center items-center h-20 w-full gap-4 px-4"
               onSubmit={sendMessageHandler}
             >
               {/* Chat input */}
               <Input
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-white rounded-full"
                 type="text"
                 placeholder="Type a message..."
               />
-              <Button loading={isLoading}>Send</Button>
+              <Button className="rounded-full" disabled={isLoading}>
+                Send
+              </Button>
             </form>
           ) : null}
         </div>

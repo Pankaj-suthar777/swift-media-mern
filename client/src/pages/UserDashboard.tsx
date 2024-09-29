@@ -11,8 +11,8 @@ const UserDashboard = () => {
     return null;
   }
   return (
-    <div className="pl-4 pr-4 overflow-y-auto h-viewport-minus-80px">
-      <div className="grid md:grid-cols-2 gap-4 w-full overflow-y-auto">
+    <div className="pl-4 pr-4 overflow-y-auto h-screen">
+      <div className="grid gap-4 w-full overflow-y-auto mt-4">
         <div>
           <PostActivity />
         </div>
@@ -27,11 +27,6 @@ const UserDashboard = () => {
         </div>
         <div className="flex flex-col gap-4">
           <div className="flex gap-4">
-            <DashBox text="Total Follows" value={data?.followCount} />
-            <DashBox text="Total Followings" value={data?.followingCount} />
-          </div>
-          <div className="flex gap-4">
-            <DashBox text="Total Posts" value={data?.postsCount} />
             <DashBox
               text="Total Post Comments"
               value={data?.totalCommentsCount}
@@ -52,7 +47,7 @@ const UserDashboard = () => {
             />
             <DashBox
               text="Total Posts Disvotes"
-              value={data?.postDisvotesConnt}
+              value={data?.postDisvotesCount}
             />
           </div>
         </div>

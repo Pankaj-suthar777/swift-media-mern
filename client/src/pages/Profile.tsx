@@ -341,7 +341,7 @@ const Profile = () => {
     <div className="overflow-y-auto h-screen">
       <div className="flex gap-4 w-full h-full overflow-hidden relative">
         <div className="sm:w-[90%] overflow-auto">
-          <div className="sticky top-0 w-full h-[50px] flex flex-col gap-4 justify-center items-start bg-white bg-opacity-10 backdrop-blur-lg border-b border-opacity-30 rounded-lg z-20">
+          <div className="sticky top-0 w-full h-[50px] flex flex-col gap-4 justify-center items-start bg-white bg-opacity-10 backdrop-blur-lg border border-opacity-30 rounded-lg z-20">
             <div className="flex items-center">
               <BackButton
                 className="bg-transparent"

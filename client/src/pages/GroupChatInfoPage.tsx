@@ -13,7 +13,7 @@ const GroupChatInfoPage = () => {
   const chatInfo: GroupChat = chatData?.chatInfo;
 
   return (
-    <div className="flex w-full gap-4 lg:pl-4 lg:pr-4 pl-2 pr-2 h-viewport-minus-80px">
+    <div className="flex w-full gap-4 lg:pl-4 lg:pr-4 pl-2 pr-2 h-screen">
       <div className="w-full h-full bg-white">
         <div className="mt-10">
           <div className="flex flex-col justify-center h-full w-full items-center">

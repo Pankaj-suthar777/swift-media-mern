@@ -55,13 +55,10 @@ export const userApi = createApi({
     }),
     userDashboard: builder.query<
       {
-        followCount: number;
-        followingCount: number;
-        postsCount: number;
         totalCommentsCount: number;
         messageCount: number;
         postUpvotesCount: number;
-        postDisvotesConnt: number;
+        postDisvotesCount: number;
         GroupChatsYouPartOf: number;
         chatsYouPartOf: number;
         recentFollowers: User[];
