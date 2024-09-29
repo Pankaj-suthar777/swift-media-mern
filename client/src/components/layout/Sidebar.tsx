@@ -14,6 +14,7 @@ interface ItemProps {
   text: string;
   active?: boolean;
   to: string;
+  notifications?: number;
 }
 
 export default function Sidebar({ children }: Props) {
@@ -46,7 +47,13 @@ export default function Sidebar({ children }: Props) {
   );
 }
 
-export function SidebarItem({ icon, text, active, to }: ItemProps) {
+export function SidebarItem({
+  icon,
+  text,
+  active,
+  to,
+  notifications,
+}: ItemProps) {
   return (
     <Link
       to={to}
@@ -60,6 +67,15 @@ export function SidebarItem({ icon, text, active, to }: ItemProps) {
       <span className={`overflow-hidden transition-all w-52 ml-3 text-lg`}>
         {text}
       </span>
+      {notifications !== 0 &&
+        notifications !== undefined &&
+        to.includes("notification") && (
+          <div className="h-6 w-6 absolute flex justify-center items-center bg-green-600 top-1 right-0 rounded-full">
+            <span className="text-[12px] text-white text-center">
+              {notifications}
+            </span>
+          </div>
+        )}
     </Link>
   );
 }

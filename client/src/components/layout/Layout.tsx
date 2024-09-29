@@ -6,11 +6,13 @@ import { getNav } from "../../navigation";
 import Logout from "./Logout";
 import { Button } from "../ui/button";
 import CreatePost from "../post/CreatePost";
+import { useGetMyNotificationsCountQuery } from "@/store/api/userApi";
 
 const Layout = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const role = "user";
   const { pathname } = useLocation();
+  const { data } = useGetMyNotificationsCountQuery(null);
 
   const [allNav, setAllNav] = useState<any[]>([]);
 
@@ -29,6 +31,7 @@ const Layout = () => {
 
               return (
                 <SidebarItem
+                  notifications={data?.notificationsCount}
                   key={i}
                   icon={n.icon}
                   text={n.title}

@@ -123,6 +123,23 @@ export const userApi = createApi({
         };
       },
     }),
+    getMyNotification: builder.query<{ notifications: AllPeople[] }, null>({
+      query() {
+        return {
+          url: `/user/get-notification`,
+        };
+      },
+    }),
+    getMyNotificationsCount: builder.query<
+      { notificationsCount: number },
+      null
+    >({
+      query() {
+        return {
+          url: `/user/get-notification-count`,
+        };
+      },
+    }),
   }),
 });
 
@@ -139,4 +156,6 @@ export const {
   useGetUserFollowersListQuery,
   useGetUserFollowingListQuery,
   useGetAllPeoplesQuery,
+  useGetMyNotificationQuery,
+  useGetMyNotificationsCountQuery,
 } = userApi;
