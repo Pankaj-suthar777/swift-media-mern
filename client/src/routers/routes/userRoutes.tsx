@@ -3,6 +3,7 @@ import FollowersListPage from "@/pages/FollowersListPage";
 import FollowingListPage from "@/pages/FollowingListPage";
 import GroupChat from "@/pages/GroupChat";
 import GroupChatInfoPage from "@/pages/GroupChatInfoPage";
+import Notification from "@/pages/Notifiction";
 import Peoples from "@/pages/Peoples";
 import Post from "@/pages/Post";
 import Posts from "@/pages/Posts";
@@ -81,6 +82,11 @@ export const userRoutes = [
   {
     path: "people",
     element: <Peoples />,
+    role: "user",
+  },
+  {
+    path: "notification",
+    element: <Notification />,
     role: "user",
   },
 ];

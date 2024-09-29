@@ -6,7 +6,6 @@ import {
   useAddCommentMutation,
   useGetSinglePostQuery,
 } from "@/store/api/postApi";
-import { Loader } from "lucide-react";
 import { useParams } from "react-router-dom";
 import SinglePost from "@/components/post/SinglePost";
 import { Button } from "@/components/custom/button";

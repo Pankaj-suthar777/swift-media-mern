@@ -1,4 +1,4 @@
-import { Cross, Group, Home, Pin, User, UsersRound } from "lucide-react";
+import { Bell, Cross, Group, Home, Pin, User, UsersRound } from "lucide-react";
 
 export const allNav = [
   {
@@ -30,14 +30,21 @@ export const allNav = [
     path: "/user/profile",
   },
   {
-    id: 1,
+    id: 6,
+    title: "Notifications",
+    icon: <Bell size={28} />,
+    role: "user",
+    path: "/user/notification",
+  },
+  {
+    id: 7,
     title: "User Activity",
     icon: <Home size={28} />,
     role: "user",
     path: "/user/dashboard",
   },
   {
-    id: 6,
+    id: 8,
     title: "Saved Posts",
     icon: <Pin size={28} />,
     role: "user",
