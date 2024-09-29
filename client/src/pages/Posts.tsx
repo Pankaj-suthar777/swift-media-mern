@@ -41,7 +41,7 @@ const Posts = () => {
           <div className="sticky top-0 w-full h-[50px] flex flex-col gap-4 justify-center items-center bg-white bg-opacity-10 backdrop-blur-lg border-b border-opacity-30 rounded-lg">
             <h1>Your Feed</h1>
           </div>
-          <div className="flex flex-col gap-4 overflow-y-auto h-[calu(h-[100vh]-50px)] w-full items-center border-r">
+          <div className="flex flex-col gap-4 overflow-y-auto h-[calu(h-[100vh]-50px)] w-full items-center">
             {posts.length === 0 && isLoading === false ? (
               <div className="px-4">
                 <div className="flex w-full py-24 justify-center items-center">

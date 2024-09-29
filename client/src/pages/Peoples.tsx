@@ -131,7 +131,7 @@ const UserBlock = ({ user }: { user: AllPeople }) => {
       >
         <div className="w-12 h-12 rounded-full mr-4">
           <img
-            className="w-full h-full rounded-full object-cover"
+            className="w-full h-full rounded-full object-cover cursor-pointer"
             src={user?.avatar ? user.avatar : "/user-profile2.jpg"}
             alt="User avatar"
           />

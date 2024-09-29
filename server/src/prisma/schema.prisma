@@ -42,7 +42,6 @@ model User {
     twitter            String? @default("")
     groupChats         GroupChat[] @relation("GroupChatFriends")
     groupMessages      GroupMessage[] @relation("MessageSender")
-
 }
 
 model Chat {

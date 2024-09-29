@@ -1,7 +1,7 @@
 import prisma from "#/prisma/prisma";
 import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
-import { startOfMonth, endOfMonth, eachDayOfInterval, format } from "date-fns";
+import { startOfMonth, eachDayOfInterval, format } from "date-fns";
 import { convertDaysToDate } from "#/utils/helper";
 
 export const getUser: RequestHandler = async (req, res) => {
@@ -93,7 +93,7 @@ export const getRecommendedUser: RequestHandler = async (req, res) => {
 export const followUser: RequestHandler = async (req, res) => {
   const { id } = req.params as any;
   const myId = req.user.id;
-
+  console.log(id);
   const existingFollow = await prisma.follow.findUnique({
     where: {
       followerId_followingId: {
@@ -508,21 +508,43 @@ export const getUserFollowingList: RequestHandler = async (req, res) => {
 
 export const getAllPeoples: RequestHandler = async (req, res) => {
   const myId = req.user.id;
-  console.log("cssssssssss");
-  console.log(myId);
 
-  try {
-    const peoples = await prisma.user.findMany({
-      where: {
-        id: {
-          not: Number(myId), // Ensure myId is a number
-        },
+  // const { page } = req.query;
+  // Get the list of users the current user is following
+  const followingData = await prisma.follow.findMany({
+    where: {
+      followerId: parseInt(myId),
+    },
+    select: {
+      followingId: true,
+    },
+  });
+
+  // Extract the following IDs from the result
+  const followingIds = followingData.map((f) => f.followingId);
+
+  // Get all users except the current user
+  const peoples = await prisma.user.findMany({
+    where: {
+      id: {
+        not: Number(myId),
       },
-    });
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      avatar: true,
+      about: true,
+    },
+  });
 
-    // Respond with 200 for a successful data retrieval
-    return responseReturn(res, 200, { peoples });
-  } catch (error) {
-    return responseReturn(res, 500, { error: "Internal server error" });
-  }
+  // Format the data to include the `isFollowing` field
+  const formattedPeoples = peoples.map((person) => ({
+    ...person,
+    isFollowing: followingIds.includes(person.id),
+  }));
+
+  // Respond with 200 for a successful data retrieval
+  return responseReturn(res, 200, { peoples: formattedPeoples });
 };

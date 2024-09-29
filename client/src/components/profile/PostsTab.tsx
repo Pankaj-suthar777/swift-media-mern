@@ -1,11 +1,20 @@
 import useFetchUserPosts from "@/hooks/useFetchUsersPosts";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import PostItem from "@/components/post/PostItem";
 import { Loader } from "lucide-react";
 
-const PostsTab = () => {
+interface Props {
+  userId?: number | string;
+  setTotalPosts?: (count: number) => void;
+}
+
+const PostsTab = ({ userId, setTotalPosts }: Props) => {
   const { id } = useParams();
+
+  if (!userId && id) {
+    userId = id;
+  }
 
   const [page, setPage] = useState(0);
 
@@ -15,7 +24,7 @@ const PostsTab = () => {
     posts,
     hasMore,
     refetchSinglePost,
-  } = useFetchUserPosts(id, page);
+  } = useFetchUserPosts(String(userId), page);
 
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -34,6 +43,12 @@ const PostsTab = () => {
     },
     [isLoading, hasMore]
   );
+
+  useEffect(() => {
+    if (posts && setTotalPosts) {
+      setTotalPosts(posts.length);
+    }
+  }, [posts, setTotalPosts]);
 
   return (
     <div className="w-full mt-6 px-4 space-y-8">
@@ -61,6 +76,9 @@ const PostsTab = () => {
             </div>
           );
         })}
+      {!isLoading && posts.length === 0 && (
+        <h1 className="text-center">No post yet.</h1>
+      )}
       {isLoading ? (
         <div className="w-full flex justify-center items-center py-4 md:col-span-2">
           <Loader className="animate-spin h-8 w-8" />
