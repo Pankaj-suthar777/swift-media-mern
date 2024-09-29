@@ -90,6 +90,7 @@ export const user_login: RequestHandler = async (req, res) => {
         followersCount,
         followingCount,
         about: user.about,
+        avatar: user.avatar,
       });
 
       responseReturn(res, 201, {
@@ -104,6 +105,7 @@ export const user_login: RequestHandler = async (req, res) => {
           followingCount,
           about: user.about,
           friends: user?.friends,
+          avatar: user.avatar,
         },
       });
     } else {

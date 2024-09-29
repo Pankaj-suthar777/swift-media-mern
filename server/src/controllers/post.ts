@@ -139,6 +139,25 @@ export const upOrDownVote: RequestHandler = async (req, res) => {
     });
   }
 
+  const author = await prisma.post.findFirst({
+    where: {
+      id: parseInt(id),
+    },
+    select: {
+      author: true,
+    },
+  });
+
+  if (author?.author.id && author?.author.id !== parseInt(myId)) {
+    await prisma.notifiction.create({
+      data: {
+        user_id: author?.author.id,
+        message: `${req.user.name} ${vote.split("-")[0]} voted your post`,
+        image: req.user.avatar,
+      },
+    });
+  }
+
   const message = vote === "up-vote" ? "Upvoted" : "Devoted";
 
   responseReturn(res, 201, { message });

@@ -42,6 +42,7 @@ model User {
     twitter            String? @default("")
     groupChats         GroupChat[] @relation("GroupChatFriends")
     groupMessages      GroupMessage[] @relation("MessageSender")
+    notifications      Notifiction[]
 }
 
 model Chat {
@@ -223,4 +224,15 @@ model ReplayToReplyCommentVote {
    author_id                      Int
    author                         User  @relation(fields: [author_id], references: [id] , onDelete: Cascade)
    reply_to_reply_comment         ReplayToReplayComment  @relation(fields: [reply_to_reply_comment_id], references: [id], onDelete: Cascade)
+}
+
+
+model Notifiction {
+   id                             Int      @id @default(autoincrement())
+   created_at                     DateTime @default(now())
+   isSeen                         Boolean  @default(false)
+   user_id                        Int
+   user                           User  @relation(fields: [user_id], references: [id] , onDelete: Cascade)
+   message                        String
+   image                          String?
 }

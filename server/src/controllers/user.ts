@@ -527,3 +527,46 @@ export const getAllPeoples: RequestHandler = async (req, res) => {
   // Respond with 200 for a successful data retrieval
   return responseReturn(res, 200, { peoples: formattedPeoples });
 };
+
+export const getMyNotifications: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+
+  const notifications = await prisma.notifiction.findMany({
+    where: {
+      user_id: myId,
+    },
+    orderBy: {
+      created_at: "desc",
+    },
+  });
+
+  return responseReturn(res, 200, { notifications });
+};
+
+export const getMyNotificationsCount: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+
+  const notificationsCount = await prisma.notifiction.count({
+    where: {
+      user_id: myId,
+      isSeen: false,
+    },
+  });
+
+  return responseReturn(res, 200, { notificationsCount });
+};
+
+export const seenNotification: RequestHandler = async (req, res) => {
+  const myId = req.user.id;
+
+  await prisma.notifiction.updateMany({
+    where: {
+      user_id: myId,
+    },
+    data: {
+      isSeen: true,
+    },
+  });
+
+  return responseReturn(res, 200, { success: true });
+};

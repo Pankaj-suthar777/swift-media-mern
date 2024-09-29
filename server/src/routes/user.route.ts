@@ -11,6 +11,9 @@ import {
   getUserFollowingList,
   getUserFollowersList,
   getAllPeoples,
+  getMyNotifications,
+  getMyNotificationsCount,
+  seenNotification,
 } from "#/controllers/user";
 import { authMiddleware } from "#/middleware/authMiddleware";
 import { Router } from "express";
@@ -28,6 +31,10 @@ router.get(
   authMiddleware,
   getDashboardPostActivityData
 );
+router.get("/get-notification", authMiddleware, getMyNotifications);
+router.get("/get-notification-count", authMiddleware, getMyNotificationsCount);
+router.put("/seen-notification", authMiddleware, seenNotification);
+
 router.get("/get-peoples", authMiddleware, getAllPeoples);
 router.get("/recommended-user", authMiddleware, getRecommendedUser);
 router.post("/follow-user/:id", authMiddleware, followUser);
