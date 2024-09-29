@@ -1,3 +1,4 @@
+import { Notification } from "@/@types/notifiction";
 import { User } from "@/@types/user";
 import { baseURL } from "@/api/client";
 import { AllPeople } from "@/pages/Peoples";
@@ -123,7 +124,7 @@ export const userApi = createApi({
         };
       },
     }),
-    getMyNotification: builder.query<{ notifications: AllPeople[] }, null>({
+    getMyNotification: builder.query<{ notifications: Notification[] }, null>({
       query() {
         return {
           url: `/user/get-notification`,
@@ -137,6 +138,14 @@ export const userApi = createApi({
       query() {
         return {
           url: `/user/get-notification-count`,
+        };
+      },
+    }),
+    seenNotification: builder.mutation({
+      query() {
+        return {
+          url: `/user/seen-notification`,
+          method: "PUT",
         };
       },
     }),
@@ -158,4 +167,5 @@ export const {
   useGetAllPeoplesQuery,
   useGetMyNotificationQuery,
   useGetMyNotificationsCountQuery,
+  useSeenNotificationMutation,
 } = userApi;

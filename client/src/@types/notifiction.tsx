@@ -7,4 +7,6 @@ export interface Notification {
   user_id: number;
   author: User;
   user: User[];
+  isSeen: boolean;
+  image: string;
 }
