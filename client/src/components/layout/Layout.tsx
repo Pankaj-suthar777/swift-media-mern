@@ -50,7 +50,7 @@ const Layout = () => {
               </div>
             </CreatePost>
 
-            <div className="absolute bottom-24 left-0 right-0 hidden md:block">
+            <div className="absolute md:bottom-24 md:left-0 md:right-0 bottom-32 left-0.5">
               <Logout />
             </div>
           </div>

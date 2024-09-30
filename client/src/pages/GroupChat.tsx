@@ -98,7 +98,7 @@ const GroupChat = () => {
         <GroupChatList />
       </div>
       <div className="w-full relative">
-        <div className="flex flex-col h-screen w-full overflow-y-hidden">
+        <div className="flex flex-col h-screen md:w-full w-[calc(100vw-60px)] overflow-y-hidden">
           <div className="h-12 bg-white flex justify-between items-center px-4 py-8 border border-[#111111] border-t-0">
             {chatInfo && (
               <div

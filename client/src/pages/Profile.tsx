@@ -356,7 +356,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 overflow-y-auto h-[calu(h-[100vh]-50px)] w-full items-center">
+          <div className="flex flex-col gap-4 overflow-y-auto h-[calu(h-[100vh]-50px)] md:w-full items-center w-[calc(100vw-60px)]">
             <div className="overflow-hidden rounded-sm border border-stroke border-b-0 shadow-default dark:border-strokedark dark:bg-boxdark relative w-full">
               <div className="pb-6 lg:pb-8 xl:pb-11.5 relative">
                 <div className="bg-[url('https://www.lightstalking.com/wp-content/uploads/backlit-beach-color-258109-3-1024x576.jpg')] bg-cover bg-center h-48"></div>
@@ -406,7 +406,7 @@ const Profile = () => {
                       {userInfo?.email}
                     </p>
                   </div>
-                  <div className="z-10 m-2 flex gap-2">
+                  <div className="z-10 m-2 flex gap-2 md:flex-row flex-col">
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button

@@ -87,7 +87,7 @@ export function PostActivity() {
         </div>
         <Select value={timeRange} onValueChange={onValueChangeHandler}>
           <SelectTrigger
-            className="w-[160px] rounded-lg sm:ml-auto"
+            className="md:w-[160px] rounded-lg sm:ml-auto"
             aria-label="Select a value"
           >
             <SelectValue placeholder="Last 3 months" />
@@ -108,7 +108,7 @@ export function PostActivity() {
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
+          className="aspect-auto md:h-[250px] h-[150px] w-full"
         >
           <AreaChart data={filteredData}>
             <defs>

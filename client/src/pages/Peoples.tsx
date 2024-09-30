@@ -9,7 +9,7 @@ import {
   useGetAllPeoplesQuery,
 } from "@/store/api/userApi";
 import { truncateText } from "@/utils/helper";
-import { useCallback, useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export interface AllPeople {
@@ -24,28 +24,7 @@ export interface AllPeople {
 const dummyData = new Array(9).fill("");
 
 const Peoples = () => {
-  const { data, isLoading } = useGetAllPeoplesQuery(null);
-  const observer = useRef<IntersectionObserver | null>(null);
-  const [page, setPage] = useState(0);
-
-  const error = false;
-  const hasMore = false;
-
-  const lastElementRef = useCallback(
-    (node: HTMLElement | null) => {
-      if (isLoading) return;
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setPage((prev) => prev + 1);
-        }
-      });
-
-      if (node) observer.current.observe(node);
-    },
-    [isLoading, hasMore]
-  );
+  const { data, isLoading, error } = useGetAllPeoplesQuery(null);
 
   return (
     <div className="h-screen w-full flex flex-col items-center border border-r-0">
@@ -66,12 +45,7 @@ const Peoples = () => {
             <div className="h-2"></div>
             {data?.peoples &&
               data.peoples?.map((user, i: number) => {
-                const isLastElement = data.peoples.length === i + 1;
-                return isLastElement ? (
-                  <div key={i} ref={lastElementRef} className="w-full">
-                    <UserBlock key={i} user={user} />
-                  </div>
-                ) : (
+                return (
                   <div key={i} className="w-full">
                     <UserBlock key={i} user={user} />
                   </div>

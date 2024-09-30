@@ -75,7 +75,7 @@ export function MessagesSentChart() {
       <CardContent className="px-2 sm:p-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[234px] w-full"
+          className="aspect-auto md:h-[234px] h-[150px] w-full"
         >
           <BarChart
             accessibilityLayer

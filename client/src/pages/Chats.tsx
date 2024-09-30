@@ -192,7 +192,7 @@ const Chats = () => {
         />
       </div>
       {/* here */}
-      <div className="flex flex-col gap-4 overflow-y-auto h-[calu(100vh-50px)] items-center md:px-0 px-2 md:w-full w-[calc(100vw-60px)]">
+      <div className="flex flex-col gap-4 overflow-y-auto h-[calu(100vh-50px)] items-center md:w-full w-[calc(100vw-60px)]">
         <div className="flex h-screen flex-col w-full overflow-y-hidden">
           <div className="h-12  bg-white flex justify-between items-center px-4 py-8 border border-[#111111] border-t-0">
             {selectedChat ? (

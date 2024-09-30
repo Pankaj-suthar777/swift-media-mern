@@ -12,7 +12,7 @@ const UserDashboard = () => {
   }
   return (
     <div className="overflow-y-auto h-screen md:px-0 px-2">
-      <div className="grid gap-4 w-full overflow-y-auto md:mt-1">
+      <div className="grid gap-4 w-full overflow-y-auto mt-2">
         <div>
           <PostActivity />
         </div>
@@ -40,7 +40,7 @@ const UserDashboard = () => {
             text="Total Messages You have sent"
             value={data?.messageCount}
           />
-          <div className="flex gap-4">
+          <div className="flex gap-4 md:flex-row flex-col">
             <DashBox
               text="Total Posts Upvotes"
               value={data?.postUpvotesCount}

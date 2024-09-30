@@ -98,7 +98,7 @@ interface ItemProps {
 export default function Sidebar({ children }: Props) {
   return (
     <aside
-      className={`flex-col h-full bg-white md:bg-transparent transition-all`}
+      className={`flex-col h-full md:pr-6 bg-white md:bg-transparent transition-all`}
     >
       <nav className="h-full flex flex-col">
         <Link

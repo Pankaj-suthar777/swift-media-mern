@@ -13,10 +13,43 @@ import {
 import { RootState } from "@/store/store";
 
 const Logout = () => {
+  const { userInfo } = useAppSelector((state: RootState) => state.auth);
+
+  return (
+    <div
+      className={`relative flex justify-between items-center md:py-2.5 md:px-6 p-1 font-medium rounded-full cursor-pointer transition-colors group bg-indigo-50 hover:bg-indigo-100 text-gray-600`}
+    >
+      <div className="flex justify-center items-center gap-4">
+        <CustomProfilePopover>
+          <Avatar>
+            <AvatarImage src={userInfo?.avatar} alt="@shadcn" />
+            <AvatarFallback>{userInfo?.name}</AvatarFallback>
+          </Avatar>
+        </CustomProfilePopover>
+        <div className="flex-col md:flex hidden">
+          <h3 className="text-sm font-bold">{userInfo?.name}</h3>
+          <h4 className="text-xs">
+            {userInfo?.email && userInfo?.email.length > 10
+              ? userInfo?.email.substring(0, 5) + " ..."
+              : userInfo?.email}
+          </h4>
+        </div>
+      </div>
+      <div className="md:block hidden">
+        <CustomProfilePopover>
+          <Ellipsis />
+        </CustomProfilePopover>
+      </div>
+    </div>
+  );
+};
+
+export default Logout;
+
+const CustomProfilePopover = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [logout, { isSuccess }] = useLogoutMutation();
-  const { userInfo } = useAppSelector((state: RootState) => state.auth);
 
   const logoutUserHandler = async () => {
     await logout({});
@@ -30,45 +63,24 @@ const Logout = () => {
       navigate("/login");
     }
   }, [isSuccess, navigate]);
+
   return (
-    <div
-      className={`relative flex justify-between items-center py-3 px-6 font-medium rounded-full cursor-pointer transition-colors group bg-indigo-50 hover:bg-indigo-100 text-gray-600`}
-    >
-      <div className="flex justify-center items-center gap-4">
-        <Avatar>
-          <AvatarImage src={userInfo?.avatar} alt="@shadcn" />
-          <AvatarFallback>{userInfo?.name}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <h3 className="text-sm font-bold">{userInfo?.name}</h3>
-          <h4 className="text-xs">
-            {userInfo?.email && userInfo?.email.length > 10
-              ? userInfo?.email.substring(0, 5) + " ..."
-              : userInfo?.email}
-          </h4>
+    <Popover>
+      <PopoverTrigger>{children}</PopoverTrigger>
+      <PopoverContent className="p-0">
+        <div
+          onClick={() => navigate("/user/profile")}
+          className="py-4 flex justify-center items-center hover:bg-slate-100 cursor-pointer"
+        >
+          View Profile
         </div>
-      </div>
-      <Popover>
-        <PopoverTrigger>
-          <Ellipsis />
-        </PopoverTrigger>
-        <PopoverContent className="p-0">
-          <div
-            onClick={() => navigate("/user/profile")}
-            className="py-4 flex justify-center items-center hover:bg-slate-100 cursor-pointer"
-          >
-            View Profile
-          </div>
-          <div
-            onClick={() => logoutUserHandler()}
-            className="py-4 flex justify-center items-center hover:bg-slate-100 cursor-pointer"
-          >
-            Logout
-          </div>
-        </PopoverContent>
-      </Popover>
-    </div>
+        <div
+          onClick={() => logoutUserHandler()}
+          className="py-4 flex justify-center items-center hover:bg-slate-100 cursor-pointer"
+        >
+          Logout
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
-
-export default Logout;
