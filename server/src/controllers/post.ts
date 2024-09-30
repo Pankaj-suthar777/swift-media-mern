@@ -1,4 +1,10 @@
 import prisma from "#/prisma/prisma";
+import redisClient from "#/redis";
+import {
+  cachePostComment,
+  getCachePostComment,
+  invalidatePostCommentCache,
+} from "#/utils/cacheUtils";
 import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
 
@@ -272,6 +278,8 @@ export const addComment: RequestHandler = async (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
 
+  await invalidatePostCommentCache(id);
+
   await prisma.comment.create({
     data: {
       author_id: myId,
@@ -285,6 +293,14 @@ export const addComment: RequestHandler = async (req, res) => {
 
 export const getPostComment: RequestHandler = async (req, res) => {
   const { id } = req.params;
+
+  const cachedComments = await getCachePostComment(id);
+
+  if (cachedComments) {
+    return responseReturn(res, 200, {
+      comments: cachedComments,
+    });
+  }
 
   const comments = await prisma.comment.findMany({
     where: {
@@ -329,6 +345,8 @@ export const getPostComment: RequestHandler = async (req, res) => {
     },
   });
 
+  await cachePostComment(id, comments);
+
   responseReturn(res, 201, { comments });
 };
 
@@ -337,13 +355,22 @@ export const addReplayComment: RequestHandler = async (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
 
-  await prisma.replayToComment.create({
+  const replayToComment = await prisma.replayToComment.create({
     data: {
       author_id: myId,
       comment_id: parseInt(id),
       text: text,
     },
+    include: {
+      comment: {
+        select: {
+          post_id: true,
+        },
+      },
+    },
   });
+
+  await invalidatePostCommentCache(replayToComment.comment.post_id);
 
   responseReturn(res, 201, { message: "Replay added to comment successfully" });
 };
@@ -352,14 +379,29 @@ export const addReplayToReplayComment: RequestHandler = async (req, res) => {
   const myId = req.user.id;
   const { text, replayToAuthorId, replayToCommentId } = req.body;
 
-  await prisma.replayToReplayComment.create({
+  const addReplayToReplay = await prisma.replayToReplayComment.create({
     data: {
       author_id: myId,
       text: text,
       replay_to_author_id: parseInt(replayToAuthorId),
       replay_to_comment_id: parseInt(replayToCommentId),
     },
+    include: {
+      replay_to_comment: {
+        include: {
+          comment: {
+            select: {
+              post_id: true,
+            },
+          },
+        },
+      },
+    },
   });
+
+  await invalidatePostCommentCache(
+    addReplayToReplay.replay_to_comment.comment.post_id
+  );
 
   responseReturn(res, 201, { message: "Replay added to comment successfully" });
 };
