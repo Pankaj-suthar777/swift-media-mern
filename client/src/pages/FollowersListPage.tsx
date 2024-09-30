@@ -14,14 +14,14 @@ const FollowersListPage = () => {
   return (
     <div className="h-screen w-full flex flex-col items-center border border-r-0">
       <div className="flex gap-4 w-full h-full overflow-hidden">
-        <div className="sm:w-[90%] overflow-auto">
+        <div className="md:w-[90%] w-[100%] overflow-auto">
           <div className="sticky top-0 w-full h-[50px] flex justify-start items-center bg-white bg-opacity-10 backdrop-blur-lg border border-opacity-30 rounded-lg border-slate-600 border-l-0">
             <BackButton showText={false} variant={"link"} />
-            <h1>Connect</h1>
+            <h1>Followers</h1>
           </div>
           <div
             className={cn(
-              "flex flex-col overflow-y-auto h-[calu(100vh-50px)] w-full items-center",
+              "flex flex-col overflow-y-auto h-[calu(100vh-50px)] md:w-full items-center w-[calu(100vw-60px)]",
               {
                 "border h-auto border-b-0": isLoading,
               }
