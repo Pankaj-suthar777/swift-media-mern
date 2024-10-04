@@ -34,6 +34,7 @@ export const user_register: RequestHandler = async (req, res) => {
       followersCount: 0,
       followingCount: 0,
       about: createUser.about,
+      backgroundImage: createUser.backgroundImage,
     });
 
     responseReturn(res, 201, {
@@ -91,6 +92,7 @@ export const user_login: RequestHandler = async (req, res) => {
         followingCount,
         about: user.about,
         avatar: user.avatar,
+        backgroundImage: user.backgroundImage,
       });
 
       responseReturn(res, 201, {
@@ -162,6 +164,7 @@ export const get_user: RequestHandler = async (req, res) => {
       github: user?.github || null,
       twitter: user?.twitter || null,
       friends: user?.friends,
+      backgroundImage: user?.backgroundImage,
     },
   });
 };
@@ -186,6 +189,7 @@ export const admin_login: RequestHandler = async (req, res) => {
         email: user.email,
         role: "admin",
         about: user.about,
+        backgroundImage: user.backgroundImage,
       });
 
       responseReturn(res, 201, {
@@ -208,7 +212,7 @@ export const admin_login: RequestHandler = async (req, res) => {
 };
 
 export const update_user: RequestHandler = async (req, res) => {
-  const { about, name, avatar, github, twitter } = req.body;
+  const { about, name, avatar, github, twitter, backgroundImage } = req.body;
   const id = req.user.id;
 
   try {
@@ -219,6 +223,7 @@ export const update_user: RequestHandler = async (req, res) => {
         avatar: avatar,
         github,
         twitter,
+        backgroundImage,
       },
       where: {
         id: id,

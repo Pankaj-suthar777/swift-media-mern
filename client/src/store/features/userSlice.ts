@@ -13,6 +13,7 @@ export interface UserInfo {
   followingCount?: number;
   github: string;
   twitter: string;
+  backgroundImage?: string;
   friends: User[];
 }
 

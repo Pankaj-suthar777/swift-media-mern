@@ -14,4 +14,5 @@ export interface User {
   friends: Chat[];
   followersCount?: number;
   followingCount?: number;
+  backgroundImage?: string;
 }

@@ -43,6 +43,7 @@ model User {
     groupChats         GroupChat[] @relation("GroupChatFriends")
     groupMessages      GroupMessage[] @relation("MessageSender")
     notifications      Notifiction[]
+    backgroundImage    String?
 }
 
 model Chat {

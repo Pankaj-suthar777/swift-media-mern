@@ -53,6 +53,7 @@ export const UpdateUserSchema = yup.object().shape({
     ),
   about: yup.string().trim().min(3, "About is too short!").optional(),
   avatar: yup.string().optional(),
+  backgroundImage: yup.string().optional(),
 });
 
 export const CreatePostSchema = yup.object().shape({

@@ -29,10 +29,10 @@ const Notification = () => {
 
             <h1>Notifications</h1>
           </div>
-          <div className="flex flex-col gap-4 overflow-y-auto h-[calu(h-[100vh]-50px)] w-full items-center">
-            <div className="w-full flex flex-col">
+          <div className="flex flex-col gap-4 overflow-y-auto h-[calu(100vh-50px)] w-full items-center">
+            <div className="w-full flex flex-col h-full">
               {isLoading ? (
-                <div className="flex justify-center items-center w-full mt-10">
+                <div className="flex justify-center items-center h-[10vh] w-full mt-10">
                   <Loader className="animate-spin" />
                 </div>
               ) : (

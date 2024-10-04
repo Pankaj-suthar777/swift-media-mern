@@ -1,5 +1,4 @@
 import prisma from "#/prisma/prisma";
-import redisClient from "#/redis";
 import {
   cachePostComment,
   getCachePostComment,

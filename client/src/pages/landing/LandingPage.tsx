@@ -10,7 +10,7 @@ const LandingPage = () => {
 
   const redirect = () => {
     if (userInfo) {
-      navigate("/user/dashboard");
+      navigate("/user/posts");
     } else {
       navigate("login");
     }

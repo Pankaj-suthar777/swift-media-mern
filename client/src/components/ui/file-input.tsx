@@ -2,7 +2,7 @@ import { Label } from "./label";
 
 interface Props {
   onChange: React.Dispatch<React.SetStateAction<File | null>>;
-  image: string;
+  image: string | undefined;
   label?: string;
 }
 
@@ -38,7 +38,7 @@ const FileInput = ({ onChange, image, label = "Image" }: Props) => {
                   ></path>
                 </svg>
                 <span className="font-medium text-gray-600">
-                  Drop files to Attach, or
+                  Drop image to Attach, or
                   <span className="text-blue-600 underline ml-[4px]">
                     browse
                   </span>

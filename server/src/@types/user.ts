@@ -33,6 +33,7 @@ declare global {
         followings: number;
         role: string;
         about: string;
+        backgroundImage: string;
       };
       token: string;
     }

@@ -26,6 +26,9 @@ import { useUpdateUserProfileMutation } from "@/store/api/authApi";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import FileInput from "../ui/file-input";
+import { uploadFilesToFirebaseAndGetUrl } from "@/utils/file-upload";
 
 const profileDetailsChangeSchema = z.object({
   name: z.string().optional(),
@@ -37,6 +40,8 @@ const ChangeDetails = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
 
   const [about, setAbout] = useState(userInfo?.about || "");
+
+  const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
 
   const form = useForm<z.infer<typeof profileDetailsChangeSchema>>({
     resolver: zodResolver(profileDetailsChangeSchema),
@@ -51,13 +56,36 @@ const ChangeDetails = () => {
     formData: z.infer<typeof profileDetailsChangeSchema>
   ) => {
     try {
-      const data = await updateUserProfile({ ...formData, about }).unwrap();
-      dispatch(setUser(data?.user));
+      if (backgroundImage) {
+        const url = await uploadFilesToFirebaseAndGetUrl(
+          backgroundImage,
+          "backgroundImage"
+        );
+        const data = await updateUserProfile({
+          ...formData,
+          about,
+          backgroundImage: url,
+        }).unwrap();
 
-      toast({
-        title: data?.message,
-        variant: "default",
-      });
+        dispatch(setUser(data?.user));
+
+        toast({
+          title: data?.message,
+          variant: "default",
+        });
+      } else {
+        const data = await updateUserProfile({
+          ...formData,
+          about,
+        }).unwrap();
+
+        dispatch(setUser(data?.user));
+
+        toast({
+          title: data?.message,
+          variant: "default",
+        });
+      }
     } catch (error: any) {
       toast({
         title: "User info change failed",
@@ -72,51 +100,74 @@ const ChangeDetails = () => {
       <CardHeader>
         <CardTitle>Change Your Details</CardTitle>
       </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="first name" {...field} />
-                  </FormControl>
+      <Tabs defaultValue="account" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="account">Account</TabsTrigger>
+          <TabsTrigger value="bg-img">Background Image</TabsTrigger>
+        </TabsList>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+              <TabsContent value="account">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="first name" {...field} />
+                      </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div>
-              <FormLabel>About</FormLabel>
-              <div className="h-[250px] pb-10">
-                <FormControl>
-                  <ReactQuill
-                    defaultValue={userInfo?.about}
-                    theme="snow"
-                    value={about}
-                    onChange={(e) => setAbout(e)}
-                    className="h-full"
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div>
+                  <FormLabel>About</FormLabel>
+                  <div className="h-[250px] pb-10">
+                    <FormControl>
+                      <ReactQuill
+                        defaultValue={userInfo?.about}
+                        theme="snow"
+                        value={about}
+                        onChange={(e) => setAbout(e)}
+                        className="h-full"
+                      />
+                    </FormControl>
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="bg-img">
+                <div className="p-8">
+                  <FileInput
+                    onChange={setBackgroundImage}
+                    image={
+                      backgroundImage
+                        ? URL.createObjectURL(backgroundImage)
+                        : userInfo?.backgroundImage
+                        ? userInfo?.backgroundImage
+                        : ""
+                    }
+                    label="background image"
                   />
-                </FormControl>
-              </div>
-            </div>
+                </div>
+              </TabsContent>
 
-            <CardFooter className="flex w-full justify-between p-0 pt-8">
-              <DialogClose>
-                <Button type="button" variant="outline">
-                  Close
+              <CardFooter className="flex w-full justify-between p-0 pt-8">
+                <DialogClose>
+                  <Button type="button" variant="outline">
+                    Close
+                  </Button>
+                </DialogClose>
+                <Button disabled={isLoading} loading={isLoading} type="submit">
+                  Save Changes
                 </Button>
-              </DialogClose>
-              <Button disabled={isLoading} loading={isLoading} type="submit">
-                Save Changes
-              </Button>
-            </CardFooter>
-          </form>
-        </Form>
-      </CardContent>
+              </CardFooter>
+            </form>
+          </Form>
+        </CardContent>
+      </Tabs>
     </Card>
   );
 };

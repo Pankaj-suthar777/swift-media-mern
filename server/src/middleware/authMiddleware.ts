@@ -16,6 +16,7 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
       req.user.id = decodeToken.id;
       req.user.name = decodeToken.name;
       req.user.avatar = decodeToken.avatar;
+      req.user.backgroundImage = decodeToken.backgroundImage;
 
       next();
     } catch (error) {
