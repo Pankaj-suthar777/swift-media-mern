@@ -25,10 +25,10 @@ export const SocketContextProvider = ({
   const [socket, setSocket] = useState<Socket | null>(null);
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const { userInfo: authUser } = useAppSelector((state) => state.auth);
-  // https://swift-media-mern.onrender.com
+  // http://localhost:5000
   useEffect(() => {
     if (authUser) {
-      const newSocket = io("http://localhost:5000", {
+      const newSocket = io("https://swift-media-mern.onrender.com", {
         query: {
           userId: authUser.id,
         },
