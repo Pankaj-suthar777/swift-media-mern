@@ -16,7 +16,8 @@ import { CLIENT_URL, PORT } from "./utils/variables";
 
 app.use(
   cors({
-    origin: [CLIENT_URL],
+    origin: "*",
+    // origin:[CLIENT_URL],
   })
 );
 app.use(express.json());

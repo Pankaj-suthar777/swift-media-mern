@@ -106,67 +106,71 @@ export const getSinglePost: RequestHandler = async (req, res) => {
 };
 
 export const upOrDownVote: RequestHandler = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const myId = req.user.id;
+    const myId = req.user.id;
 
-  const isVoted = await prisma.vote.findFirst({
-    where: {
-      post_id: parseInt(id),
-      author_id: myId,
-    },
-  });
-
-  if (isVoted) {
-    await prisma.vote.delete({
+    const isVoted = await prisma.vote.findFirst({
       where: {
-        id: isVoted?.id,
-      },
-    });
-  }
-
-  const vote = req.body?.vote;
-
-  if (vote === "up-vote") {
-    await prisma.vote.create({
-      data: {
-        author_id: myId,
-        vote: vote,
         post_id: parseInt(id),
-      },
-    });
-  } else if (vote === "down-vote") {
-    await prisma.vote.create({
-      data: {
         author_id: myId,
-        vote: vote,
-        post_id: parseInt(id),
       },
     });
-  }
 
-  const author = await prisma.post.findFirst({
-    where: {
-      id: parseInt(id),
-    },
-    select: {
-      author: true,
-    },
-  });
+    if (isVoted) {
+      await prisma.vote.delete({
+        where: {
+          id: isVoted?.id,
+        },
+      });
+    }
 
-  if (author?.author.id && author?.author.id !== parseInt(myId)) {
-    await prisma.notifiction.create({
-      data: {
-        user_id: author?.author.id,
-        message: `${req.user.name} ${vote.split("-")[0]} voted your post`,
-        image: req.user.avatar,
+    const vote = req.body?.vote;
+
+    if (vote === "up-vote") {
+      await prisma.vote.create({
+        data: {
+          author_id: myId,
+          vote: vote,
+          post_id: parseInt(id),
+        },
+      });
+    } else if (vote === "down-vote") {
+      await prisma.vote.create({
+        data: {
+          author_id: myId,
+          vote: vote,
+          post_id: parseInt(id),
+        },
+      });
+    }
+
+    const author = await prisma.post.findFirst({
+      where: {
+        id: parseInt(id),
+      },
+      select: {
+        author: true,
       },
     });
+
+    if (author?.author.id && author?.author.id !== parseInt(myId)) {
+      await prisma.notifiction.create({
+        data: {
+          user_id: author?.author.id,
+          message: `${req.user.name} ${vote.split("-")[0]} voted your post`,
+          image: req.user.avatar,
+        },
+      });
+    }
+
+    const message = vote === "up-vote" ? "Upvoted" : "Devoted";
+    responseReturn(res, 201, { message });
+  } catch (error) {
+    console.log(error);
+    responseReturn(res, 403, { error });
   }
-
-  const message = vote === "up-vote" ? "Upvoted" : "Devoted";
-
-  responseReturn(res, 201, { message });
 };
 
 export const isVoted: RequestHandler = async (req, res) => {
