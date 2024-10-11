@@ -542,6 +542,9 @@ export const getMyNotifications: RequestHandler = async (req, res) => {
     orderBy: {
       created_at: "desc",
     },
+    include: {
+      user: true,
+    },
   });
 
   return responseReturn(res, 200, { notifications });

@@ -1,5 +1,5 @@
 export const baseURL = "https://swift-media-mern.onrender.com/api";
-// export const baseURL = "/api";
+//export const baseURL = "/api";
 
 import axios, { CreateAxiosDefaults } from "axios";
 

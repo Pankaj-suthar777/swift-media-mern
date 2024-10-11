@@ -1,12 +1,19 @@
 import { createClient } from "redis";
+import { REDIS_HOST, REDIS_PASSWORD } from "./utils/variables";
 
-const redisClient = createClient({
-  password: "yz1iiyZNe5kbubKaMD83q4q9jqru8t9g",
-  socket: {
-    host: "redis-12199.c44.us-east-1-2.ec2.redns.redis-cloud.com",
-    port: 12199,
-  },
-});
+let redisClient;
+try {
+  redisClient = createClient({
+    password: REDIS_PASSWORD,
+    socket: {
+      host: REDIS_HOST,
+      port: 12199,
+    },
+  });
+  console.log("Redis client initialized.");
+} catch (error) {
+  console.error("Error initializing Redis client:", error);
+}
 
 redisClient.on("connect", () => {
   console.log("Redis client connecting...");
