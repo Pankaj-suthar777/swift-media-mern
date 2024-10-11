@@ -10,4 +10,5 @@ export interface Message {
   updated_at?: Date;
   senderId: number;
   sender: User;
+  imageUrl?: string;
 }

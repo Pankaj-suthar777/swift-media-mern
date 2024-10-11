@@ -11,8 +11,9 @@ import {
   useSendMessageMutation,
 } from "@/store/api/chatApi";
 import { useAppSelector } from "@/store/hooks";
-import { Menu, X } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { uploadFilesToFirebaseAndGetUrl } from "@/utils/file-upload";
+import { Menu, Plus, X } from "lucide-react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Chats = () => {
@@ -31,6 +32,10 @@ const Chats = () => {
   const [currentChatUser, setCurrentChatUserId] = useState("");
   const [getSearch, { data: searchUserChat }] =
     useLazyGetSearchChatUsersQuery();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -40,7 +45,7 @@ const Chats = () => {
     }
   }, [searchValue, getSearch]);
 
-  const [sendMessage, { isLoading }] = useSendMessageMutation();
+  const [sendMessage] = useSendMessageMutation();
 
   const {
     data: ChatData,
@@ -126,28 +131,58 @@ const Chats = () => {
 
   const sendMessageHandler = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
-    const receiverId = selectedSearchedUser
-      ? selectedSearchedUser.id
-      : otherFriend.id;
+    try {
+      const receiverId = selectedSearchedUser
+        ? selectedSearchedUser.id
+        : otherFriend.id;
 
-    if (!message) {
-      return;
+      if (!message && !imageFile) {
+        return;
+      }
+
+      let imageURL;
+
+      if (imageFile) {
+        imageURL = await uploadFilesToFirebaseAndGetUrl(
+          imageFile,
+          "chat-messages"
+        );
+      }
+
+      sendMessage({ message, receiverId, imageUrl: imageURL }).unwrap();
+
+      setMessages([
+        ...messages,
+        { text: message, senderId: userInfo?.id, imageUrl: imageURL },
+      ]);
+
+      if (searchValue) {
+        refetchChat();
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      setMessage("");
     }
+  };
 
-    sendMessage({ message, receiverId }).unwrap();
-
-    setMessages([...messages, { text: message, senderId: userInfo?.id }]);
-
-    if (searchValue) {
-      refetchChat();
+  const handleImageSelect = (event: any) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
     }
-
-    setMessage("");
   };
 
   return (
-    <div className="flex w-full gap-4 h-screen">
+    <div className="flex w-full gap-4 h-screen overflow-hidden">
       {showSidebar && (
         <div
           onClick={() => setShowSidebar(false)}
@@ -265,22 +300,59 @@ const Chats = () => {
           </div>
 
           {id ? (
-            <form
-              className="flex justify-center items-center h-20 w-full gap-4 px-4"
-              onSubmit={sendMessageHandler}
-            >
-              {/* Chat input */}
-              <Input
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-white rounded-full"
-                type="text"
-                placeholder="Type a message..."
-              />
-              <Button className="rounded-full" disabled={isLoading}>
-                Send
-              </Button>
-            </form>
+            <div className="relative">
+              {imagePreview ? (
+                <div className="absolute bg-green-200 bottom-16 right-0 left-0 p-2">
+                  <div className="h-full w-full relative">
+                    <img
+                      className="w-full h-full max-h-[400px] object-contain"
+                      src={imagePreview}
+                    />
+                    <div
+                      className="absolute top-1 right-1 cursor-pointer"
+                      onClick={() => {
+                        setImageFile(null);
+                        setImagePreview("");
+                      }}
+                    >
+                      <X />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              <form
+                className="flex justify-center items-center h-20 w-full gap-4 px-4"
+                onSubmit={sendMessageHandler}
+              >
+                {/* Chat input */}
+                <div
+                  onClick={() => {
+                    if (inputRef.current) {
+                      inputRef.current.click();
+                    }
+                  }}
+                  className="cursor-pointer hover:bg-slate-200 p-2"
+                >
+                  <Plus color="black" />
+                  <input
+                    type="file"
+                    className="hidden"
+                    ref={inputRef}
+                    onChange={handleImageSelect}
+                  />
+                </div>
+                <Input
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-white rounded-full"
+                  type="text"
+                  placeholder="Type a message..."
+                />
+                <Button className="rounded-full" disabled={isLoading}>
+                  Send
+                </Button>
+              </form>
+            </div>
           ) : null}
         </div>
       </div>

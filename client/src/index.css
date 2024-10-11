@@ -206,3 +206,25 @@ body {
   color: rgb(80, 80, 255);
   text-decoration: underline;
 }
+
+/* Width of the scrollbar */
+::-webkit-scrollbar {
+  width: 8px; /* Change this value to make it thinner or thicker */
+}
+
+/* Track of the scrollbar */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* You can change the background color */
+}
+
+/* Thumb of the scrollbar */
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* The color of the scrollbar */
+  border-radius: 10px; /* Round corners for a better look */
+  border: 2px solid #f1f1f1; /* Creates a space around the thumb */
+}
+
+/* Hover state of the thumb */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker color when hovered */
+}

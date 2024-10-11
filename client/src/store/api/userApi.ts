@@ -1,7 +1,7 @@
 import { Notification } from "@/@types/notifiction";
 import { User } from "@/@types/user";
 import { baseURL } from "@/api/client";
-import { AllPeople } from "@/pages/Peoples";
+import { People } from "@/pages/Peoples";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const userApi = createApi({
@@ -117,7 +117,7 @@ export const userApi = createApi({
         };
       },
     }),
-    getAllPeoples: builder.query<{ peoples: AllPeople[] }, null>({
+    getAllPeoples: builder.query<{ peoples: People[] }, null>({
       query() {
         return {
           url: `/user/get-peoples`,

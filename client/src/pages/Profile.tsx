@@ -231,6 +231,7 @@ const Profile = () => {
                   </TabsContent>
                   <TabsContent value="posts" className="w-full">
                     <PostsTab
+                      isEditable={true}
                       userId={userInfo?.id}
                       setTotalPosts={setTotalPosts}
                     />

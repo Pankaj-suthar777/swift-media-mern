@@ -82,7 +82,7 @@ const Posts = () => {
           </div>
         </div>
 
-        <div className="w-[50%] md:block hidden mt-4 sm:flex h-fit justify-center overflow-hidden mx-auto">
+        <div className="w-[50%] hidden mt-4 lg:flex h-fit justify-center overflow-hidden mx-auto">
           <div className="flex flex-col gap-2 w-full">
             <div className="mb-4">
               {pathname === "/user/posts" || pathname === "/user/search" ? (

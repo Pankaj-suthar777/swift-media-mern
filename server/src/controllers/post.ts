@@ -283,27 +283,34 @@ export const addComment: RequestHandler = async (req, res) => {
 
   await invalidatePostCommentCache(id);
 
-  await prisma.comment.create({
+  const comment = await prisma.comment.create({
     data: {
       author_id: myId,
       post_id: parseInt(id),
       text: text,
     },
+    include: {
+      author: true,
+    },
   });
 
-  responseReturn(res, 201, { message: "Comment added successfully" });
+  responseReturn(res, 201, {
+    message: "Comment added successfully",
+    success: true,
+    comment,
+  });
 };
 
 export const getPostComment: RequestHandler = async (req, res) => {
   const { id } = req.params;
 
-  const cachedComments = await getCachePostComment(id);
+  // const cachedComments = await getCachePostComment(id);
 
-  if (cachedComments) {
-    return responseReturn(res, 200, {
-      comments: cachedComments,
-    });
-  }
+  // if (cachedComments) {
+  //   return responseReturn(res, 200, {
+  //     comments: cachedComments,
+  //   });
+  // }
 
   const comments = await prisma.comment.findMany({
     where: {
@@ -348,7 +355,7 @@ export const getPostComment: RequestHandler = async (req, res) => {
     },
   });
 
-  await cachePostComment(id, comments);
+  // await cachePostComment(id, comments);
 
   responseReturn(res, 201, { comments });
 };
@@ -370,12 +377,18 @@ export const addReplayComment: RequestHandler = async (req, res) => {
           post_id: true,
         },
       },
+      author: true,
+      replies: true,
+      vote: true,
     },
   });
 
-  await invalidatePostCommentCache(replayToComment.comment.post_id);
+  // await invalidatePostCommentCache(replayToComment.comment.post_id);
 
-  responseReturn(res, 201, { message: "Replay added to comment successfully" });
+  responseReturn(res, 201, {
+    message: "Replay added to comment successfully",
+    replayToComment,
+  });
 };
 
 export const addReplayToReplayComment: RequestHandler = async (req, res) => {
@@ -397,6 +410,9 @@ export const addReplayToReplayComment: RequestHandler = async (req, res) => {
               post_id: true,
             },
           },
+          author: true,
+          replies: true,
+          vote: true,
         },
       },
     },
@@ -406,7 +422,10 @@ export const addReplayToReplayComment: RequestHandler = async (req, res) => {
     addReplayToReplay.replay_to_comment.comment.post_id
   );
 
-  responseReturn(res, 201, { message: "Replay added to comment successfully" });
+  responseReturn(res, 201, {
+    message: "Replay added to comment successfully",
+    replayToReplayComment: addReplayToReplay,
+  });
 };
 
 export const toogleCommentVote: RequestHandler = async (req, res) => {

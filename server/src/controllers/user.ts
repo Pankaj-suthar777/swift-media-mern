@@ -162,6 +162,7 @@ export const serachUser: RequestHandler = async (req, res) => {
       email: true,
       id: true,
       name: true,
+      about: true,
     },
   });
 
@@ -183,6 +184,9 @@ export const getUserPosts: RequestHandler = async (req, res) => {
     },
     skip: Number(page) * 4,
     take: Number(page) * 4 + 4,
+    orderBy: {
+      created_at: "desc",
+    },
   });
 
   responseReturn(res, 201, { posts });

@@ -56,36 +56,27 @@ const ChangeDetails = () => {
     formData: z.infer<typeof profileDetailsChangeSchema>
   ) => {
     try {
-      if (backgroundImage) {
-        const url = await uploadFilesToFirebaseAndGetUrl(
-          backgroundImage,
-          "backgroundImage"
-        );
-        const data = await updateUserProfile({
-          ...formData,
-          about,
-          backgroundImage: url,
-        }).unwrap();
+      const backgroundImageUrl = backgroundImage
+        ? await uploadFilesToFirebaseAndGetUrl(
+            backgroundImage,
+            "backgroundImage"
+          )
+        : undefined;
 
-        dispatch(setUser(data?.user));
+      const updatedProfileData = {
+        ...formData,
+        about,
+        ...(backgroundImageUrl && { backgroundImage: backgroundImageUrl }),
+      };
 
-        toast({
-          title: data?.message,
-          variant: "default",
-        });
-      } else {
-        const data = await updateUserProfile({
-          ...formData,
-          about,
-        }).unwrap();
+      const data = await updateUserProfile(updatedProfileData).unwrap();
 
-        dispatch(setUser(data?.user));
+      dispatch(setUser(data?.user));
 
-        toast({
-          title: data?.message,
-          variant: "default",
-        });
-      }
+      toast({
+        title: data?.message,
+        variant: "default",
+      });
     } catch (error: any) {
       toast({
         title: "User info change failed",

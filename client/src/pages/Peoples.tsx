@@ -12,7 +12,7 @@ import { truncateText } from "@/utils/helper";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export interface AllPeople {
+export interface People {
   id: number;
   name: string;
   email: string;
@@ -86,7 +86,7 @@ const Peoples = () => {
 
 export default Peoples;
 
-const UserBlock = ({ user }: { user: AllPeople }) => {
+const UserBlock = ({ user }: { user: People }) => {
   const [isFollow, setIsFollow] = useState(user.isFollowing);
 
   const [followUser, { isLoading }] = useFollowUserMutation();

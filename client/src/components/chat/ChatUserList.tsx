@@ -33,7 +33,7 @@ const ChatUserList = ({
   return (
     <div>
       <div className="bg-white rounded-md overflow-hidden w-[300px]">
-        <ul className="divide-y divide-gray-200 w-full">
+        <ul className="divide-y divide-gray-200 w-full overflow-y-auto h-screen">
           {searchValue ? (
             <div className="w-full">
               <div className="text-center flex justify-center gap-2">

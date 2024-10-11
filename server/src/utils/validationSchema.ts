@@ -38,7 +38,8 @@ export const UpdateUserSchema = yup.object().shape({
         value === undefined ||
         value === null ||
         /^https:\/\/github\.com\//.test(value)
-    ),
+    )
+    .optional(),
   twitter: yup
     .string()
     .trim()
@@ -50,7 +51,8 @@ export const UpdateUserSchema = yup.object().shape({
         value === undefined ||
         value === null ||
         /^https:\/\/x\.com\//.test(value)
-    ),
+    )
+    .optional(),
   about: yup.string().trim().min(3, "About is too short!").optional(),
   avatar: yup.string().optional(),
   backgroundImage: yup.string().optional(),

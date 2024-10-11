@@ -92,11 +92,12 @@ model Message {
     id                 Int @id @default(autoincrement())
     chat_id            Int
     chat               Chat  @relation(fields: [chat_id],references: [id] , onDelete: Cascade) 
-    text               String
+    text               String?
     created_at         DateTime @default(now())
     updated_at         DateTime @updatedAt
     senderId           Int
     sender             User @relation("MessageSender",fields: [senderId], references: [id])
+    imageUrl           String?
 }
 
 

@@ -65,6 +65,7 @@ export const sendMessage: RequestHandler = async (req, res) => {
   const myId = req.user.id;
   const receiverId = req.body?.receiverId;
   const message = req.body.message;
+  const imageUrl = req.body.imageUrl;
 
   const existingChat = await prisma.chat.findFirst({
     where: {
@@ -88,9 +89,11 @@ export const sendMessage: RequestHandler = async (req, res) => {
   });
 
   let newMessage;
+  let chat;
 
   if (!existingChat) {
-    const newChat = await prisma.chat.create({
+    // new chat
+    chat = await prisma.chat.create({
       data: {
         lastMessage: message,
         senderId: myId,
@@ -98,12 +101,16 @@ export const sendMessage: RequestHandler = async (req, res) => {
           connect: [{ id: myId }, { id: receiverId }],
         },
       },
+      include: {
+        friends: true,
+      },
     });
     newMessage = await prisma.message.create({
       data: {
         text: message,
-        chat_id: newChat.id,
+        chat_id: chat.id,
         senderId: myId,
+        imageUrl,
       },
     });
   } else {
@@ -112,26 +119,31 @@ export const sendMessage: RequestHandler = async (req, res) => {
         text: message,
         chat_id: existingChat.id,
         senderId: myId,
+        imageUrl,
       },
     });
-    await prisma.chat.update({
+    chat = await prisma.chat.update({
       where: {
         id: existingChat.id,
       },
       data: {
         lastMessage: message,
       },
+      include: {
+        friends: true,
+      },
     });
   }
 
-  // SOCKET IO FUNCTIONALITY WILL GO HERE
   const receiverSocketId = getReceiverSocketId(receiverId);
   if (receiverSocketId) {
-    // io.to(<socket_id>).emit() used to send events to specific client
     io.to(receiverSocketId).emit("newMessage", newMessage);
   }
 
-  responseReturn(res, 201, { message: "Message send successfully" });
+  responseReturn(res, 201, {
+    message: "Message send successfully",
+    chat: chat,
+  });
 };
 
 export const getUserChats: RequestHandler = async (req, res) => {

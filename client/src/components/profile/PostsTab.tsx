@@ -7,9 +7,10 @@ import { Loader } from "lucide-react";
 interface Props {
   userId?: number | string;
   setTotalPosts?: (count: number) => void;
+  isEditable?: boolean;
 }
 
-const PostsTab = ({ userId, setTotalPosts }: Props) => {
+const PostsTab = ({ userId, setTotalPosts, isEditable = false }: Props) => {
   const { id } = useParams();
 
   if (!userId && id) {
@@ -59,6 +60,7 @@ const PostsTab = ({ userId, setTotalPosts }: Props) => {
             <>
               <div key={i} ref={lastElementRef}>
                 <PostItem
+                  isEditable={isEditable}
                   post={post}
                   key={i}
                   refetchSinglePost={refetchSinglePost}
@@ -69,6 +71,7 @@ const PostsTab = ({ userId, setTotalPosts }: Props) => {
           ) : (
             <div key={i}>
               <PostItem
+                isEditable={isEditable}
                 post={post}
                 key={i}
                 refetchSinglePost={refetchSinglePost}

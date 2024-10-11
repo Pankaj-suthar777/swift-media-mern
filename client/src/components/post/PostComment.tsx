@@ -56,12 +56,10 @@ const PostComment = ({
     let updatedVotes;
 
     if (existingVoteIndex !== -1) {
-      // If the user already voted update vote
       updatedVotes = comment.vote.map((c, index) =>
         index === existingVoteIndex ? { ...c, vote } : c
       );
     } else {
-      // If the user hasn't voted
       updatedVotes = [
         ...comment.vote,
         {

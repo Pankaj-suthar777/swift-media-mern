@@ -59,7 +59,9 @@ const MessageContainer = ({
                 const isSentInSameTime =
                   moment(message?.created_at).format("LT") !==
                   moment(nextMessage?.created_at).format("LT");
+
                 const isMyMessage = senderId === myId;
+                console.log(message?.imageUrl);
                 return (
                   <div key={i}>
                     <div className="flex flex-col py-1">
@@ -72,11 +74,22 @@ const MessageContainer = ({
                               send by : {message.sender?.name}
                             </span>
                           ) : null}
+
                           <div className="bg-white rounded-[10px] px-8 py-2 max-w-[80%] md:max-w-[40vw] relative word-wrap">
+                            {message?.imageUrl ? (
+                              <div className="w-[300px] h-[300px]">
+                                <img
+                                  className="h-full w-full object-contain"
+                                  src={message.imageUrl}
+                                  alt="image"
+                                />
+                              </div>
+                            ) : null}
                             <p className="text-gray-900 text-sm break-words">
                               {message.text}
                             </p>
                           </div>
+
                           {isSentInSameTime && (
                             <span className="text-xs mb-2">
                               {moment(message?.created_at).format("LT")}
@@ -88,6 +101,15 @@ const MessageContainer = ({
                       {isMyMessage && (
                         <div className="flex items-end flex-col gap-1">
                           <div className="bg-blue-500 rounded-[10px] px-4 py-2 max-w-[80vw] md:max-w-[40vw] word-wrap">
+                            {message?.imageUrl ? (
+                              <div className="w-[300px] h-[300px] mb-2">
+                                <img
+                                  className="h-full w-full object-contain"
+                                  src={message.imageUrl}
+                                  alt="image"
+                                />
+                              </div>
+                            ) : null}
                             <p className="text-white text-sm break-words">
                               {message.text}
                             </p>

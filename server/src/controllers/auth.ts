@@ -108,6 +108,7 @@ export const user_login: RequestHandler = async (req, res) => {
           about: user.about,
           friends: user?.friends,
           avatar: user.avatar,
+          backgroundImage: user?.backgroundImage,
         },
       });
     } else {
@@ -235,7 +236,6 @@ export const update_user: RequestHandler = async (req, res) => {
         error: "User not found",
       });
     }
-
     return responseReturn(res, 200, {
       message: "User info updated",
       user,
