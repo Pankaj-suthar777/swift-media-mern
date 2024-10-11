@@ -11,29 +11,28 @@ try {
     },
   });
   console.log("Redis client initialized.");
+
+  redisClient?.on("connect", () => {
+    console.log("Redis client connecting...");
+  });
+
+  redisClient?.on("ready", () => {
+    console.log("Redis client connected and ready!");
+  });
+
+  redisClient?.on("error", (err) => {
+    console.error("Redis client error:", err);
+  });
+
+  redisClient?.on("end", () => {
+    console.log("Redis client disconnected.");
+  });
 } catch (error) {
   console.error("Error initializing Redis client:", error);
 }
 
-redisClient.on("connect", () => {
-  console.log("Redis client connecting...");
-});
-
-redisClient.on("ready", () => {
-  console.log("Redis client connected and ready!");
-});
-
-redisClient.on("error", (err) => {
-  console.error("Redis client error:", err);
-});
-
-redisClient.on("end", () => {
-  console.log("Redis client disconnected.");
-});
-
-// Connect the Redis client when the app starts
 async function connectRedisClient() {
-  if (!redisClient.isOpen) {
+  if (!redisClient?.isOpen) {
     try {
       await redisClient.connect();
       console.log("Redis client connected successfully.");
