@@ -98,7 +98,7 @@ export const followUser: RequestHandler = async (req, res) => {
     where: {
       followerId_followingId: {
         followerId: parseInt(id),
-        followingId: parseInt(myId),
+        followingId: myId,
       },
     },
   });
@@ -116,7 +116,7 @@ export const followUser: RequestHandler = async (req, res) => {
           connect: { id: parseInt(id) },
         },
         following: {
-          connect: { id: parseInt(myId) },
+          connect: { id: myId },
         },
       },
     });
@@ -212,19 +212,19 @@ export const getDashboardData: RequestHandler = async (req, res) => {
 
   const commentsCount = await prisma.comment.count({
     where: {
-      author_id: parseInt(id),
+      author_id: id,
     },
   });
 
   const commentReplayCount = await prisma.replayToComment.count({
     where: {
-      author_id: parseInt(id),
+      author_id: id,
     },
   });
 
   const replayedCommentReplayCount = await prisma.replayToReplayComment.count({
     where: {
-      author_id: parseInt(id),
+      author_id: id,
     },
   });
 
@@ -233,13 +233,13 @@ export const getDashboardData: RequestHandler = async (req, res) => {
 
   const chatMessagesCount = await prisma.message.count({
     where: {
-      senderId: parseInt(id),
+      senderId: id,
     },
   });
 
   const groupChatMessagesCount = await prisma.message.count({
     where: {
-      senderId: parseInt(id),
+      senderId: id,
     },
   });
 
@@ -247,14 +247,14 @@ export const getDashboardData: RequestHandler = async (req, res) => {
 
   const postUpvotesCount = await prisma.vote.count({
     where: {
-      author_id: parseInt(id),
+      author_id: id,
       vote: "up-vote",
     },
   });
 
   const postDisvotesCount = await prisma.vote.count({
     where: {
-      author_id: parseInt(id),
+      author_id: id,
       vote: "down-vote",
     },
   });
@@ -263,7 +263,7 @@ export const getDashboardData: RequestHandler = async (req, res) => {
     where: {
       friends: {
         some: {
-          id: parseInt(id),
+          id: id,
         },
       },
     },
@@ -273,7 +273,7 @@ export const getDashboardData: RequestHandler = async (req, res) => {
     where: {
       friends: {
         some: {
-          id: parseInt(id),
+          id: id,
         },
       },
     },
@@ -281,7 +281,7 @@ export const getDashboardData: RequestHandler = async (req, res) => {
 
   const recentFollowersArray = await prisma.follow.findMany({
     where: {
-      followingId: parseInt(id),
+      followingId: id,
     },
     orderBy: {
       created_at: "desc",
@@ -312,7 +312,7 @@ export const getDashboardMessageSentData: RequestHandler = async (req, res) => {
 
   const data = await prisma.message.findMany({
     where: {
-      senderId: parseInt(id),
+      senderId: id,
       created_at: {
         gte: start,
         lte: end,
@@ -365,7 +365,7 @@ export const getDashboardPostActivityData: RequestHandler = async (
 
   const data = await prisma.vote.findMany({
     where: {
-      author_id: parseInt(id),
+      author_id: id,
       created_at: {
         gte: start,
         lte: end,
@@ -496,7 +496,7 @@ export const getAllPeoples: RequestHandler = async (req, res) => {
   // Get the list of users the current user is following
   const followingData = await prisma.follow.findMany({
     where: {
-      followerId: parseInt(myId),
+      followerId: myId,
     },
     select: {
       followingId: true,

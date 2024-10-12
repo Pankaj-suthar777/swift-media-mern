@@ -11,7 +11,7 @@ export interface UserDocument {
   twitter?: string;
 }
 export type User = {
-  id: string; // Assuming 'id' should be string
+  id: number;
   name: string;
   email: string;
   avatar?: string;
@@ -32,11 +32,11 @@ export interface CreateUser extends Request {
   };
 }
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: User;
-      token: string;
-    }
-  }
-}
+// declare global {
+//   namespace Express {
+//     interface Request {
+//       user: User;
+//       token: string;
+//     }
+//   }
+// }

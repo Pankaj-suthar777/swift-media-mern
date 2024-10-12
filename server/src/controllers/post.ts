@@ -154,7 +154,7 @@ export const upOrDownVote: RequestHandler = async (req, res) => {
       },
     });
 
-    if (author?.author.id && author?.author.id !== parseInt(myId)) {
+    if (author?.author.id && author?.author.id !== myId) {
       await prisma.notifiction.create({
         data: {
           user_id: author?.author.id,

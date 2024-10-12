@@ -73,7 +73,7 @@ export const sendMessage: RequestHandler = async (req, res) => {
         {
           friends: {
             some: {
-              id: parseInt(myId),
+              id: myId,
             },
           },
         },
@@ -199,7 +199,7 @@ export const getOtherUserChatWithMe: RequestHandler = async (req, res) => {
         {
           friends: {
             some: {
-              id: parseInt(myId),
+              id: myId,
             },
           },
         },

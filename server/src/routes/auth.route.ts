@@ -60,7 +60,7 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   async (req, res) => {
     // Successful authentication
-    const user = req.user as User;
+    const user = req.user;
 
     const token = await createToken({
       id: user.id,
@@ -89,7 +89,7 @@ router.get(
   async (req, res) => {
     // Successful authentication, redirect to the home page or dashboard
 
-    const user = req.user as User;
+    const user = req.user;
     const token = await createToken({
       id: user.id,
       name: user.name,
