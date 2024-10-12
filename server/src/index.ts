@@ -17,8 +17,8 @@ import { app, server } from "./socket/socket";
 import { CLIENT_URL, PORT, GOOGLE_SESSION_SECRET } from "./utils/variables";
 import prisma from "./prisma/prisma";
 const passport = require("passport");
-require("./providers/google.ts")(passport);
-require("./providers/github.ts")(passport);
+require("./providers/google")(passport);
+require("./providers/github")(passport);
 
 app.use(
   session({
