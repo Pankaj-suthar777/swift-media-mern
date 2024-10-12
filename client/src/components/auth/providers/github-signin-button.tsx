@@ -1,20 +1,22 @@
 import { Button } from "@/components/custom/button";
 import { Github } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
-const GithubSigninButton = () => {
-  const router = useNavigate();
-
+const GithubSigninButton = ({ isSignin = true }: { isSignin?: boolean }) => {
   return (
-    <Button
-      onClick={() => router("/api/auth/login/github")}
-      className="py-4 flex justify-center items-center gap-2 font-normal"
+    <a
+      href="http://localhost:5000/api/auth/github"
+      className="flex justify-center items-center gap-2 w-full"
     >
-      <div>
-        <Github size={20} />
-      </div>
-      Sign in with Github
-    </Button>
+      <Button
+        type="button"
+        className="py-4 flex justify-center items-center gap-2 font-normal w-full"
+      >
+        <div>
+          <Github size={20} />
+        </div>
+        Sign {isSignin ? "in " : "up "}with Github
+      </Button>
+    </a>
   );
 };
 

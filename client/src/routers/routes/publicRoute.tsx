@@ -4,6 +4,7 @@ import Register from "@/pages/auth/Register";
 import AdminLoginPage from "@/pages/auth/AdminLoginPage";
 import NotFoundError from "@/pages/NotFoundError";
 import ContactPage from "@/pages/landing/ContactPage";
+import ProviderRedirectPage from "@/pages/auth/ProviderRedirectPage";
 
 const publicRoutes = [
   {
@@ -25,6 +26,10 @@ const publicRoutes = [
   {
     path: "/contact",
     element: <ContactPage />,
+  },
+  {
+    path: "/provider-redirect",
+    element: <ProviderRedirectPage />,
   },
   {
     path: "*",

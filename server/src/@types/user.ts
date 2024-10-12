@@ -10,6 +10,17 @@ export interface UserDocument {
   github?: string;
   twitter?: string;
 }
+export type User = {
+  id: string; // Assuming 'id' should be string
+  name: string;
+  email: string;
+  avatar?: string;
+  followers: number;
+  followings: number;
+  role: string;
+  about: string;
+  backgroundImage: string;
+};
 
 import { Request } from "express";
 
@@ -24,17 +35,7 @@ export interface CreateUser extends Request {
 declare global {
   namespace Express {
     interface Request {
-      user: {
-        id: any;
-        name: string;
-        email: string;
-        avatar?: string;
-        followers: number;
-        followings: number;
-        role: string;
-        about: string;
-        backgroundImage: string;
-      };
+      user?: User;
       token: string;
     }
   }

@@ -3,14 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
 import { useEffect } from "react";
 import { MountainIcon } from "lucide-react";
-import { jwtDecode } from "jwt-decode";
-import { useDispatch } from "react-redux";
-import { setUser, UserInfo } from "@/store/features/userSlice";
 
 const LoginPage = () => {
   const { token, userInfo, role } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (token && userInfo) {
@@ -21,15 +17,6 @@ const LoginPage = () => {
       }
     }
   }, [token, userInfo, role, navigate]);
-
-  useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get("token");
-    if (token) {
-      localStorage.setItem("accessToken", token);
-      const decodedToken: UserInfo = jwtDecode(token);
-      dispatch(setUser(decodedToken));
-    }
-  }, [dispatch]);
 
   return (
     <div>

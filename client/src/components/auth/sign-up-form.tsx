@@ -19,6 +19,8 @@ import { toast } from "../ui/use-toast";
 import { setUser } from "@/store/features/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
+import GoogleSigninButton from "./providers/google-signin-button";
+import GithubSigninButton from "./providers/github-signin-button";
 
 interface SignUpFormProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -141,6 +143,14 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             <Button className="mt-2" loading={isLoading}>
               Create Account
             </Button>
+
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+            </div>
+            <GoogleSigninButton isSignin={false} />
+            <GithubSigninButton isSignin={false} />
 
             <div className="relative my-2">
               <div className="absolute inset-0 flex items-center">

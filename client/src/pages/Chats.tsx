@@ -46,7 +46,13 @@ const Chats = () => {
     }
   }, [searchValue, getSearch]);
 
-  const [sendMessage] = useSendMessageMutation();
+  const [sendMessage, { data }] = useSendMessageMutation();
+
+  useEffect(() => {
+    if (pathname === "/user/chats/new" && data?.chat) {
+      navigate("/user/chats/" + data.chat.id);
+    }
+  }, [data, navigate, pathname]);
 
   const {
     data: ChatData,

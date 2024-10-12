@@ -16,9 +16,7 @@ import {
   UpdateUserSchema,
 } from "#/utils/validationSchema";
 import { Router } from "express";
-import { sign } from "jsonwebtoken";
 import passport from "passport";
-import { SECRET } from "../utils/variables";
 import { User } from "@prisma/client";
 import { createToken } from "#/utils/createToken";
 const router = Router();
@@ -57,7 +55,6 @@ router.get(
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-// Google OAuth callback route
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
@@ -77,7 +74,35 @@ router.get(
       avatar: user.avatar,
     });
 
-    res.redirect(`http://localhost:5173/login?token=${token}`);
+    res.redirect(`http://localhost:5173/provider-redirect?token=${token}`);
+  }
+);
+
+router.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+router.get(
+  "/github/callback",
+  passport.authenticate("github", { failureRedirect: "/" }),
+  async (req, res) => {
+    // Successful authentication, redirect to the home page or dashboard
+
+    const user = req.user as User;
+    const token = await createToken({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: "user",
+      followersCount: 0,
+      followingCount: 0,
+      about: user.about,
+      backgroundImage: user.backgroundImage,
+      avatar: user.avatar,
+    });
+
+    res.redirect(`http://localhost:5173/provider-redirect?token=${token}`);
   }
 );
 

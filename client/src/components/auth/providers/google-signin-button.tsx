@@ -1,6 +1,6 @@
 import { Button } from "@/components/custom/button";
 
-const GoogleSigninButton = () => {
+const GoogleSigninButton = ({ isSignin = true }: { isSignin?: boolean }) => {
   return (
     <a
       href="http://localhost:5000/api/auth/google"
@@ -37,7 +37,7 @@ const GoogleSigninButton = () => {
             ></path>
           </svg>
         </div>
-        Sign in with Google
+        Sign {isSignin ? "in" : "up"} with Google
       </Button>
     </a>
   );

@@ -118,6 +118,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             <Button className="mt-2" loading={isLoading}>
               Login
             </Button>
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center">
+                <span className="bg-white px-2 text-gray-500">or</span>
+              </div>
+            </div>
+
             <GoogleSigninButton />
             <GithubSigninButton />
           </div>
