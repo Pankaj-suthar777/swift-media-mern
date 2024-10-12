@@ -35,10 +35,10 @@ const App = () => {
       }
     };
 
-    if (role === "user") {
-      handleUserInfo(userData);
-    } else if (role === "admin") {
+    if (role === "admin") {
       handleUserInfo(adminData);
+    } else {
+      handleUserInfo(userData);
     }
   }, [token, role, userData, adminData, dispatch]);
 

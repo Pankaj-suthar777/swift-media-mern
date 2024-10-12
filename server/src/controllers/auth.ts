@@ -244,3 +244,37 @@ export const update_user: RequestHandler = async (req, res) => {
     responseReturn(res, 404, { error: error.message });
   }
 };
+
+export const update_password: RequestHandler = async (req, res) => {
+  const { newPassword, oldPassword } = req.body;
+  const id = req.user.id;
+
+  try {
+    const user = await prisma.user.findFirst({ where: { id } });
+    if (!user) {
+      return responseReturn(res, 404, {
+        error: "User not found",
+      });
+    }
+
+    const isMatched = await bcrypt.compare(oldPassword, user.password);
+
+    if (isMatched) {
+      await prisma.user.update({
+        where: {
+          id,
+        },
+        data: { password: await bcrypt.hash(newPassword, 10) },
+      });
+      return responseReturn(res, 200, {
+        message: "password updated",
+      });
+    } else {
+      return responseReturn(res, 200, {
+        error: "Old password is wrong",
+      });
+    }
+  } catch (error: any) {
+    responseReturn(res, 404, { error: error.message });
+  }
+};

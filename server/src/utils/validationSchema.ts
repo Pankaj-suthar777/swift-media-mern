@@ -103,3 +103,8 @@ export const UpdateGroupSchema = yup.object().shape({
   users: yup.array().optional(),
   avatar: yup.string().optional(),
 });
+
+export const UpdatePasswordSchema = yup.object().shape({
+  newPassword: yup.string(),
+  oldPassword: yup.string(),
+});

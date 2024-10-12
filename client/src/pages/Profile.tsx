@@ -176,7 +176,9 @@ const Profile = () => {
                   <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                     <span className="font-semibold text-black dark:text-white">
                       {!totalPosts ? (
-                        <Loader className="animate-spin" />
+                        <div className="flex flex-col justify-center items-center gap-1">
+                          0<span className="text-sm font-normal">Posts</span>
+                        </div>
                       ) : (
                         <div className="flex flex-col justify-center items-center gap-1">
                           {totalPosts}

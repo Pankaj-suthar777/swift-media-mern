@@ -20,6 +20,8 @@ import { useLoginMutation } from "@/store/api/authApi";
 import { setUser } from "@/store/features/userSlice";
 import { toast } from "../ui/use-toast";
 import { useAppDispatch } from "@/store/hooks";
+import GoogleSigninButton from "./providers/google-signin-button";
+import GithubSigninButton from "./providers/github-signin-button";
 
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -116,6 +118,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             <Button className="mt-2" loading={isLoading}>
               Login
             </Button>
+            <GoogleSigninButton />
+            <GithubSigninButton />
           </div>
         </form>
       </Form>

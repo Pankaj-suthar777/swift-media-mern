@@ -11,6 +11,7 @@ import {
   useSendMessageMutation,
 } from "@/store/api/chatApi";
 import { useAppSelector } from "@/store/hooks";
+import { RootState } from "@/store/store";
 import { uploadFilesToFirebaseAndGetUrl } from "@/utils/file-upload";
 import { Menu, Plus, X } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
@@ -53,7 +54,7 @@ const Chats = () => {
     isLoading: isChatsLoading,
   } = useGetMyChatsQuery({});
 
-  const { userInfo } = useAppSelector((state) => state.auth);
+  const { userInfo } = useAppSelector((state: RootState) => state.auth);
 
   const myId = userInfo?.id;
 
@@ -164,6 +165,8 @@ const Chats = () => {
     } catch (error) {
       console.log(error);
     } finally {
+      setImagePreview("");
+      setImageFile(null);
       setIsLoading(false);
       setMessage("");
     }

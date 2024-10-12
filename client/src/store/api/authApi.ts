@@ -99,6 +99,7 @@ export const {
   useResetPasswordMutation,
   useLoginMutation,
   useGetUserInfoQuery,
+  useLazyGetUserInfoQuery,
   useLogoutMutation,
   useAdminLoginMutation,
   useAdminGetUserInfoQuery,
