@@ -74,7 +74,9 @@ router.get(
       avatar: user.avatar,
     });
 
-    res.redirect(`http://localhost:5173/provider-redirect?token=${token}`);
+    res.redirect(
+      `https://swift-rivals-mern.vercel.app/provider-redirect?token=${token}`
+    );
   }
 );
 
@@ -102,7 +104,9 @@ router.get(
       avatar: user.avatar,
     });
 
-    res.redirect(`http://localhost:5173/provider-redirect?token=${token}`);
+    res.redirect(
+      `https://swift-rivals-mern.vercel.app/provider-redirect?token=${token}`
+    );
   }
 );
 
