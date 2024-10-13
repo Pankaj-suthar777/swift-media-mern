@@ -93,7 +93,6 @@ export const getRecommendedUser: RequestHandler = async (req, res) => {
 export const followUser: RequestHandler = async (req, res) => {
   const { id } = req.params as any;
   const myId = req.user.id;
-  console.log(id);
   const existingFollow = await prisma.follow.findUnique({
     where: {
       followerId_followingId: {
@@ -109,6 +108,13 @@ export const followUser: RequestHandler = async (req, res) => {
         id: existingFollow.id,
       },
     });
+    await prisma.notifiction.create({
+      data: {
+        user_id: parseInt(id),
+        message: `${req.user?.name} unfollowed you`,
+        image: req.user?.avatar,
+      },
+    });
   } else {
     await prisma.follow.create({
       data: {
@@ -118,6 +124,13 @@ export const followUser: RequestHandler = async (req, res) => {
         following: {
           connect: { id: myId },
         },
+      },
+    });
+    await prisma.notifiction.create({
+      data: {
+        user_id: parseInt(id),
+        message: `${req.user?.name} followed you`,
+        image: req.user?.avatar,
       },
     });
   }
@@ -575,5 +588,34 @@ export const seenNotification: RequestHandler = async (req, res) => {
     },
   });
 
-  return responseReturn(res, 200, { success: true });
+  const notificationsCount = await prisma.notifiction.count({
+    where: {
+      user_id: myId,
+    },
+  });
+
+  if (notificationsCount > 12) {
+    const notificationsToDelete = await prisma.notifiction.findMany({
+      where: {
+        user_id: myId,
+        isSeen: true,
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+      skip: 12,
+    });
+
+    const notificationIdsToDelete = notificationsToDelete.map(
+      (notification) => notification.id
+    );
+
+    await prisma.notifiction.deleteMany({
+      where: {
+        id: { in: notificationIdsToDelete },
+      },
+    });
+
+    return responseReturn(res, 200, { success: true });
+  }
 };

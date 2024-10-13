@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/userSlice";
+import notifictionReducer from "./features/notifictionSlice";
 import { authApi } from "./api/authApi";
 import { chatApi } from "./api/chatApi";
 import { userApi } from "./api/userApi";
@@ -9,6 +10,7 @@ import { groupChatApi } from "./api/groupChatApi";
 export const store = configureStore({
   reducer: {
     auth: userReducer,
+    notifiction: notifictionReducer,
     [authApi.reducerPath]: authApi.reducer,
     [chatApi.reducerPath]: chatApi.reducer,
     [userApi.reducerPath]: userApi.reducer,

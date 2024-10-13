@@ -7,10 +7,18 @@ import Logout from "./Logout";
 import CreatePost from "../post/CreatePost";
 import { useGetMyNotificationsCountQuery } from "@/store/api/userApi";
 import { Feather } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { setNotifictionCount } from "@/store/features/notifictionSlice";
+import { useAppSelector } from "@/store/hooks";
+import { RootState } from "@/store/store";
 
 const Layout = () => {
   const role = "user";
   const { pathname } = useLocation();
+  const { notifictionCount } = useAppSelector(
+    (state: RootState) => state.notifiction
+  );
+  const dispatch = useDispatch();
   const { data } = useGetMyNotificationsCountQuery(null);
 
   const [allNav, setAllNav] = useState<any[]>([]);
@@ -19,6 +27,12 @@ const Layout = () => {
     const navs = getNav(role);
     setAllNav(navs);
   }, []);
+
+  useEffect(() => {
+    if (data?.notificationsCount) {
+      dispatch(setNotifictionCount(data.notificationsCount));
+    }
+  }, [data, dispatch]);
 
   return (
     <div className="h-screen w-[1250px] overflow-hidden">
@@ -30,7 +44,7 @@ const Layout = () => {
 
               return (
                 <SidebarItem
-                  notifications={data?.notificationsCount}
+                  notifications={notifictionCount}
                   key={i}
                   icon={n.icon}
                   text={n.title}

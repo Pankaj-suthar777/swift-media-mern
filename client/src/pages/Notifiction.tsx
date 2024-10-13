@@ -6,12 +6,15 @@ import {
   useGetMyNotificationQuery,
   useSeenNotificationMutation,
 } from "@/store/api/userApi";
+import { setNotifictionCount } from "@/store/features/notifictionSlice";
 import { Loader } from "lucide-react";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const Notification = () => {
   const { data, isLoading } = useGetMyNotificationQuery(null);
   const [seen] = useSeenNotificationMutation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const func = async () => {
@@ -19,6 +22,10 @@ const Notification = () => {
     };
     func();
   }, [seen]);
+
+  useEffect(() => {
+    dispatch(setNotifictionCount(0));
+  }, [dispatch]);
 
   return (
     <div className="h-screen w-full flex flex-col items-center border border-r-0">

@@ -214,12 +214,28 @@ export const toogleSavePost: RequestHandler = async (req, res) => {
     },
   });
 
+  const postUser = await prisma.user.findFirst({
+    where: {
+      posts: {
+        some: {
+          id: parseInt(postId),
+        },
+      },
+    },
+    select: {
+      avatar: true,
+      id: true,
+      name: true,
+    },
+  });
+
   if (isPostAlreadySaved) {
     await prisma.savedPost.delete({
       where: {
         id: isPostAlreadySaved.id,
       },
     });
+
     return responseReturn(res, 201, { message: "Post Is Removed From Saved" });
   } else {
     await prisma.savedPost.create({
@@ -228,6 +244,15 @@ export const toogleSavePost: RequestHandler = async (req, res) => {
         post_id: parseInt(postId),
       },
     });
+    if (postUser) {
+      await prisma.notifiction.create({
+        data: {
+          user_id: postUser.id,
+          message: `${req.user?.name} saved your post`,
+          image: req.user?.avatar,
+        },
+      });
+    }
   }
 
   const message = "Post Saved Successfully";
@@ -294,6 +319,29 @@ export const addComment: RequestHandler = async (req, res) => {
     },
   });
 
+  const postUser = await prisma.user.findFirst({
+    where: {
+      posts: {
+        some: {
+          id: parseInt(id),
+        },
+      },
+    },
+    select: {
+      avatar: true,
+      id: true,
+      name: true,
+    },
+  });
+  if (postUser) {
+    await prisma.notifiction.create({
+      data: {
+        user_id: postUser.id,
+        message: `(${req.user?.name} commented on your post) ${text}`,
+        image: req.user?.avatar,
+      },
+    });
+  }
   responseReturn(res, 201, {
     message: "Comment added successfully",
     success: true,
@@ -383,6 +431,31 @@ export const addReplayComment: RequestHandler = async (req, res) => {
     },
   });
 
+  const replayedUser = await prisma.user.findFirst({
+    where: {
+      comments: {
+        some: {
+          id: parseInt(id),
+        },
+      },
+    },
+    select: {
+      avatar: true,
+      name: true,
+      id: true,
+    },
+  });
+
+  if (replayedUser) {
+    await prisma.notifiction.create({
+      data: {
+        user_id: replayedUser.id,
+        message: `(${req.user?.name} replayed you) ${text}`,
+        image: req.user?.avatar,
+      },
+    });
+  }
+
   // await invalidatePostCommentCache(replayToComment.comment.post_id);
 
   responseReturn(res, 201, {
@@ -417,6 +490,27 @@ export const addReplayToReplayComment: RequestHandler = async (req, res) => {
       },
     },
   });
+
+  const replayedUser = await prisma.user.findFirst({
+    where: {
+      id: parseInt(replayToAuthorId),
+    },
+    select: {
+      avatar: true,
+      name: true,
+      id: true,
+    },
+  });
+
+  if (replayedUser) {
+    await prisma.notifiction.create({
+      data: {
+        user_id: replayedUser.id,
+        message: `(${req.user?.name} replayed you) ${text}`,
+        image: req.user?.avatar,
+      },
+    });
+  }
 
   await invalidatePostCommentCache(
     addReplayToReplay.replay_to_comment.comment.post_id
