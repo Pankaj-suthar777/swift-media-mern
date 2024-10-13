@@ -3,7 +3,7 @@ import { Button } from "@/components/custom/button";
 const GoogleSigninButton = ({ isSignin = true }: { isSignin?: boolean }) => {
   return (
     <a
-      href="http://localhost:5000/api/auth/google"
+      href="https://swift-media-mern.onrender.com/api/auth/google"
       className="flex justify-center items-center gap-2 w-full"
     >
       <Button
