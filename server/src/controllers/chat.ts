@@ -105,7 +105,7 @@ export const sendMessage: RequestHandler = async (req, res) => {
         friends: true,
       },
     });
-    newMessage = await prisma.message.create({
+    const ewMessage = await prisma.message.create({
       data: {
         text: message,
         chat_id: chat.id,
@@ -138,6 +138,13 @@ export const sendMessage: RequestHandler = async (req, res) => {
   const receiverSocketId = getReceiverSocketId(receiverId);
   if (receiverSocketId) {
     io.to(receiverSocketId).emit("newMessage", newMessage);
+  }
+
+  if (receiverSocketId) {
+    io.to(receiverSocketId).emit("newChatNotification", {
+      text: newMessage.text,
+      senderInfo: req.user,
+    });
   }
 
   responseReturn(res, 201, {

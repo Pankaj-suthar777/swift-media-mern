@@ -240,11 +240,8 @@ const Post = ({
                     navigate(`/user/profile/${postData?.author.id}`)
                   }
                 >
-                  <p className="text-xs">
-                    posted by : {postData?.author?.name}
-                  </p>
+                  <p className="text-xs">{postData?.author?.name}</p>
                   <p className="text-[10px]">
-                    Created At :{" "}
                     {moment(postData?.created_at).startOf("hour").fromNow()}
                   </p>
                 </div>

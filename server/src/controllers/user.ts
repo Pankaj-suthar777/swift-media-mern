@@ -3,6 +3,7 @@ import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
 import { startOfMonth, eachDayOfInterval, format } from "date-fns";
 import { convertDaysToDate } from "#/utils/helper";
+import { getReceiverSocketId, io } from "#/socket/socket";
 
 export const getUser: RequestHandler = async (req, res) => {
   const { id } = req.params;
@@ -102,19 +103,34 @@ export const followUser: RequestHandler = async (req, res) => {
     },
   });
 
+  const receiverSocketId = getReceiverSocketId(id);
+
   if (existingFollow) {
     await prisma.follow.delete({
       where: {
         id: existingFollow.id,
       },
     });
-    await prisma.notifiction.create({
+    const notification = await prisma.notifiction.create({
       data: {
         user_id: parseInt(id),
         message: `${req.user?.name} unfollowed you`,
         image: req.user?.avatar,
       },
+      include: {
+        user: {
+          select: {
+            email: true,
+            name: true,
+            avatar: true,
+          },
+        },
+      },
     });
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newNotification", notification);
+    }
   } else {
     await prisma.follow.create({
       data: {
@@ -126,13 +142,27 @@ export const followUser: RequestHandler = async (req, res) => {
         },
       },
     });
-    await prisma.notifiction.create({
+    const notification = await prisma.notifiction.create({
       data: {
         user_id: parseInt(id),
         message: `${req.user?.name} followed you`,
         image: req.user?.avatar,
       },
+      include: {
+        user: {
+          select: {
+            email: true,
+            name: true,
+            avatar: true,
+          },
+        },
+      },
     });
+    if (receiverSocketId) {
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newNotification", notification);
+      }
+    }
   }
 
   responseReturn(res, 201, { success: true });

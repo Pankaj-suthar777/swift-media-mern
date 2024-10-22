@@ -8,9 +8,16 @@ import CreatePost from "../post/CreatePost";
 import { useGetMyNotificationsCountQuery } from "@/store/api/userApi";
 import { Feather } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { setNotifictionCount } from "@/store/features/notifictionSlice";
+import {
+  increaseNotifictionCountByOne,
+  setNotifictionCount,
+} from "@/store/features/notifictionSlice";
 import { useAppSelector } from "@/store/hooks";
 import { RootState } from "@/store/store";
+import { useSocketContext } from "@/context/SocketContext";
+import { Notification } from "@/@types/notifiction";
+import { toast } from "../ui/use-toast";
+import { User } from "@/@types/user";
 
 const Layout = () => {
   const role = "user";
@@ -33,6 +40,45 @@ const Layout = () => {
       dispatch(setNotifictionCount(data.notificationsCount));
     }
   }, [data, dispatch]);
+
+  const { socket } = useSocketContext() as any;
+
+  useEffect(() => {
+    if (data?.notificationsCount) {
+      dispatch(setNotifictionCount(data.notificationsCount));
+    }
+  }, [data, dispatch]);
+
+  interface ChatNotification {
+    senderInfo: User;
+    text: string;
+  }
+
+  useEffect(() => {
+    socket?.on("newChatNotification", (newNotification: ChatNotification) => {
+      if (newNotification) {
+        if (!pathname.startsWith("/user/chats")) {
+          toast({
+            title: `${newNotification.text}`,
+            description: newNotification.text,
+          });
+        }
+      }
+    });
+    return () => socket?.off("newNotification");
+  }, [pathname, socket]);
+
+  useEffect(() => {
+    socket?.on("newNotification", (newNotification: Notification) => {
+      if (newNotification) {
+        dispatch(increaseNotifictionCountByOne());
+        toast({
+          title: newNotification.message,
+        });
+      }
+    });
+    return () => socket?.off("newNotification");
+  }, [dispatch, socket]);
 
   return (
     <div className="h-screen w-[1250px] overflow-hidden">
