@@ -13,6 +13,12 @@ import { toast } from "../ui/use-toast";
 import ReplayToReplayComment from "./ReplayToReplyComment";
 import { VoteType } from "@/@types/vote";
 import { useAppSelector } from "@/store/hooks";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 interface Props {
   replay: ReplyToComment;
@@ -130,12 +136,22 @@ const ReplayComment = ({
   return (
     <div>
       <div className="relative">
-        <div
-          className="absolute top-10 right-4 cursor-pointer z-20"
-          onClick={() => clickReplayHandler(replay)}
-        >
-          <Reply size={20} />
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div
+                className="absolute top-10 right-4 cursor-pointer z-20"
+                onClick={() => clickReplayHandler(replay)}
+              >
+                <Reply size={20} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent className="">
+              <p>replay to comment</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         <div className="text-gray-300 font-bold pl-14">|</div>
 
         <div className="flex justify-between border ml-5 rounded-md bg-white">

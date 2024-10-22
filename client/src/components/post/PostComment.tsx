@@ -10,6 +10,12 @@ import { VoteType } from "@/@types/vote";
 import { useToogleCommentVoteMutation } from "@/store/api/postApi";
 import { toast } from "../ui/use-toast";
 import { useAppSelector } from "@/store/hooks";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 interface Props {
   comment: Comment;
@@ -141,13 +147,21 @@ const PostComment = ({
                 </div>
               </div>
             </div>
-
-            <div
-              className="absolute top-4 right-4 cursor-pointer"
-              onClick={() => clickReplayHandler(comment)}
-            >
-              <Reply size={20} />
-            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    className="absolute top-4 right-4 cursor-pointer"
+                    onClick={() => clickReplayHandler(comment)}
+                  >
+                    <Reply size={20} />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="">
+                  <p>replay to comment</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
 
             <div className="flex flex-col justify-center items-start w-full">
               <div className="flex gap-3 items-center w-full">

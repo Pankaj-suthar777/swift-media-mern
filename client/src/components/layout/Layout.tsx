@@ -59,7 +59,7 @@ const Layout = () => {
       if (newNotification) {
         if (!pathname.startsWith("/user/chats")) {
           toast({
-            title: `${newNotification.text}`,
+            title: `${newNotification.senderInfo.name}`,
             description: newNotification.text,
           });
         }

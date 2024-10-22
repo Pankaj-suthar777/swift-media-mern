@@ -31,6 +31,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../custom/button";
 import ShareLink from "../layout/ShareLink";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface SidePostProps {
   type: "horizontal" | "vertical";
@@ -174,38 +180,61 @@ const Post = ({
   };
   const SidePostActions = ({ type }: SidePostProps) => {
     return (
-      <div
-        className={`flex ${
-          type === "horizontal" ? "flex-row" : "flex-col"
-        } gap-4 h-full w-full justify-center`}
-      >
-        <div className="flex items-center gap-2">
-          <div
-            className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
-              vote?.vote === "up-vote" ? "bg-green-200" : ""
-            }`}
-            onClick={() => upOrDownVoteHandler("up-vote", post?.id)}
-          >
-            <ArrowUp size={20} />
-          </div>
-          <span>
-            {postData?.vote.filter((vote) => vote.vote === "up-vote").length}
-          </span>
+      <TooltipProvider>
+        <div
+          className={`flex ${
+            type === "horizontal" ? "flex-row" : "flex-col"
+          } gap-4 h-full w-full justify-center`}
+        >
+          <Tooltip>
+            <div className="flex items-center gap-2">
+              <TooltipTrigger asChild>
+                <div
+                  className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+                    vote?.vote === "up-vote" ? "bg-green-200" : ""
+                  }`}
+                  onClick={() => upOrDownVoteHandler("up-vote", post?.id)}
+                >
+                  <ArrowUp size={20} />
+                </div>
+              </TooltipTrigger>
+
+              <span>
+                {
+                  postData?.vote.filter((vote) => vote.vote === "up-vote")
+                    .length
+                }
+              </span>
+              <TooltipContent className="">
+                <p>up vote post</p>
+              </TooltipContent>
+            </div>
+          </Tooltip>
+          <Tooltip>
+            <div className="flex items-center gap-2">
+              <TooltipTrigger asChild>
+                <div
+                  className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
+                    vote?.vote === "down-vote" ? "bg-red-200" : ""
+                  }`}
+                  onClick={() => upOrDownVoteHandler("down-vote", post.id)}
+                >
+                  <ArrowDown size={20} />
+                </div>
+              </TooltipTrigger>
+              <span>
+                {
+                  postData?.vote.filter((vote) => vote.vote === "down-vote")
+                    .length
+                }
+              </span>
+              <TooltipContent className="">
+                <p>down vote post</p>
+              </TooltipContent>
+            </div>
+          </Tooltip>
         </div>
-        <div className="flex items-center gap-2">
-          <div
-            className={`border rounded-full border-slate-300 p-2 cursor-pointer ${
-              vote?.vote === "down-vote" ? "bg-red-200" : ""
-            }`}
-            onClick={() => upOrDownVoteHandler("down-vote", post.id)}
-          >
-            <ArrowDown size={20} />
-          </div>
-          <span>
-            {postData?.vote.filter((vote) => vote.vote === "down-vote").length}
-          </span>
-        </div>
-      </div>
+      </TooltipProvider>
     );
   };
 
@@ -312,34 +341,52 @@ const Post = ({
                   onClick={() => navigate(`/user/posts/${postData?.id}`)}
                 ></div>
                 <div className="footer flex w-full mt-4">
-                  <div className="flex space-x-4  w-full justify-between">
-                    <div className="flex gap-4">
-                      <div
-                        className={`flex items-center border border-slate-300 rounded-full py-1 px-3 ${
-                          isSaved ? "bg-slate-300" : ""
-                        }`}
-                        onClick={() => savePostHandler()}
-                      >
-                        {isLoading ? (
-                          <Loader className="animate-spin" />
-                        ) : (
-                          <Pin size={18} />
-                        )}
-                        <span className="ml-2">
-                          {postData?.savedPost?.length}
-                        </span>
+                  <TooltipProvider>
+                    <div className="flex space-x-4  w-full justify-between">
+                      <div className="flex gap-4">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div
+                              className={`flex items-center border border-slate-300 rounded-full py-1 px-3 ${
+                                isSaved ? "bg-slate-300" : ""
+                              }`}
+                              onClick={() => savePostHandler()}
+                            >
+                              {isLoading ? (
+                                <Loader className="animate-spin" />
+                              ) : (
+                                <Pin size={18} />
+                              )}
+                              <span className="ml-2">
+                                {postData?.savedPost?.length}
+                              </span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent className="">
+                            <p>{isSaved ? "unsave" : "save"} post</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <ShareLink
+                            link={window.location.href + "/" + post.id}
+                          >
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center">
+                                <Share2 size={18} />
+                              </div>
+                            </TooltipTrigger>
+                          </ShareLink>
+                          <TooltipContent className="">
+                            <p>share post</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
-                      <ShareLink link={window.location.href + "/" + post.id}>
-                        <div className="flex items-center">
-                          <Share2 size={18} />
-                        </div>
-                      </ShareLink>
-                    </div>
 
-                    <div className="flex items-center min-w-[45px] lg:hidden">
-                      <SidePostActions type="horizontal" />
+                      <div className="flex items-center min-w-[45px] lg:hidden">
+                        <SidePostActions type="horizontal" />
+                      </div>
                     </div>
-                  </div>
+                  </TooltipProvider>
                 </div>
               </div>
             </div>
