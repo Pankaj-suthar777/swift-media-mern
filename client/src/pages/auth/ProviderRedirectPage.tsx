@@ -4,6 +4,7 @@ import { setUser, UserInfo } from "@/store/features/userSlice";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 const ProviderRedirectPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

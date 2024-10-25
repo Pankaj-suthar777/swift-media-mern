@@ -54,7 +54,7 @@ const Posts = () => {
               posts?.map((post, i: number) => {
                 const isLastElement = posts.length === i + 1;
                 return isLastElement ? (
-                  <div key={i} ref={lastElementRef} className="w-full">
+                  <div key={i} className="w-full" ref={lastElementRef}>
                     <Post
                       key={i}
                       post={post}
@@ -72,8 +72,8 @@ const Posts = () => {
                 );
               })}
 
-            {isLoading && (
-              <div className="w-full overflow-hidden flex justify-center items-center py-4">
+            {!isLoading && (
+              <div className="w-full h-[100px] overflow-hidden flex justify-center items-center py-4">
                 <Loader className="animate-spin" size={30} />
               </div>
             )}

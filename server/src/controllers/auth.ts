@@ -157,7 +157,7 @@ export const get_user: RequestHandler = async (req, res) => {
       name: user.name,
       id: user.id,
       email: user.email,
-      role: "admin",
+      role: "user",
       followersCount,
       followingCount,
       about: user.about,
@@ -175,7 +175,7 @@ export const get_user: RequestHandler = async (req, res) => {
 export const admin_login: RequestHandler = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.adminUser.findUnique({
     where: {
       email: email,
     },
@@ -186,22 +186,19 @@ export const admin_login: RequestHandler = async (req, res) => {
     if (match) {
       const token = await createToken({
         id: user.id,
-        name: user.name,
         email: user.email,
         role: "admin",
-        about: user.about,
-        backgroundImage: user.backgroundImage,
+        avatar: user.avatar,
       });
 
       responseReturn(res, 201, {
         message: "User Login Success",
         token,
         userInfo: {
-          name: user.name,
           id: user.id,
           email: user.email,
           role: "admin",
-          about: user.about,
+          avatar: user.avatar,
         },
       });
     } else {
@@ -277,4 +274,29 @@ export const update_password: RequestHandler = async (req, res) => {
   } catch (error: any) {
     responseReturn(res, 404, { error: error.message });
   }
+};
+
+export const admin_get_user: RequestHandler = async (req, res) => {
+  const { id } = req.user;
+
+  const user = await prisma.adminUser.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!user) {
+    return responseReturn(res, 200, {
+      error: "User not found",
+    });
+  }
+
+  responseReturn(res, 200, {
+    userInfo: {
+      avatar: user.avatar,
+      id: user.id,
+      email: user.email,
+      role: "admin",
+    },
+  });
 };

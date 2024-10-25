@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Router from "./routers/Router";
-import { getRoutes } from "./routers/routes";
+import { getAdminRoutes, getUserRoutes } from "./routers/routes";
 import publicRoutes from "./routers/routes/publicRoute";
 import {
-  useAdminGetUserInfoQuery,
-  useGetUserInfoQuery,
+  useLazyAdminGetUserInfoQuery,
+  useLazyGetUserInfoQuery,
 } from "./store/api/authApi";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { setUser } from "./store/features/userSlice";
@@ -15,18 +15,22 @@ const App = () => {
   const dispatch = useAppDispatch();
   const { pathname } = useLocation();
   const { token, role } = useAppSelector((state) => state.auth);
-  const { data: userData, isLoading: isUserDataLoading } = useGetUserInfoQuery({
-    token,
-  });
-  const { data: adminData, isLoading: isAdminUserDataLoading } =
-    useAdminGetUserInfoQuery({ token });
+  const [getUser, { data: userData, isLoading: isUserDataLoading }] =
+    useLazyGetUserInfoQuery();
+  const [getAdminUser, { data: adminData, isLoading: isAdminUserDataLoading }] =
+    useLazyAdminGetUserInfoQuery();
 
   const [allRoutes, setAllRoutes] = useState([...publicRoutes]);
 
   useEffect(() => {
-    const routes = getRoutes();
-    setAllRoutes((prevRoutes) => [...prevRoutes, { ...routes }]);
-  }, []);
+    if (role === "admin") {
+      const routes = getAdminRoutes();
+      setAllRoutes((prevRoutes) => [...prevRoutes, { ...routes }]);
+    } else {
+      const routes = getUserRoutes();
+      setAllRoutes((prevRoutes) => [...prevRoutes, { ...routes }]);
+    }
+  }, [role]);
 
   useEffect(() => {
     const handleUserInfo = (data: any) => {
@@ -36,11 +40,13 @@ const App = () => {
     };
 
     if (role === "admin") {
+      getAdminUser({ token });
       handleUserInfo(adminData);
     } else {
+      getUser({ token });
       handleUserInfo(userData);
     }
-  }, [token, role, userData, adminData, dispatch]);
+  }, [token, role, userData, adminData, dispatch, getAdminUser, getUser]);
 
   if (isUserDataLoading || isAdminUserDataLoading) {
     if (pathname !== "/") {

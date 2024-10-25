@@ -103,5 +103,6 @@ export const {
   useLogoutMutation,
   useAdminLoginMutation,
   useAdminGetUserInfoQuery,
+  useLazyAdminGetUserInfoQuery,
   useUpdateUserProfileMutation,
 } = authApi;

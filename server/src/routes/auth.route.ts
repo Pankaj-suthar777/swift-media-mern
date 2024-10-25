@@ -6,6 +6,7 @@ import {
   update_user,
   user_login,
   user_register,
+  admin_get_user,
 } from "#/controllers/auth";
 import { authMiddleware } from "#/middleware/authMiddleware";
 import { validate } from "#/middleware/validator";
@@ -112,6 +113,7 @@ router.get(
 
 // admin
 router.post("/admin/login", authLimiter, admin_login);
+router.get("/admin/get-user", authMiddleware, admin_get_user);
 router.get("/get-user", authLimiter, authMiddleware, get_user);
 
 export default router;
