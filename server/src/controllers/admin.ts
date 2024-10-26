@@ -144,3 +144,53 @@ export const getAllUsers: RequestHandler = async (req, res) => {
     responseReturn(res, 404, { error: error.message });
   }
 };
+
+export const popularUsers: RequestHandler = async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        avatar: true,
+        email: true,
+        about: true,
+        followers: {
+          select: {
+            id: true,
+          },
+        },
+        following: {
+          select: { id: true },
+        },
+        posts: {
+          select: { id: true },
+        },
+      },
+      orderBy: {
+        followers: {
+          _count: "desc",
+        },
+      },
+      take: 10,
+    });
+
+    const formattedUsers = users.map((u) => {
+      return {
+        id: u.id,
+        name: u.name,
+        avatar: u.avatar,
+        email: u.email,
+        about: u.about,
+        followersCount: u.followers.length,
+        followingCount: u.following.length,
+        posts: u.posts.length,
+      };
+    });
+
+    return responseReturn(res, 200, {
+      users: formattedUsers,
+    });
+  } catch (error: any) {
+    responseReturn(res, 404, { error: error.message });
+  }
+};

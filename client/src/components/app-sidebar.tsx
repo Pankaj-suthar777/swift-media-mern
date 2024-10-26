@@ -38,7 +38,7 @@ const data = {
         },
         {
           title: "Most popular users",
-          url: "#",
+          url: "popular-users",
         },
       ],
     },

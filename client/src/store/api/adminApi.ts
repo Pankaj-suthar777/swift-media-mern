@@ -36,7 +36,22 @@ export const adminApi = createApi({
         };
       },
     }),
+    getPopularUsers: builder.query<{ users: PopularUsers[] }, void>({
+      query() {
+        return {
+          url: "/get-popular-users",
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetDashboardDataQuery, useGetAllUsersQuery } = adminApi;
+export interface PopularUsers extends UserColumn {
+  about: string;
+}
+
+export const {
+  useGetDashboardDataQuery,
+  useGetAllUsersQuery,
+  useGetPopularUsersQuery,
+} = adminApi;
