@@ -1,10 +1,11 @@
 import { baseURL } from "@/api/client";
+import { UserColumn } from "@/components/admin/users/all-users-table/columns";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const authApi = createApi({
-  reducerPath: "authApi",
+export const adminApi = createApi({
+  reducerPath: "adminApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: baseURL,
+    baseUrl: baseURL + "/admin",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
       if (token) {
@@ -14,16 +15,28 @@ export const authApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    adminLogin: builder.mutation({
-      query(body) {
+    getDashboardData: builder.query<
+      {
+        userCount: number;
+        postCount: number;
+        chartData: { date: string; users: number; posts: number }[];
+      },
+      void
+    >({
+      query() {
         return {
-          url: "/auth/admin/login",
-          method: "POST",
-          body,
+          url: "/dashboard",
+        };
+      },
+    }),
+    getAllUsers: builder.query<{ users: UserColumn[] }, void>({
+      query() {
+        return {
+          url: "/get-all-users",
         };
       },
     }),
   }),
 });
 
-// export const {} = authApi;
+export const { useGetDashboardDataQuery, useGetAllUsersQuery } = adminApi;

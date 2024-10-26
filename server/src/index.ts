@@ -2,13 +2,14 @@ import express from "express";
 import "dotenv/config";
 import "express-async-errors";
 import cors from "cors";
-// import passport from "./config/passport";
 
 import authRouter from "./routes/auth.route";
 import chatRouter from "./routes/chat.route";
 import userRouter from "./routes/user.route";
 import postRouter from "./routes/post.route";
 import groupChatRouter from "./routes/groupChat.route";
+import adminRouter from "./routes/admin.route";
+
 import session from "express-session";
 
 import { errorHandler } from "./middleware/error";
@@ -70,6 +71,7 @@ app.use("/api/chat", chatRouter);
 app.use("/api/user", userRouter);
 app.use("/api/post", postRouter);
 app.use("/api/group-chat", groupChatRouter);
+app.use("/api/admin", adminRouter);
 
 app.use(errorHandler);
 

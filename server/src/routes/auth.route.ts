@@ -18,7 +18,6 @@ import {
 } from "#/utils/validationSchema";
 import { Router } from "express";
 import passport from "passport";
-import { User } from "@prisma/client";
 import { createToken } from "#/utils/createToken";
 const router = Router();
 
