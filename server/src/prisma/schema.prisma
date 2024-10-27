@@ -55,7 +55,8 @@ model Chat {
     messages           Message[]
     lastMessage        String
     senderId           Int
-    sender             User @relation("ChatSender", fields: [senderId], references: [id])
+    sender       User @relation("ChatSender", fields: [senderId], references: [id], onDelete: Cascade)
+
     created_at         DateTime @default(now())
     updated_at         DateTime @updatedAt
 }

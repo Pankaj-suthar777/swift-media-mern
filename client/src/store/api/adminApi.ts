@@ -29,10 +29,10 @@ export const adminApi = createApi({
         };
       },
     }),
-    getAllUsers: builder.query<{ users: UserColumn[] }, void>({
-      query() {
+    getAllUsers: builder.query<{ users: UserColumn[] }, number>({
+      query(pageNo) {
         return {
-          url: "/get-all-users",
+          url: "/get-all-users?pageNo=" + pageNo,
         };
       },
     }),
@@ -40,6 +40,28 @@ export const adminApi = createApi({
       query() {
         return {
           url: "/get-popular-users",
+        };
+      },
+    }),
+    deleteUser: builder.mutation<{ message: string }, number>({
+      query(id: number) {
+        return {
+          url: "/delete-user/" + id,
+          method: "POST",
+          body: {},
+        };
+      },
+    }),
+    chnagePassword: builder.mutation<{ message: string }, any>({
+      query(body: {
+        oldPassword: string;
+        newPassword: string;
+        confirmPassword: string;
+      }) {
+        return {
+          url: "/change-password",
+          method: "POST",
+          body,
         };
       },
     }),
@@ -53,5 +75,8 @@ export interface PopularUsers extends UserColumn {
 export const {
   useGetDashboardDataQuery,
   useGetAllUsersQuery,
+  useLazyGetAllUsersQuery,
   useGetPopularUsersQuery,
+  useDeleteUserMutation,
+  useChnagePasswordMutation,
 } = adminApi;

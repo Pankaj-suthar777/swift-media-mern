@@ -194,3 +194,46 @@ export const popularUsers: RequestHandler = async (req, res) => {
     responseReturn(res, 404, { error: error.message });
   }
 };
+
+export const deleteUser: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await prisma.chat.deleteMany({
+      where: { senderId: parseInt(id) },
+    });
+    await prisma.user.delete({
+      where: { id: parseInt(id) },
+    });
+    return responseReturn(res, 200, {
+      message: "user deleted successfully",
+    });
+  } catch (error: any) {
+    responseReturn(res, 404, { error: error.message });
+  }
+};
+
+export const changePassword: RequestHandler = async (req, res) => {
+  const { id } = req.user;
+  const { newPassword, oldPassword } = req.body;
+  console.log("newPassword", newPassword);
+  try {
+    const admin = await prisma.adminUser.findFirst({ where: { id } });
+    if (admin?.password === oldPassword) {
+      await prisma.adminUser.update({
+        where: { id },
+        data: {
+          password: newPassword,
+        },
+      });
+      return responseReturn(res, 200, {
+        message: "password updated successfully",
+      });
+    } else {
+      return responseReturn(res, 200, {
+        message: "old password is wrong",
+      });
+    }
+  } catch (error: any) {
+    responseReturn(res, 404, { error: error.message });
+  }
+};

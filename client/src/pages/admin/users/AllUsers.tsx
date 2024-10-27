@@ -4,7 +4,7 @@ import { useGetAllUsersQuery } from "@/store/api/adminApi";
 import { Loader } from "lucide-react";
 
 const AllUsers = () => {
-  const { data, isLoading } = useGetAllUsersQuery();
+  const { data, isLoading } = useGetAllUsersQuery(0);
   return (
     <div className="container mx-auto py-10">
       {isLoading ? (
