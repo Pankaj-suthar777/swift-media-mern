@@ -1,11 +1,11 @@
 import PopularUserBlock from "@/components/admin/users/PopularUserBlock";
 import { useGetPopularUsersQuery } from "@/store/api/adminApi";
-import { Loader } from "lucide-react";
+// import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const PopularUsers = () => {
   const [user, setUser] = useState(null);
-  const { data, isLoading } = useGetPopularUsersQuery();
+  const { data } = useGetPopularUsersQuery();
 
   useEffect(() => {
     if (data) {
