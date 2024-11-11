@@ -10,6 +10,8 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { setUser } from "./store/features/userSlice";
 import { useLocation } from "react-router-dom";
 import { MountainIcon } from "lucide-react";
+import { QueryClient, QueryClientProvider } from "react-query";
+const queryClient = new QueryClient();
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -58,7 +60,11 @@ const App = () => {
     }
   }
 
-  return <Router allRoutes={allRoutes} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Router allRoutes={allRoutes} />
+    </QueryClientProvider>
+  );
 };
 
 export default App;

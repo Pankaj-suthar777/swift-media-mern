@@ -72,9 +72,12 @@ const Chats = () => {
     data: messageData,
     isLoading: isMessageLoading,
     refetch: refetchMessages,
-  } = useGetChatMessagesQuery({
-    chatId: id,
-  });
+  } = useGetChatMessagesQuery(
+    {
+      chatId: id,
+    },
+    { skip: !id }
+  );
 
   useEffect(() => {
     if (id) {
@@ -143,7 +146,7 @@ const Chats = () => {
     try {
       const receiverId = selectedSearchedUser
         ? selectedSearchedUser.id
-        : otherFriend.id;
+        : otherFriend?.id;
 
       if (!message && !imageFile) {
         return;
@@ -242,7 +245,7 @@ const Chats = () => {
             {selectedChat ? (
               <div
                 className="flex justify-between items-center w-full cursor-pointer"
-                onClick={() => navigate(`/user/profile/${otherFriend.id}`)}
+                onClick={() => navigate(`/user/profile/${otherFriend?.id}`)}
               >
                 <div className="flex gap-4 items-center">
                   <img

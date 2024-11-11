@@ -113,13 +113,13 @@ const ChatUserList = ({
                       }
                       alt="User avatar"
                     />
-                    {onlineUsersId.includes(String(otherFriend.id)) && (
+                    {onlineUsersId.includes(String(otherFriend?.id)) && (
                       <div className="bg-green-500 w-2 h-2 absolute rounded-full right-4 bottom-1"></div>
                     )}
                   </div>
                   <div className="flex-1">
                     <h3 className="text-sm font-medium text-gray-800">
-                      {otherFriend.name}
+                      {otherFriend?.name}
                     </h3>
                     <p className="text-gray-600 text-xs">
                       {truncateText(chat.lastMessage, 16)}
