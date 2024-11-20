@@ -15,11 +15,15 @@ import session from "express-session";
 import { errorHandler } from "./middleware/error";
 
 import { app, server } from "./socket/socket";
+
+app.set('trust proxy', 1);
+
 import { CLIENT_URL, PORT, GOOGLE_SESSION_SECRET } from "./utils/variables";
 import prisma from "./prisma/prisma";
 const passport = require("passport");
 require("./providers/google")(passport);
 require("./providers/github")(passport);
+
 
 app.use(
   session({
