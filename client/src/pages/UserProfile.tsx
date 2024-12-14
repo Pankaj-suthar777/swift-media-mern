@@ -123,7 +123,20 @@ const Profile = () => {
                     </div>
 
                     <div className="pb-6 lg:pb-8 xl:pb-11.5 relative">
-                      <div className="bg-[url('https://www.lightstalking.com/wp-content/uploads/backlit-beach-color-258109-3-1024x576.jpg')] bg-cover bg-center h-48"></div>
+                      <div
+                        style={{
+                          backgroundImage: `url(${
+                            data?.user?.backgroundImage ||
+                            "https://www.lightstalking.com/wp-content/uploads/backlit-beach-color-258109-3-1024x576.jpg"
+                          })`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                        className="h-48 w-full"
+                      ></div>
+                      {/* <div
+                        className={`bg-[url('https://www.lightstalking.com/wp-content/uploads/backlit-beach-color-258109-3-1024x576.jpg')] bg-cover bg-center h-48`}
+                      ></div> */}
                       <div className="flex justify-between">
                         <div className="flex w-full justify-start items-center pt-5 absolute md:top-[110px] top-[120px] left-4">
                           <div

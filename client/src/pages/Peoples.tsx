@@ -126,7 +126,7 @@ const UserBlock = ({ user }: { user: People }) => {
         className="rounded-full px-6 py-2 text-xs"
         onClick={followUserHandle}
       >
-        {isFollow ? "Follow" : "Following"}
+        {isFollow ? "Following" : "Follow"}
       </Button>
     </div>
   );

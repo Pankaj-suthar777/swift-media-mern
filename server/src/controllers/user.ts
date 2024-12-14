@@ -535,8 +535,6 @@ export const getUserFollowingList: RequestHandler = async (req, res) => {
 export const getAllPeoples: RequestHandler = async (req, res) => {
   const myId = req.user.id;
 
-  // const { page } = req.query;
-  // Get the list of users the current user is following
   const followingData = await prisma.follow.findMany({
     where: {
       followerId: myId,
@@ -546,10 +544,8 @@ export const getAllPeoples: RequestHandler = async (req, res) => {
     },
   });
 
-  // Extract the following IDs from the result
   const followingIds = followingData.map((f) => f.followingId);
 
-  // Get all users except the current user
   const peoples = await prisma.user.findMany({
     where: {
       id: {
@@ -565,13 +561,11 @@ export const getAllPeoples: RequestHandler = async (req, res) => {
     },
   });
 
-  // Format the data to include the `isFollowing` field
   const formattedPeoples = peoples.map((person) => ({
     ...person,
     isFollowing: followingIds.includes(person.id),
   }));
 
-  // Respond with 200 for a successful data retrieval
   return responseReturn(res, 200, { peoples: formattedPeoples });
 };
 
