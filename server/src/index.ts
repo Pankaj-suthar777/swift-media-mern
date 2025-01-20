@@ -16,14 +16,13 @@ import { errorHandler } from "./middleware/error";
 
 import { app, server } from "./socket/socket";
 
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 import { CLIENT_URL, PORT, GOOGLE_SESSION_SECRET } from "./utils/variables";
 import prisma from "./prisma/prisma";
 const passport = require("passport");
 require("./providers/google")(passport);
 require("./providers/github")(passport);
-
 
 app.use(
   session({
@@ -69,6 +68,10 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get("/", (req, res) => {
+  return res.json("Hello World");
+});
 
 app.use("/api/auth", authRouter);
 app.use("/api/chat", chatRouter);
