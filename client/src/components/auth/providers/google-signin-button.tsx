@@ -3,7 +3,7 @@ import { Button } from "@/components/custom/button";
 const GoogleSigninButton = ({ isSignin = true }: { isSignin?: boolean }) => {
   return (
     <a
-      href="https://swift-media-mern.onrender.com/api/auth/google"
+      href="https://swift-media-mern-api.vercel.app/api/auth/google"
       className="flex justify-center items-center gap-2 w-full"
     >
       <Button

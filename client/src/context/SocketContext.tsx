@@ -28,7 +28,7 @@ export const SocketContextProvider = ({
   //  http://localhost:5000
   useEffect(() => {
     if (authUser) {
-      const newSocket = io("https://swift-media-mern.onrender.com", {
+      const newSocket = io("https://swift-media-mern-api.vercel.app", {
         query: {
           userId: authUser.id,
         },

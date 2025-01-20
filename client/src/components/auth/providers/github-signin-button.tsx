@@ -4,7 +4,7 @@ import { Github } from "lucide-react";
 const GithubSigninButton = ({ isSignin = true }: { isSignin?: boolean }) => {
   return (
     <a
-      href="https://swift-media-mern.onrender.com/api/auth/github"
+      href="https://swift-media-mern-api.vercel.app/api/auth/github"
       className="flex justify-center items-center gap-2 w-full"
     >
       <Button

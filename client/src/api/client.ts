@@ -1,4 +1,4 @@
-export const baseURL = "https://swift-media-mern.onrender.com/api";
+export const baseURL = "https://swift-media-mern-api.vercel.app/api";
 //export const baseURL = "/api";
 
 import axios, { CreateAxiosDefaults } from "axios";
