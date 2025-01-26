@@ -14,17 +14,7 @@ export type User = {
 declare global {
   namespace Express {
     interface Request {
-      user: {
-        id: number;
-        name: string;
-        email: string;
-        avatar?: string;
-        followers: number;
-        followings: number;
-        role: string;
-        about: string;
-        backgroundImage: string;
-      }; // Force the 'user' type to be non-optional
+      user: User; // Use the previously defined User type here
     }
   }
 }

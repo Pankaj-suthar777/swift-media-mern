@@ -3,7 +3,7 @@ export interface UserDocument {
   name: string;
   email: string;
   password: string;
-  avatar?: { url: string; publicId: string };
+  avatar?: string;
   favorites: string[];
   followers: string[];
   followings: string[];
