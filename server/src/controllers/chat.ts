@@ -2,9 +2,10 @@ import prisma from "#/prisma/prisma";
 import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
 import { getReceiverSocketId, io } from "#/socket/socket";
+import { User } from "#/@types/user";
 
 export const serachUser: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id : myId} = req.user as User;
   const searchValue = req.query.search;
 
   const chats = await prisma.chat.findMany({
@@ -62,7 +63,7 @@ export const serachUser: RequestHandler = async (req, res) => {
 };
 
 export const sendMessage: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id : myId} = req.user as User;
   const receiverId = req.body?.receiverId;
   const message = req.body.message;
   const imageUrl = req.body.imageUrl;
@@ -143,7 +144,7 @@ export const sendMessage: RequestHandler = async (req, res) => {
   if (receiverSocketId) {
     io.to(receiverSocketId).emit("newChatNotification", {
       text: newMessage.text,
-      senderInfo: req.user,
+      senderInfo: req.user as User,
     });
   }
 
@@ -154,7 +155,7 @@ export const sendMessage: RequestHandler = async (req, res) => {
 };
 
 export const getUserChats: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id : myId} = req.user as User;
 
   const chats = await prisma.chat.findMany({
     where: {
@@ -198,7 +199,7 @@ export const getChatMessage: RequestHandler = async (req, res) => {
 
 export const getOtherUserChatWithMe: RequestHandler = async (req, res) => {
   const { userId } = req.params;
-  const myId = req.user.id;
+  const {id : myId} = req.user as User;
 
   const chat = await prisma.chat.findFirst({
     where: {

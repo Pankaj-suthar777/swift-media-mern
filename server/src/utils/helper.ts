@@ -5,7 +5,7 @@ export const formatProfile = (user: UserDocument) => {
     id: user.id,
     name: user.name,
     email: user.email,
-    avatar: user.avatar?.url,
+    avatar: user.avatar,
     followers: user.followers.length,
     followings: user.followings.length,
   };

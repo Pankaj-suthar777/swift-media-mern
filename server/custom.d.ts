@@ -14,7 +14,7 @@ export type User = {
 declare global {
   namespace Express {
     interface Request {
-      user: User; // Use the previously defined User type here
+      user?: User; // Use the previously defined User type here
     }
   }
 }

@@ -2,6 +2,7 @@ import prisma from "#/prisma/prisma";
 import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
 import { subMonths, format } from "date-fns";
+import { User } from "@prisma/client";
 export const getDashboardData: RequestHandler = async (req, res) => {
   try {
     const userCount = await prisma.user.count();
@@ -213,7 +214,7 @@ export const deleteUser: RequestHandler = async (req, res) => {
 };
 
 export const changePassword: RequestHandler = async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.user as User as User;
   const { newPassword, oldPassword } = req.body;
   console.log("newPassword", newPassword);
   try {

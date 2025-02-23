@@ -1,3 +1,4 @@
+import { User } from "#/@types/user";
 import prisma from "#/prisma/prisma";
 import {
   cachePostComment,
@@ -8,7 +9,7 @@ import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
 
 export const createPost: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id : myId} = req.user as User;
   const { text, image, visibility } = req.body;
   let post;
 
@@ -36,7 +37,7 @@ export const createPost: RequestHandler = async (req, res) => {
 
 export const getFeed: RequestHandler = async (req, res) => {
   try {
-    const myId = req.user.id;
+    const {id : myId} = req.user as User;
 
     const { page } = req.query;
 
@@ -108,7 +109,7 @@ export const upOrDownVote: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const myId = req.user.id;
+    const {id : myId} = req.user as User;
 
     const isVoted = await prisma.vote.findFirst({
       where: {
@@ -158,8 +159,8 @@ export const upOrDownVote: RequestHandler = async (req, res) => {
       await prisma.notifiction.create({
         data: {
           user_id: author?.author.id,
-          message: `${req.user.name} ${vote.split("-")[0]} voted your post`,
-          image: req.user.avatar,
+          message: `${(req.user as User).name} ${vote.split("-")[0]} voted your post`,
+          image: (req.user as User).avatar,
         },
       });
     }
@@ -175,7 +176,7 @@ export const upOrDownVote: RequestHandler = async (req, res) => {
 export const isVoted: RequestHandler = async (req, res) => {
   const { id } = req.params;
 
-  const myId = req.user.id;
+  const {id:myId} = req.user as User;
 
   const isVoted = await prisma.vote.findFirst({
     where: {
@@ -188,7 +189,7 @@ export const isVoted: RequestHandler = async (req, res) => {
 };
 
 export const myPosts: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id: myId} = req.user as User;
 
   const posts = await prisma.post.findMany({
     where: {
@@ -204,7 +205,7 @@ export const myPosts: RequestHandler = async (req, res) => {
 };
 
 export const toogleSavePost: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id :myId} = req.user as User;
   const { postId } = req.params;
 
   const isPostAlreadySaved = await prisma.savedPost.findFirst({
@@ -248,8 +249,8 @@ export const toogleSavePost: RequestHandler = async (req, res) => {
       await prisma.notifiction.create({
         data: {
           user_id: postUser.id,
-          message: `${req.user?.name} saved your post`,
-          image: req.user?.avatar,
+          message: `${(req.user as User).name} saved your post`,
+          image: (req.user as User).avatar,
         },
       });
     }
@@ -260,7 +261,7 @@ export const toogleSavePost: RequestHandler = async (req, res) => {
   responseReturn(res, 201, { message });
 };
 export const getSavedPost: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id:myId} = req.user as User;
 
   const { page } = req.query;
 
@@ -288,7 +289,7 @@ export const getSavedPost: RequestHandler = async (req, res) => {
 };
 
 export const isPostSaved: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id : myId} = req.user as User;
   const { postId } = req.params;
 
   const post = await prisma.savedPost.findFirst({
@@ -302,7 +303,7 @@ export const isPostSaved: RequestHandler = async (req, res) => {
 };
 
 export const addComment: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id :myId} = req.user as User;
   const { id } = req.params;
   const { text } = req.body;
 
@@ -337,8 +338,8 @@ export const addComment: RequestHandler = async (req, res) => {
     await prisma.notifiction.create({
       data: {
         user_id: postUser.id,
-        message: `(${req.user?.name} commented on your post) ${text}`,
-        image: req.user?.avatar,
+        message: `(${(req.user as User).name} commented on your post) ${text}`,
+        image: (req.user as User).avatar,
       },
     });
   }
@@ -409,7 +410,7 @@ export const getPostComment: RequestHandler = async (req, res) => {
 };
 
 export const addReplayComment: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id:myId} = req.user as User;
   const { id } = req.params;
   const { text } = req.body;
 
@@ -450,8 +451,8 @@ export const addReplayComment: RequestHandler = async (req, res) => {
     await prisma.notifiction.create({
       data: {
         user_id: replayedUser.id,
-        message: `(${req.user?.name} replayed you) ${text}`,
-        image: req.user?.avatar,
+        message: `(${(req.user as User).name} replayed you) ${text}`,
+        image: (req.user as User).avatar,
       },
     });
   }
@@ -465,7 +466,7 @@ export const addReplayComment: RequestHandler = async (req, res) => {
 };
 
 export const addReplayToReplayComment: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id : myId} = req.user as User;
   const { text, replayToAuthorId, replayToCommentId } = req.body;
 
   const addReplayToReplay = await prisma.replayToReplayComment.create({
@@ -506,8 +507,8 @@ export const addReplayToReplayComment: RequestHandler = async (req, res) => {
     await prisma.notifiction.create({
       data: {
         user_id: replayedUser.id,
-        message: `(${req.user?.name} replayed you) ${text}`,
-        image: req.user?.avatar,
+        message: `(${(req.user as User).name} replayed you) ${text}`,
+        image: (req.user as User).avatar,
       },
     });
   }
@@ -523,7 +524,7 @@ export const addReplayToReplayComment: RequestHandler = async (req, res) => {
 };
 
 export const toogleCommentVote: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id :myId} = req.user as User;
   const { id } = req.params;
 
   const isVoted = await prisma.commentVote.findFirst({
@@ -567,7 +568,7 @@ export const toogleCommentVote: RequestHandler = async (req, res) => {
 };
 
 export const toogleCommentReplayVote: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id :myId} = req.user as User;
   const { id } = req.params;
 
   const isVoted = await prisma.replayToCommentVote.findFirst({
@@ -613,7 +614,7 @@ export const toogleReplayedCommentReplyVote: RequestHandler = async (
   req,
   res
 ) => {
-  const myId = req.user.id;
+  const {id :myId} = req.user as User;
   const { id } = req.params;
 
   const isVoted = await prisma.replayToReplyCommentVote.findFirst({
@@ -657,7 +658,7 @@ export const toogleReplayedCommentReplyVote: RequestHandler = async (
 };
 
 export const deletePost: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id:myId} = req.user as User;
   const { id } = req.params;
 
   const isExist = await prisma.post.findUnique({
@@ -684,7 +685,7 @@ export const deletePost: RequestHandler = async (req, res) => {
 };
 
 export const updatePost: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id :myId} = req.user as User;
   const { text, image, visibility } = req.body;
   const { id } = req.params;
 

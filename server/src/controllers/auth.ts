@@ -4,6 +4,7 @@ import { responseReturn } from "#/utils/response";
 import prisma from "#/prisma/prisma";
 import { createToken } from "#/utils/createToken";
 import { RequestHandler } from "express";
+import { User } from "@prisma/client";
 
 // user register @POST /api/auth/register
 export const user_register: RequestHandler = async (req, res) => {
@@ -123,7 +124,7 @@ export const user_login: RequestHandler = async (req, res) => {
 // get user info @GET /api/auth/get-user
 
 export const get_user: RequestHandler = async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.user as User;
 
   const user = await prisma.user.findUnique({
     where: {
@@ -211,7 +212,7 @@ export const admin_login: RequestHandler = async (req, res) => {
 
 export const update_user: RequestHandler = async (req, res) => {
   const { about, name, avatar, github, twitter, backgroundImage } = req.body;
-  const id = req.user.id;
+  const {id} = req.user as User;
 
   try {
     const user = await prisma.user.update({
@@ -244,7 +245,7 @@ export const update_user: RequestHandler = async (req, res) => {
 
 export const update_password: RequestHandler = async (req, res) => {
   const { newPassword, oldPassword } = req.body;
-  const id = req.user.id;
+  const {id} = req.user as User;
 
   try {
     const user = await prisma.user.findFirst({ where: { id } });
@@ -277,7 +278,7 @@ export const update_password: RequestHandler = async (req, res) => {
 };
 
 export const admin_get_user: RequestHandler = async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.user as User;
 
   const user = await prisma.adminUser.findUnique({
     where: {

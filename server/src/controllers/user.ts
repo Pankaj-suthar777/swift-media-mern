@@ -4,6 +4,7 @@ import { RequestHandler } from "express";
 import { startOfMonth, eachDayOfInterval, format } from "date-fns";
 import { convertDaysToDate } from "#/utils/helper";
 import { getReceiverSocketId, io } from "#/socket/socket";
+import { User } from "#/@types/user";
 
 export const getUser: RequestHandler = async (req, res) => {
   const { id } = req.params;
@@ -44,7 +45,7 @@ export const getUser: RequestHandler = async (req, res) => {
 
 export const getRecommendedUser: RequestHandler = async (req, res) => {
   try {
-    const myId = req.user.id;
+    const {id : myId} = req.user as User;
 
     const chats = await prisma.chat.findMany({
       where: {
@@ -93,7 +94,7 @@ export const getRecommendedUser: RequestHandler = async (req, res) => {
 
 export const followUser: RequestHandler = async (req, res) => {
   const { id } = req.params as any;
-  const myId = req.user.id;
+    const {id : myId} = req.user as User;
   const existingFollow = await prisma.follow.findUnique({
     where: {
       followerId_followingId: {
@@ -114,8 +115,8 @@ export const followUser: RequestHandler = async (req, res) => {
     const notification = await prisma.notifiction.create({
       data: {
         user_id: parseInt(id),
-        message: `${req.user?.name} unfollowed you`,
-        image: req.user?.avatar,
+        message: `${(req.user as User).name} unfollowed you`,
+        image: (req.user as User).avatar,
       },
       include: {
         user: {
@@ -145,8 +146,8 @@ export const followUser: RequestHandler = async (req, res) => {
     const notification = await prisma.notifiction.create({
       data: {
         user_id: parseInt(id),
-        message: `${req.user?.name} followed you`,
-        image: req.user?.avatar,
+        message: `${(req.user as User).name} followed you`,
+        image: (req.user as User).avatar,
       },
       include: {
         user: {
@@ -170,7 +171,7 @@ export const followUser: RequestHandler = async (req, res) => {
 
 export const isFollow: RequestHandler = async (req, res) => {
   const { id } = req.params as any;
-  const myId = req.user.id;
+    const {id : myId} = req.user as User;
 
   const follow = await prisma.follow.findFirst({
     where: {
@@ -183,7 +184,7 @@ export const isFollow: RequestHandler = async (req, res) => {
 };
 
 export const serachUser: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+    const {id : myId} = req.user as User;
   const searchValue = req.query.search as string;
 
   if (searchValue === "") {
@@ -236,7 +237,7 @@ export const getUserPosts: RequestHandler = async (req, res) => {
 };
 
 export const getDashboardData: RequestHandler = async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.user as User;
   //const cacheKey = `user_profile_${id}`;
 
   // client.get(cacheKey, (err: Error | null, cachedProfile: string | null) => {
@@ -348,7 +349,7 @@ export const getDashboardData: RequestHandler = async (req, res) => {
 };
 
 export const getDashboardMessageSentData: RequestHandler = async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.user as User;
   const now = new Date();
   const start = startOfMonth(now);
   const end = now; // today date
@@ -395,7 +396,7 @@ export const getDashboardPostActivityData: RequestHandler = async (
   req,
   res
 ) => {
-  const { id } = req.user;
+  const { id } = req.user as User;
   const now = new Date();
   let start = startOfMonth(now);
   const end = now;
@@ -450,7 +451,7 @@ export const getDashboardPostActivityData: RequestHandler = async (
 
 export const getUserFollowersList: RequestHandler = async (req, res) => {
   const { id } = req.params;
-  const myId = req.user.id;
+    const {id : myId} = req.user as User;
 
   if (myId === parseInt(id)) {
     const followers = await prisma.user.findUnique({
@@ -493,7 +494,7 @@ export const getUserFollowersList: RequestHandler = async (req, res) => {
 
 export const getUserFollowingList: RequestHandler = async (req, res) => {
   const { id } = req.params;
-  const myId = req.user.id;
+    const {id : myId} = req.user as User;
 
   if (myId === parseInt(id)) {
     const following = await prisma.user.findUnique({
@@ -533,7 +534,7 @@ export const getUserFollowingList: RequestHandler = async (req, res) => {
 };
 
 export const getAllPeoples: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+    const {id : myId} = req.user as User;
 
   const followingData = await prisma.follow.findMany({
     where: {
@@ -570,7 +571,7 @@ export const getAllPeoples: RequestHandler = async (req, res) => {
 };
 
 export const getMyNotifications: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+    const {id : myId} = req.user as User;
 
   const notifications = await prisma.notifiction.findMany({
     where: {
@@ -588,7 +589,7 @@ export const getMyNotifications: RequestHandler = async (req, res) => {
 };
 
 export const getMyNotificationsCount: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+    const {id : myId} = req.user as User;
 
   const notificationsCount = await prisma.notifiction.count({
     where: {
@@ -601,7 +602,7 @@ export const getMyNotificationsCount: RequestHandler = async (req, res) => {
 };
 
 export const seenNotification: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+    const {id : myId} = req.user as User;
 
   await prisma.notifiction.updateMany({
     where: {

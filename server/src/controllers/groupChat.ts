@@ -2,9 +2,10 @@ import prisma from "#/prisma/prisma";
 import { getReceiverSocketIds, io } from "#/socket/socket";
 import { responseReturn } from "#/utils/response";
 import { RequestHandler } from "express";
+import { User } from "#/@types/user";
 
 export const createGroupChat: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id :myId} = req.user as User;
 
   const { users, title, avatar } = req.body;
 
@@ -18,7 +19,7 @@ export const createGroupChat: RequestHandler = async (req, res) => {
 
   await prisma.groupChat.create({
     data: {
-      lastMessage: `chat created by ${req.user.name}`,
+      lastMessage: `chat created by ${(req.user as User).name}`,
       createdBy: myId,
       title: title,
       avatar: avatar,
@@ -35,7 +36,7 @@ export const createGroupChat: RequestHandler = async (req, res) => {
 };
 
 export const getUserGroupChats: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id :myId} = req.user as User;
 
   const chats = await prisma.groupChat.findMany({
     where: {
@@ -68,7 +69,7 @@ export const getUserGroupChats: RequestHandler = async (req, res) => {
 };
 
 export const sendGroupMessage: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id :myId} = req.user as User;
   const { chatId } = req.params;
   const message = req.body.message;
 
@@ -105,7 +106,7 @@ export const sendGroupMessage: RequestHandler = async (req, res) => {
   });
 
   newMessage.senderId = myId;
-  newMessage.sender = req.user;
+  newMessage.sender = req.user as User;
   const friends = existingChat.friends.map((friend) => friend.id);
   // SOCKET IO FUNCTIONALITY WILL GO HERE
   const receiverSocketId = getReceiverSocketIds(friends);
@@ -148,7 +149,7 @@ export const getGroupChatInfo: RequestHandler = async (req, res) => {
 };
 
 export const updateGroupChat: RequestHandler = async (req, res) => {
-  const myId = req.user.id;
+  const {id :myId} = req.user as User;
   const { id } = req.params;
 
   const { users, title, avatar } = req.body;

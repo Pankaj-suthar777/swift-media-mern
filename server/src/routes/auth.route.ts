@@ -19,6 +19,7 @@ import {
 import { Router } from "express";
 import passport from "passport";
 import { createToken } from "#/utils/createToken";
+import { User } from "@prisma/client";
 const router = Router();
 
 // user
@@ -60,7 +61,7 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   async (req, res) => {
     // Successful authentication
-    const user = req.user;
+    const user = req.user as User;
 
     const token = await createToken({
       id: user.id,
@@ -91,7 +92,7 @@ router.get(
   async (req, res) => {
     // Successful authentication, redirect to the home page or dashboard
 
-    const user = req.user;
+    const user = req.user as User;
     const token = await createToken({
       id: user.id,
       name: user.name,
