@@ -8,20 +8,20 @@ import {
 import { hash } from "bcrypt";
 
 module.exports = function (passport) {
-  passport.deserializeUser(async function (id, done) {
-    try {
-      const user = await prisma.user.findFirst({
-        where: { id: parseInt(id) },
-      });
-      if (user) {
-        done(null, user);
-      } else {
-        done(new Error("User not found"), null);
-      }
-    } catch (error) {
-      done(error, null);
-    }
-  });
+  // passport.deserializeUser(async function (id, done) {
+  //   try {
+  //     const user = await prisma.user.findFirst({
+  //       where: { id: parseInt(id) },
+  //     });
+  //     if (user) {
+  //       done(null, user);
+  //     } else {
+  //       done(new Error("User not found"), null);
+  //     }
+  //   } catch (error) {
+  //     done(error, null);
+  //   }
+  // });
 
   passport.use(
     new GoogleStrategy(
@@ -32,26 +32,31 @@ module.exports = function (passport) {
         scope: ["profile", "email"],
       },
       async function (_accessToken, _refreshToken, profile, cb) {
-        const user = await prisma.user.findFirst({
-          where: { googleId: String(profile.id), provider: profile.provider },
-        });
-
-        if (!user) {
-          const name = profile.displayName;
-          const newUser = await prisma.user.create({
-            data: {
-              name,
-              email: profile._json.email,
-              password: await hash(`${profile.provider}/12345`, 10),
-              googleId: String(profile.id),
-              provider: profile.provider,
-              avatar: profile?.photos[0]?.value,
-            },
+        try {
+          const user = await prisma.user.findFirst({
+            where: { googleId: String(profile.id), provider: profile.provider },
           });
-          return cb(null, newUser);
+  
+          if (!user) {
+            const name = profile.displayName;
+            const newUser = await prisma.user.create({
+              data: {
+                name,
+                email: profile._json.email,
+                password: await hash(`${profile.provider}/12345`, 10),
+                googleId: String(profile.id),
+                provider: profile.provider,
+                avatar: profile?.photos[0]?.value,
+              },
+            });
+            return cb(null, newUser);
+          }
+  
+          return cb(null, user);
+        } catch (error) {
+          console.error("Google OAuth Error:", error); // Check Render logs
+          return cb(error, null);
         }
-
-        return cb(null, user);
       }
     )
   );

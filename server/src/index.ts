@@ -24,24 +24,41 @@ const passport = require("passport");
 require("./providers/google")(passport);
 require("./providers/github")(passport);
 
+// app.use(
+//   session({
+//     secret: GOOGLE_SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: true,
+//   })
+// );
+
+// // Initialize Passport middleware
+// app.use(passport.initialize());
+// app.use(
+//   passport.session({
+//     secret: GOOGLE_SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: true },
+//   })
+// );
+
 app.use(
   session({
     secret: GOOGLE_SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, // Avoid race conditions
+    cookie: {
+      secure: true, // Required for HTTPS
+      sameSite: "none", // Needed for cross-site cookies (OAuth)
+      maxAge: 24 * 60 * 60 * 1000, // Optional: session expiry
+    },
   })
 );
-
-// Initialize Passport middleware
 app.use(passport.initialize());
-app.use(
-  passport.session({
-    secret: GOOGLE_SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
-  })
-);
+
+// Remove options from passport.session():
+app.use(passport.session()); 
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
@@ -63,7 +80,7 @@ passport.deserializeUser(async function (id, done) {
 app.use(
   cors({
     origin: "*",
-    // origin:[CLIENT_URL],
+    credentials: true,
   })
 );
 app.use(express.json());

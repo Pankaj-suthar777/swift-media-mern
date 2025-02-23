@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 interface Props {
   selectedChat: any;
   setSelectedChat: React.Dispatch<React.SetStateAction<any>>;
-  searchValue: string;
+  searchValue: string; 
+  
   searchedResultUser: User[];
   chats: any[];
   isLoading: boolean;
