@@ -8,18 +8,18 @@ import {
 import { hash } from "bcrypt";
 
 module.exports = function (passport) {
-  passport.deserializeUser(async function (id, done) {
-    try {
-      const user = await prisma.user.findFirst({ where: { id: parseInt(id) } });
-      if (user) {
-        done(null, user);
-      } else {
-        done(new Error("User not found"), null);
-      }
-    } catch (error) {
-      done(error, null);
-    }
-  });
+  // passport.deserializeUser(async function (id, done) {
+  //   try {
+  //     const user = await prisma.user.findFirst({ where: { id: parseInt(id) } });
+  //     if (user) {
+  //       done(null, user);
+  //     } else {
+  //       done(new Error("User not found"), null);
+  //     }
+  //   } catch (error) {
+  //     done(error, null);
+  //   }
+  // });
 
   passport.use(
     new GitHubStrategy(
@@ -30,17 +30,40 @@ module.exports = function (passport) {
         scope: ["user:email"], // Ensure this is correct
       },
       async function (_accessToken, _refreshToken, profile, cb) {
-        const user = await prisma.user.findFirst({
-          where: { githubId: String(profile.id), provider: profile.provider },
-        });
+        console.log("profile", profile);
 
-        if (!user) {
+        try {
+
+          const existingGithubUser = await prisma.user.findFirst({
+            where: { githubId: String(profile.id) },
+          });
+
+          if (existingGithubUser) return cb(null, existingGithubUser);
+
+          const existingEmailUser = await prisma.user.findUnique({
+            where: { email: profile._json.email },
+          });
+
+          // const user = await prisma.user.findFirst({
+          //   where: { githubId: String(profile.id), provider: profile.provider },
+          // });
+
+          if (existingEmailUser) {
+            const updatedUser = await prisma.user.update({
+              where: { id: existingEmailUser.id },
+              data: {
+                githubId: String(profile.id),
+                provider: "github",
+                avatar: profile?.photos[0]?.value || existingEmailUser.avatar,
+              },
+            });
+            return cb(null, updatedUser);
+          }
           const name = profile.displayName || profile.username;
-          const email =
-            profile.emails && profile.emails.length > 0
-              ? profile.emails[0].value // Get email
-              : null; // Handle case where no email is available
-
+            const email =
+              profile.emails && profile.emails.length > 0
+                ? profile.emails[0].value // Get email
+                : null; // Handle case where no email is available
           const newUser = await prisma.user.create({
             data: {
               name,
@@ -52,9 +75,11 @@ module.exports = function (passport) {
             },
           });
           return cb(null, newUser);
+  
+        } catch (error) {
+          console.error("Github OAuth Error:", error);
+          return cb(error, null);
         }
-
-        return cb(null, user);
       }
     )
   );
