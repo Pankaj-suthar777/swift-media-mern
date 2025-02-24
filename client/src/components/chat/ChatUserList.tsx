@@ -7,7 +7,6 @@ interface Props {
   selectedChat: any;
   setSelectedChat: React.Dispatch<React.SetStateAction<any>>;
   searchValue: string; 
-  
   searchedResultUser: User[];
   chats: any[];
   isLoading: boolean;

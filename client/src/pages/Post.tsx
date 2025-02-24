@@ -52,7 +52,7 @@ const Posts = () => {
   return (
     <div className="h-screen w-full flex flex-col items-center overflow-x-hidden">
       <div className="flex gap-4 w-full h-full">
-        <div className="sm:w-[65%] w-full flex flex-col justify-center items-center border overflow-y-auto h-full">
+        <div className="sm:w-[90%] w-full flex flex-col justify-center items-center border border-r-0 overflow-y-auto h-full">
           <div className="w-full flex justify-start py-2 px-2">
             <BackButton to="/user/posts" variant="link" />
           </div>
@@ -111,7 +111,7 @@ const Posts = () => {
           </div>
         </div>
 
-        <div className="w-[40%] md:flex h-fit justify-center hidden mx-auto">
+        <div className="w-[50%] md:flex h-fit justify-center hidden mx-auto">
           <div className="flex flex-col gap-2 w-full">
             <div className="my-4">
               <SearchBox />
